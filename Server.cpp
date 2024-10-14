@@ -6,11 +6,32 @@
 /*   By: tnicolau <tnicolau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 12:56:29 by tnicolau          #+#    #+#             */
-/*   Updated: 2024/10/14 10:44:26 by tnicolau         ###   ########.fr       */
+/*   Updated: 2024/10/14 14:06:57 by tnicolau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
+
+bool	Server::_signal = false;
+
+Server::Server() : serverSocketFd(0)
+{}
+
+void	Server::SignalHandler(int signal)
+{
+	(void)signal;
+	_signal = true;
+}
+
+void	Server::CloseFds()
+{
+	for (size_t i = 0; i < clients.size(); ++i)
+	{
+		std::cout << "Client " << clients[i].getFd() << " disconnected" << std::endl;
+		close(clients[i].getFd());
+	}
+	close(serverSocketFd);
+}
 
 void	Server::ServerSocket()
 {
@@ -19,8 +40,6 @@ void	Server::ServerSocket()
 	serverAddress.sin_family = AF_INET;
 	serverAddress.sin_port = htons(8080);
 	serverAddress.sin_addr.s_addr = INADDR_ANY;
-
-	std::cout << INADDR_ANY << std::endl;
 
 	int	optionval = 1;
 
@@ -77,9 +96,9 @@ void	Server::AcceptNewClient()
 void	Server::ServerProgram()
 {
 	ServerSocket();
-	while (42)
+	while (!_signal)
 	{
-		if((poll(&fds[0],fds.size(),-1) == -1))
+		if((poll(&fds[0],fds.size(), -1) == -1) && !_signal)
 			throw(std::runtime_error("poll() failed"));
 		for (size_t i = 0; i < fds.size(); i++)
 		{
@@ -90,5 +109,5 @@ void	Server::ServerProgram()
 			}
 		}
 	}
-
+	CloseFds();
 }

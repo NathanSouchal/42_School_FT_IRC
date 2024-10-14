@@ -6,7 +6,7 @@
 /*   By: tnicolau <tnicolau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 12:56:31 by tnicolau          #+#    #+#             */
-/*   Updated: 2024/10/14 10:21:39 by tnicolau         ###   ########.fr       */
+/*   Updated: 2024/10/14 13:57:31 by tnicolau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@
 #include <arpa/inet.h>
 #include <fcntl.h>
 #include <poll.h>
+#include <unistd.h>
+#include <csignal>
 #include <vector>
 #include "Client.hpp"
 
@@ -30,10 +32,14 @@ class	Server
 		int	serverSocketFd;
 		std::vector<Client>	clients;
 		std::vector<pollfd>	fds;
+		static bool	_signal;
 	public:
+		Server();
 		void	ServerSocket();
 		void	AcceptNewClient();
 		void	ServerProgram();
+		void	CloseFds();
+		static void	SignalHandler(int signal);
 };
 
 #endif
