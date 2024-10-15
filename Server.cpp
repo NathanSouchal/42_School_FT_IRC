@@ -6,7 +6,7 @@
 /*   By: tnicolau <tnicolau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 12:56:29 by tnicolau          #+#    #+#             */
-/*   Updated: 2024/10/14 14:06:57 by tnicolau         ###   ########.fr       */
+/*   Updated: 2024/10/15 12:05:06 by tnicolau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,11 +93,45 @@ void	Server::AcceptNewClient()
 	std::cout << "Client " << fd << " connected !" << std::endl;
 }
 
+void	Server::sendPing(int fd)
+{
+	std::string ping = "PING :serverping\r\n";
+	send(fd, ping.c_str(), ping.length(), 0);
+	time_t timePing = time(NULL);
+	for (int i = 0; i < clients.size(); ++i)
+	{
+		if (clients[i].getFd() == fd)
+			clients[i].setPing(timePing);
+	}
+}
+
+void	Server::ReceiveData(int fd)
+{
+	char	buffer[1024];
+
+	ssize_t bytes = recv(fd, buffer, sizeof(buffer) - 1 , 0); //-> receive the data
+
+	if(bytes <= 0)
+	{ //-> check if the client disconnected
+		std::cout << "Client " << fd << " Disconnected" << std::endl;
+		//ClearClients(fd); //-> clear the client
+		close(fd); //-> close the client socket
+	}
+
+	else
+	{ //-> print the received data
+		buffer[bytes] = '\0';
+		std::cout << "Client " << fd << " Data: " << buffer;
+		//here you can add your code to process the received data: parse, check, authenticate, handle the command, etc...
+	}
+}
+
 void	Server::ServerProgram()
 {
 	ServerSocket();
 	while (!_signal)
 	{
+		//Attend qu'il se produise un evenement sur un des fds
 		if((poll(&fds[0],fds.size(), -1) == -1) && !_signal)
 			throw(std::runtime_error("poll() failed"));
 		for (size_t i = 0; i < fds.size(); i++)
@@ -106,6 +140,8 @@ void	Server::ServerProgram()
 			{
 				if (fds[i].fd == serverSocketFd)
 					AcceptNewClient();
+				else
+					ReceiveData(fds[i].fd);
 			}
 		}
 	}

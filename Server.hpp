@@ -6,7 +6,7 @@
 /*   By: tnicolau <tnicolau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 12:56:31 by tnicolau          #+#    #+#             */
-/*   Updated: 2024/10/14 13:57:31 by tnicolau         ###   ########.fr       */
+/*   Updated: 2024/10/15 11:58:14 by tnicolau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,9 @@ class	Server
 		void	AcceptNewClient();
 		void	ServerProgram();
 		void	CloseFds();
+		void	ReceiveData(int fd);
 		static void	SignalHandler(int signal);
+		void		sendPing(int fd);
 };
 
 #endif
