@@ -6,7 +6,7 @@
 /*   By: tnicolau <tnicolau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 12:56:29 by tnicolau          #+#    #+#             */
-/*   Updated: 2024/10/15 12:05:06 by tnicolau         ###   ########.fr       */
+/*   Updated: 2024/10/15 13:55:21 by tnicolau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,7 @@ void	Server::AcceptNewClient()
 	fds.push_back(newPoll);
 
 	std::cout << "Client " << fd << " connected !" << std::endl;
+	//sendPing(fd);
 }
 
 void	Server::sendPing(int fd)
@@ -98,7 +99,7 @@ void	Server::sendPing(int fd)
 	std::string ping = "PING :serverping\r\n";
 	send(fd, ping.c_str(), ping.length(), 0);
 	time_t timePing = time(NULL);
-	for (int i = 0; i < clients.size(); ++i)
+	for (size_t i = 0; i < clients.size(); ++i)
 	{
 		if (clients[i].getFd() == fd)
 			clients[i].setPing(timePing);
@@ -111,17 +112,21 @@ void	Server::ReceiveData(int fd)
 
 	ssize_t bytes = recv(fd, buffer, sizeof(buffer) - 1 , 0); //-> receive the data
 
-	if(bytes <= 0)
+	if (bytes == 0)
 	{ //-> check if the client disconnected
-		std::cout << "Client " << fd << " Disconnected" << std::endl;
+		std::cout << "Client " << fd << " disconnected" << std::endl;
 		//ClearClients(fd); //-> clear the client
 		close(fd); //-> close the client socket
 	}
-
+	else if (bytes < 0)
+	{
+		std::cout << "Client " << fd << " error made him disconnect" << std::endl;
+		close(fd);
+	}
 	else
 	{ //-> print the received data
 		buffer[bytes] = '\0';
-		std::cout << "Client " << fd << " Data: " << buffer;
+		std::cout << "Client " << fd << ". Data: " << buffer;
 		//here you can add your code to process the received data: parse, check, authenticate, handle the command, etc...
 	}
 }

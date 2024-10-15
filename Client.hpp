@@ -6,7 +6,7 @@
 /*   By: tnicolau <tnicolau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 13:23:09 by tnicolau          #+#    #+#             */
-/*   Updated: 2024/10/15 12:03:34 by tnicolau         ###   ########.fr       */
+/*   Updated: 2024/10/15 13:33:36 by tnicolau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,12 @@ class	Client
 		int			fd;
 		std::string	IPaddress;
 		time_t		_timePing;
+		time_t		_timePong;
 	public:
 		int		getFd();
 		void	setFd(const int& new_fd);
 		void	setPing(time_t timePing);
+		void	setPong(time_t timePong);
 		void	setIPaddress(const std::string& new_ip);
 };
 
