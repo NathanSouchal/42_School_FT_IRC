@@ -6,7 +6,7 @@
 /*   By: tnicolau <tnicolau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 12:56:29 by tnicolau          #+#    #+#             */
-/*   Updated: 2024/10/15 13:55:21 by tnicolau         ###   ########.fr       */
+/*   Updated: 2024/10/16 13:18:48 by tnicolau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,11 @@
 
 bool	Server::_signal = false;
 
-Server::Server() : serverSocketFd(0)
-{}
+Server::Server(int port, std::string password) : _port(port), _password(password), serverSocketFd(0)
+{
+	std::cout << "Password : " << _password << "\nPort : " << _port << std::endl;
+	ServerProgram();
+}
 
 void	Server::SignalHandler(int signal)
 {
@@ -38,7 +41,7 @@ void	Server::ServerSocket()
 	sockaddr_in serverAddress;
 	pollfd	newPoll;
 	serverAddress.sin_family = AF_INET;
-	serverAddress.sin_port = htons(8080);
+	serverAddress.sin_port = htons(_port);
 	serverAddress.sin_addr.s_addr = INADDR_ANY;
 
 	int	optionval = 1;
@@ -77,7 +80,7 @@ void	Server::AcceptNewClient()
 		std::cerr << "Accept() failed" << std::endl;
 	if (fcntl(fd, F_SETFL, O_NONBLOCK) == -1)
 	{
-		std::cout << "fcntl() failed" << std::endl;
+		std::cerr << "fcntl() failed" << std::endl;
 		return ;
 	}
 
@@ -94,7 +97,7 @@ void	Server::AcceptNewClient()
 	//sendPing(fd);
 }
 
-void	Server::sendPing(int fd)
+void	Server::SendPing(int fd)
 {
 	std::string ping = "PING :serverping\r\n";
 	send(fd, ping.c_str(), ping.length(), 0);
@@ -126,9 +129,70 @@ void	Server::ReceiveData(int fd)
 	else
 	{ //-> print the received data
 		buffer[bytes] = '\0';
-		std::cout << "Client " << fd << ". Data: " << buffer;
+		parseMessage(buffer, fd);
 		//here you can add your code to process the received data: parse, check, authenticate, handle the command, etc...
 	}
+}
+
+void	Server::capabilityNegociation(const std::string& message)
+{
+	(void)message;
+	std::cout << "CAP !!!" << std::endl;
+}
+
+void	Server::password(const std::string& message)
+{
+	(void)message;
+	std::cout << "PASSWORD !!!" << std::endl;
+}
+
+void	Server::nickname(const std::string& message)
+{
+	(void)message;
+	std::cout << "NICKNAME !!!" << std::endl;
+}
+
+void	Server::user(const std::string& message)
+{
+	(void)message;
+	std::cout << "USER !!!" << std::endl;
+}
+
+void	Server::parseMessage(char* message, int fd)
+{
+	std::cout << "Client " << fd << ", data: " << message << std::endl;
+	std::istringstream	reader(message);
+	std::string line, value;
+
+	while (std::getline(reader, line))
+	{
+		if (line.size() > 1 && line[line.size() - 1] == '\r')
+		{
+			checkCommand(line);
+		}
+	}
+}
+
+void	Server::checkCommand(const std::string& message)
+{
+	std::string	command = message.substr(0, message.find(" "));
+
+	void(Server::*function_ptr[])(const std::string&) = {&Server::capabilityNegociation, &Server::password, &Server::nickname, &Server::user};
+	std::string commands[] = {"CAP", "PASS", "NICK", "USER"};
+	bool	found = false;
+
+	for (size_t i = 0; i < commands->length() + 1; i++)
+	{
+		if (commands[i] == command)
+		{
+			(this->*function_ptr[i])(message);
+			found = true;
+			break ;
+		}
+	}
+	if (!found)
+		std::cerr << "Command " << message << " does not exist, sorry" << std::endl;
+	return ;
 }
 
 void	Server::ServerProgram()

@@ -6,23 +6,39 @@
 /*   By: tnicolau <tnicolau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 10:10:09 by tnicolau          #+#    #+#             */
-/*   Updated: 2024/10/14 13:57:00 by tnicolau         ###   ########.fr       */
+/*   Updated: 2024/10/16 10:00:09 by tnicolau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
+#include <cstdlib>
 
-int	main()
+int	checkInput(char* port)
 {
-	Server	server;
-	struct sigaction	sa;
-	sa.sa_flags = SA_SIGINFO;
-	sa.sa_handler = Server::SignalHandler;
+	char *end;
+	long	res = strtol(port, &end, 10);
+	std::cout << res << std::endl;
+	if (res < 1024 || res > 65535 || *end != '\0')
+		throw std::invalid_argument("Invalid port");
+	return res;
+}
 
+int	main(int ac, char **av)
+{
+	if (ac != 3)
+	{
+		std::cerr << "Wrong number of arguments" << std::endl;
+		return -1;
+	}
 	try
 	{
+		int port = checkInput(av[1]);
+		Server	server(port, av[2]);
+
+		struct sigaction	sa;
+		sa.sa_flags = SA_SIGINFO;
+		sa.sa_handler = Server::SignalHandler;
 		sigaction(SIGINT, &sa, NULL);
-		server.ServerProgram();
 	}
 	catch(const std::exception& e)
 	{
