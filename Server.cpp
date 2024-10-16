@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tnicolau <tnicolau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nsouchal <nsouchal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 12:56:29 by tnicolau          #+#    #+#             */
-/*   Updated: 2024/10/16 13:38:38 by tnicolau         ###   ########.fr       */
+/*   Updated: 2024/10/16 16:16:40 by nsouchal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,14 @@ Server::Server(int port, std::string password) : _port(port), _password(password
 	ServerProgram();
 }
 
+Server::~Server()
+{
+	for (size_t i = 0; i < clients.size(); ++i)
+	{
+		delete clients[i];
+	}	
+}
+
 void	Server::SignalHandler(int signal)
 {
 	(void)signal;
@@ -30,8 +38,8 @@ void	Server::CloseFds()
 {
 	for (size_t i = 0; i < clients.size(); ++i)
 	{
-		std::cout << "Client " << clients[i].getFd() << " disconnected" << std::endl;
-		close(clients[i].getFd());
+		std::cout << "Client " << clients[i]->getFd() << " disconnected" << std::endl;
+		close(clients[i]->getFd());
 	}
 	close(serverSocketFd);
 }
@@ -70,7 +78,7 @@ void	Server::ServerSocket()
 
 void	Server::AcceptNewClient()
 {
-	Client	client;
+	Client	*client = new Client();
 	sockaddr_in	clientAddress;
 	pollfd	newPoll;
 	socklen_t	len = sizeof(clientAddress);
@@ -88,8 +96,8 @@ void	Server::AcceptNewClient()
 	newPoll.events = POLLIN;
 	newPoll.revents = 0;
 
-	client.setFd(fd);
-	client.setIPaddress(inet_ntoa((clientAddress.sin_addr)));
+	client->setFd(fd);
+	client->setIPaddress(inet_ntoa((clientAddress.sin_addr)));
 	clients.push_back(client);
 	fds.push_back(newPoll);
 
@@ -104,8 +112,8 @@ void	Server::SendPing(int fd)
 	time_t timePing = time(NULL);
 	for (size_t i = 0; i < clients.size(); ++i)
 	{
-		if (clients[i].getFd() == fd)
-			clients[i].setPing(timePing);
+		if (clients[i]->getFd() == fd)
+			clients[i]->setPing(timePing);
 	}
 }
 
@@ -138,25 +146,35 @@ void	Server::ReceiveData(int fd)
 void	Server::capabilityNegociation(const std::string& message)
 {
 	(void)message;
-	std::cout << "CAP !!!" << std::endl;
+	// std::cout << "CAP !!!" << std::endl;
 }
 
 void	Server::password(const std::string& message)
 {
 	(void)message;
-	std::cout << "PASSWORD !!!" << std::endl;
+	// std::cout << "PASSWORD !!!" << std::endl;
 }
 
 void	Server::nickname(const std::string& message)
 {
 	(void)message;
-	std::cout << "NICKNAME !!!" << std::endl;
+	// std::cout << "NICKNAME !!!" << std::endl;
 }
 
 void	Server::user(const std::string& message)
 {
 	(void)message;
-	std::cout << "USER !!!" << std::endl;
+	// std::cout << "USER !!!" << std::endl;
+}
+
+Client	*Server::findClient(int fd)
+{
+	for (size_t i = 0; i < clients.size(); ++i)
+	{
+		if (clients[i]->getFd() == fd)
+			return clients[i];
+	}
+	return NULL;
 }
 
 void	Server::parseMessage(char* message, int fd)
@@ -164,12 +182,30 @@ void	Server::parseMessage(char* message, int fd)
 	std::cout << "Client " << fd << ", data: " << message << std::endl;
 	std::istringstream	reader(message);
 	std::string line, value;
-
+	findClient(fd)->incrementMessagesSended();
+	
 	while (std::getline(reader, line))
 	{
 		if (line.size() > 1 && line[line.size() - 1] == '\r')
 		{
-			checkCommand(line);
+			if (findClient(fd)->getRegistration())
+			{
+				//ici check des commandes autres que CAP PASS NICK USER
+				checkCommand(line);
+			}
+			else if (findClient(fd)->getMessagesSended() == 1)
+				checkCommand(line);
+			else if (findClient(fd)->getMessagesSended() == 2)
+			{
+				checkCommand(line);
+				//check si NICK PASS USER sont enregistres et update booleen
+			}
+			else if (!findClient(fd)->getRegistration() && findClient(fd)->getMessagesSended() < 5)
+			{
+				checkCommand(line);
+				//check si NICK PASS USER sont enregistres et update booleen
+				//si 4 passage et toujours false deconnection du client
+			}	
 		}
 	}
 }
