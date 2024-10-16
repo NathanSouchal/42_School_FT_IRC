@@ -6,7 +6,7 @@
 /*   By: tnicolau <tnicolau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 12:56:29 by tnicolau          #+#    #+#             */
-/*   Updated: 2024/10/16 13:18:48 by tnicolau         ###   ########.fr       */
+/*   Updated: 2024/10/16 13:38:38 by tnicolau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -130,6 +130,7 @@ void	Server::ReceiveData(int fd)
 	{ //-> print the received data
 		buffer[bytes] = '\0';
 		parseMessage(buffer, fd);
+		//send(fd, "001 tnicolau :Welcome to the choucroute Network, tnicolau!tnicolau@localhost\r\n", 79, 0);
 		//here you can add your code to process the received data: parse, check, authenticate, handle the command, etc...
 	}
 }
