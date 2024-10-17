@@ -6,7 +6,7 @@
 /*   By: nsouchal <nsouchal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 13:23:09 by tnicolau          #+#    #+#             */
-/*   Updated: 2024/10/16 16:04:00 by nsouchal         ###   ########.fr       */
+/*   Updated: 2024/10/17 15:42:55 by nsouchal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@
 #include <iostream>
 #include <string>
 #include <ctime>
+#include <sys/socket.h>
+#include <sys/types.h>
 
 class	Client
 {
@@ -29,10 +31,9 @@ class	Client
 		std::string	_realname;
 		std::string	_password;
 		bool		_registrationChecked;
-		int			_messagesSended;
 	public:
+		Client();
 		const int			&getFd();
-		const int			&getMessagesSended();
 		const std::string	&getNickname();
 		const std::string	&getUsername();
 		const std::string	&getRealname();
@@ -47,7 +48,8 @@ class	Client
 		void				setPing(time_t timePing);
 		void				setPong(time_t timePong);
 		void				setIPaddress(const std::string& new_ip);
-		void				incrementMessagesSended();
+		bool				checkRegistration();
+		void				reply(std::string message);
 };
 
 #endif

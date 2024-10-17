@@ -6,7 +6,7 @@
 /*   By: nsouchal <nsouchal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 13:23:42 by tnicolau          #+#    #+#             */
-/*   Updated: 2024/10/16 16:04:06 by nsouchal         ###   ########.fr       */
+/*   Updated: 2024/10/17 16:03:43 by nsouchal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,17 +14,12 @@
 
 Client::Client()
 {
-	_messagesSended = 0;
+	_nickname = "*";
 }
 
 const int		&Client::getFd()
 {
 	return _fd;
-}
-
-const int		&Client::getMessagesSended()
-{
-	return _messagesSended;
 }
 
 const std::string	&Client::getNickname()
@@ -99,7 +94,16 @@ void	Client::setTrueRegistration()
 	_registrationChecked = true;
 }
 
-void	Client::incrementMessagesSended()
+bool	Client::checkRegistration()
 {
-	_messagesSended++;
+	if (_username.empty() || _nickname.empty() || _password.empty() || _realname.empty())
+		return false;
+	return true;
+}
+
+void	Client::reply(std::string message)
+{
+	std::string	final_msg = ":ft_irc " + message;
+	
+	send(_fd, final_msg.c_str(), final_msg.size(), 0);
 }

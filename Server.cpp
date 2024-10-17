@@ -6,11 +6,12 @@
 /*   By: nsouchal <nsouchal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 12:56:29 by tnicolau          #+#    #+#             */
-/*   Updated: 2024/10/16 16:16:40 by nsouchal         ###   ########.fr       */
+/*   Updated: 2024/10/17 17:04:51 by nsouchal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
+#include "numerics.hpp"
 
 bool	Server::_signal = false;
 
@@ -149,21 +150,39 @@ void	Server::capabilityNegociation(const std::string& message)
 	// std::cout << "CAP !!!" << std::endl;
 }
 
-void	Server::password(const std::string& message)
+void	Server::password(const std::string& message, Client *client)
 {
-	(void)message;
-	// std::cout << "PASSWORD !!!" << std::endl;
+	int			pos;
+	std::string	password_sent;
+	
+	pos = message.find(" ");
+	password_sent = message.substr(pos + 1);
+	std::cout << _password << "|" << std::endl;
+	std::cout << password_sent << "|" << std::endl;
+	if (client->checkRegistration())
+		client->reply(ERR_ALREADYREGISTERED(client->getNickname(), "PASS"));
+	else if (password_sent == _password)
+		client->setPassword(password_sent);
+	else
+		client->reply(ERR_PASSWDMISMATCH(client->getNickname(), "PASS"));
 }
 
-void	Server::nickname(const std::string& message)
+void	Server::nickname(const std::string& message, Client *client)
 {
-	(void)message;
-	// std::cout << "NICKNAME !!!" << std::endl;
+	int			pos;
+	std::string	nickname_sent;
+	
+	pos = message.find(" ");
+	nickname_sent = message.substr(pos + 1);
+	client->setNick(nickname_sent);
+	if (!(client->getRealname().empty()) && !(client->getUsername().empty()))
+		client->setTrueRegistration();
 }
 
-void	Server::user(const std::string& message)
+void	Server::user(const std::string& message, Client *client)
 {
 	(void)message;
+	(void)client;
 	// std::cout << "USER !!!" << std::endl;
 }
 
@@ -177,52 +196,48 @@ Client	*Server::findClient(int fd)
 	return NULL;
 }
 
-void	Server::parseMessage(char* message, int fd)
+void	Server::parseMessage(const std::string& message, int fd)
 {
 	std::cout << "Client " << fd << ", data: " << message << std::endl;
+	std::string			command;
 	std::istringstream	reader(message);
-	std::string line, value;
-	findClient(fd)->incrementMessagesSended();
+	std::string 		line, value;
+	Client				*current_client = findClient(fd);
 	
 	while (std::getline(reader, line))
 	{
-		if (line.size() > 1 && line[line.size() - 1] == '\r')
-		{
-			if (findClient(fd)->getRegistration())
+		std::cout << "line " << line << std::endl;
+		// if (line.size() > 1 && line[line.size() - 1] == '\r')
+		// {
+			command = line.substr(0, message.find(" "));
+			std::cout << "commande " << command << "|"<< std::endl;
+			if (command != "PASS" && command != "CAP")
 			{
-				//ici check des commandes autres que CAP PASS NICK USER
-				checkCommand(line);
+				if (current_client->getPassword().empty())
+					current_client->reply(ERR_NEEDMOREPARAMS(current_client->getNickname(), command));
+				else
+					checkCommand(line, current_client);
 			}
-			else if (findClient(fd)->getMessagesSended() == 1)
-				checkCommand(line);
-			else if (findClient(fd)->getMessagesSended() == 2)
-			{
-				checkCommand(line);
-				//check si NICK PASS USER sont enregistres et update booleen
-			}
-			else if (!findClient(fd)->getRegistration() && findClient(fd)->getMessagesSended() < 5)
-			{
-				checkCommand(line);
-				//check si NICK PASS USER sont enregistres et update booleen
-				//si 4 passage et toujours false deconnection du client
-			}	
-		}
+			else if (command == "PASS")
+				password(line, current_client);
+		// }
 	}
 }
 
-void	Server::checkCommand(const std::string& message)
+void	Server::checkCommand(const std::string& message, Client *current_client)
 {
 	std::string	command = message.substr(0, message.find(" "));
+	(void)current_client;
 
-	void(Server::*function_ptr[])(const std::string&) = {&Server::capabilityNegociation, &Server::password, &Server::nickname, &Server::user};
-	std::string commands[] = {"CAP", "PASS", "NICK", "USER"};
+	void(Server::*function_ptr[])(const std::string&, Client *) = {&Server::nickname, &Server::user};
+	std::string commands[] = {"NICK", "USER"};
 	bool	found = false;
 
 	for (size_t i = 0; i < commands->length() + 1; i++)
 	{
 		if (commands[i] == command)
 		{
-			(this->*function_ptr[i])(message);
+			(this->*function_ptr[i])(message, current_client);
 			found = true;
 			break ;
 		}
