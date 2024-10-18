@@ -6,7 +6,7 @@
 /*   By: tnicolau <tnicolau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 12:56:31 by tnicolau          #+#    #+#             */
-/*   Updated: 2024/10/18 14:15:47 by tnicolau         ###   ########.fr       */
+/*   Updated: 2024/10/18 15:47:57 by tnicolau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,10 +54,10 @@ class	Server
 		void	parseMessage(const std::string& message, int fd);
 		void	checkCommand(const std::string& message, Client *current_client);
 
-		void	capabilityNegociation(const std::string& message);
 		void	password(const std::string& message, Client *client);
 		void	nickname(const std::string& message, Client *client);
 		void	user(const std::string& message, Client *client);
+		void	motd(const std::string& message, Client *client);
 
 		Client	*findClient(int fd);
 };

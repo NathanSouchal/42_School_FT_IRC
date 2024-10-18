@@ -6,7 +6,7 @@
 /*   By: tnicolau <tnicolau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 12:56:29 by tnicolau          #+#    #+#             */
-/*   Updated: 2024/10/18 14:16:16 by tnicolau         ###   ########.fr       */
+/*   Updated: 2024/10/18 15:53:30 by tnicolau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,15 +21,14 @@ Server::Server(int port, std::string password) : _port(port), _password(password
 	time(&timestamp);
 	_creationTime = ctime(&timestamp);
 	std::cout << "Password : " << _password << "\nPort : " << _port << std::endl;
+	ServerSocket();
 	ServerProgram();
 }
 
 Server::~Server()
 {
 	for (size_t i = 0; i < clients.size(); ++i)
-	{
 		delete clients[i];
-	}
 }
 
 std::string	Server::getCreationTime()
@@ -144,18 +143,10 @@ void	Server::ReceiveData(int fd)
 		close(fd);
 	}
 	else
-	{ //-> print the received data
+	{
 		buffer[bytes] = '\0';
 		parseMessage(buffer, fd);
-		//send(fd, "001 tnicolau :Welcome to the choucroute Network, tnicolau!tnicolau@localhost\r\n", 79, 0);
-		//here you can add your code to process the received data: parse, check, authenticate, handle the command, etc...
 	}
-}
-
-void	Server::capabilityNegociation(const std::string& message)
-{
-	(void)message;
-	// std::cout << "CAP !!!" << std::endl;
 }
 
 void	Server::password(const std::string& message, Client *client)
@@ -171,37 +162,6 @@ void	Server::password(const std::string& message, Client *client)
 		client->setPassword(password_sent);
 	else
 		client->reply(ERR_PASSWDMISMATCH(client->getNickname(), "PASS"));
-}
-
-void	Server::nickname(const std::string& message, Client *client)
-{
-	int			pos;
-	std::string	nickname_sent;
-
-	pos = message.find(" ");
-	nickname_sent = message.substr(pos + 1);
-	client->setNick(nickname_sent);
-	if (!(client->getRealname().empty()) && !(client->getUsername().empty()))
-		client->setTrueRegistration();
-}
-
-void	Server::user(const std::string& message, Client *client)
-{
-	int			pos;
-	int			pos2;
-	std::string	username_sent;
-	std::string	realname_sent;
-
-	pos = message.find(32);
-	pos2 = (message.substr(pos + 1)).find(32);
-	username_sent = message.substr(pos + 1, pos2);
-	client->setUsername(username_sent);
-	pos = message.find(":");
-	realname_sent = message.substr(pos + 1);
-	client->setRealname(realname_sent);
-	std::cout << "username = " << client->getUsername() << " | realname = " << client->getRealname() << std::endl;
-	if (!(client->getNickname().empty()))
-		client->setTrueRegistration();
 }
 
 Client	*Server::findClient(int fd)
@@ -242,32 +202,8 @@ void	Server::parseMessage(const std::string& message, int fd)
 	}
 }
 
-void	Server::checkCommand(const std::string& message, Client *current_client)
-{
-	std::string	command = message.substr(0, message.find(" "));
-	(void)current_client;
-
-	void(Server::*function_ptr[])(const std::string&, Client *) = {&Server::nickname, &Server::user};
-	std::string commands[] = {"NICK", "USER"};
-	bool	found = false;
-
-	for (size_t i = 0; i < commands->length() + 1; i++)
-	{
-		if (commands[i] == command)
-		{
-			(this->*function_ptr[i])(message, current_client);
-			found = true;
-			break ;
-		}
-	}
-	if (!found)
-		std::cerr << "Command " << message << " does not exist, sorry" << std::endl;
-	return ;
-}
-
 void	Server::ServerProgram()
 {
-	ServerSocket();
 	while (!_signal)
 	{
 		//Attend qu'il se produise un evenement sur un des fds

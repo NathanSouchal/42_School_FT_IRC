@@ -6,7 +6,7 @@
 /*   By: tnicolau <tnicolau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 10:10:09 by tnicolau          #+#    #+#             */
-/*   Updated: 2024/10/16 10:00:09 by tnicolau         ###   ########.fr       */
+/*   Updated: 2024/10/18 15:49:57 by tnicolau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ int	checkInput(char* port)
 {
 	char *end;
 	long	res = strtol(port, &end, 10);
-	std::cout << res << std::endl;
+
 	if (res < 1024 || res > 65535 || *end != '\0')
 		throw std::invalid_argument("Invalid port");
 	return res;
