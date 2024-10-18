@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   numerics.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tnicolau <tnicolau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nsouchal <nsouchal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 15:09:25 by nsouchal          #+#    #+#             */
-/*   Updated: 2024/10/18 13:43:00 by tnicolau         ###   ########.fr       */
+/*   Updated: 2024/10/18 14:39:18 by nsouchal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,5 +25,5 @@
 #define RPL_YOURHOST(nick) (std::string(":") + SERVER + " 002 " + std::string(nick) + " :Your host is " + SERVER + ", running version 42\r\n")
 #define RPL_CREATED(nick, date) (std::string(":") + SERVER + " 003 " + std::string(nick) + " :This server was created " + std::string(date) + "\r\n")
 #define RPL_MYINFO(nick, usermodes, channelmodes) (std::string(":") + SERVER + " 004 " + std::string(nick) + " " + SERVER + " version 42 " + std::string(usermodes) + " " + std::string(channelmodes) + "\r\n")
-#define RPL_ISUPPORT(nick, token) (std::string(":") + SERVER + " 005 " + std::string(nick) + " " + std::string(token) " :are supported by this server" + "\r\n")
+#define RPL_ISUPPORT(nick, token) (std::string(":") + SERVER + " 005 " + std::string(nick) + " " + std::string(token) + " :are supported by this server" + "\r\n")
 #endif

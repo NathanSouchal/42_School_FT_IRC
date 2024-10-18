@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tnicolau <tnicolau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nsouchal <nsouchal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 13:23:42 by tnicolau          #+#    #+#             */
-/*   Updated: 2024/10/18 14:16:33 by tnicolau         ###   ########.fr       */
+/*   Updated: 2024/10/18 14:38:04 by nsouchal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,9 +107,11 @@ void	Client::setTrueRegistration()
 {
 	_registrationChecked = true;
 	std::cout << "Registered!!" << std::endl;
-	reply(RPL_WELCOME(getNickname(), getUsername(), getIPaddress()));
-	reply(RPL_YOURHOST(getNickname()));
-	reply(RPL_CREATED(getNickname(), _serverRef.getCreationTime()));
+	reply(RPL_WELCOME(_nickname, _username, _IPaddress));
+	reply(RPL_YOURHOST(_nickname));
+	reply(RPL_CREATED(_nickname, _serverRef.getCreationTime()));
+	reply(RPL_MYINFO(_nickname, "o", "t"));
+	reply(RPL_ISUPPORT(_nickname, "PREFIX=(ov)@+ CHANTYPES=#& CHANMODES=b,k,l,imnt"));
 }
 
 bool	Client::checkRegistration()
