@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nsouchal <nsouchal@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tnicolau <tnicolau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 12:56:29 by tnicolau          #+#    #+#             */
-/*   Updated: 2024/10/18 10:40:22 by nsouchal         ###   ########.fr       */
+/*   Updated: 2024/10/18 14:16:16 by tnicolau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,9 @@ bool	Server::_signal = false;
 
 Server::Server(int port, std::string password) : _port(port), _password(password), serverSocketFd(0)
 {
+	time_t	timestamp;
+	time(&timestamp);
+	_creationTime = ctime(&timestamp);
 	std::cout << "Password : " << _password << "\nPort : " << _port << std::endl;
 	ServerProgram();
 }
@@ -26,7 +29,12 @@ Server::~Server()
 	for (size_t i = 0; i < clients.size(); ++i)
 	{
 		delete clients[i];
-	}	
+	}
+}
+
+std::string	Server::getCreationTime()
+{
+	return _creationTime;
 }
 
 void	Server::SignalHandler(int signal)
@@ -79,7 +87,7 @@ void	Server::ServerSocket()
 
 void	Server::AcceptNewClient()
 {
-	Client	*client = new Client();
+	Client	*client = new Client(*this);
 	sockaddr_in	clientAddress;
 	pollfd	newPoll;
 	socklen_t	len = sizeof(clientAddress);
@@ -154,8 +162,8 @@ void	Server::password(const std::string& message, Client *client)
 {
 	int			pos;
 	std::string	password_sent;
-	
-	pos = message.find(" ");
+
+	pos = message.find(32);
 	password_sent = message.substr(pos + 1);
 	if (client->checkRegistration())
 		client->reply(ERR_ALREADYREGISTERED(client->getNickname(), "PASS"));
@@ -169,7 +177,7 @@ void	Server::nickname(const std::string& message, Client *client)
 {
 	int			pos;
 	std::string	nickname_sent;
-	
+
 	pos = message.find(" ");
 	nickname_sent = message.substr(pos + 1);
 	client->setNick(nickname_sent);
@@ -183,7 +191,7 @@ void	Server::user(const std::string& message, Client *client)
 	int			pos2;
 	std::string	username_sent;
 	std::string	realname_sent;
-	
+
 	pos = message.find(32);
 	pos2 = (message.substr(pos + 1)).find(32);
 	username_sent = message.substr(pos + 1, pos2);
@@ -213,14 +221,14 @@ void	Server::parseMessage(const std::string& message, int fd)
 	std::istringstream	reader(message);
 	std::string 		line, value;
 	Client				*current_client = findClient(fd);
-	
+
 	while (std::getline(reader, line))
 	{
 		// std::cout << "line " << line << std::endl;
 		if (!line.empty() && line[line.size() - 1] == '\r')
-    		line.erase(line.size() - 1);
+			line.erase(line.size() - 1);
 		std::cout << "line " << line << std::endl;
-		command = line.substr(0, message.find(32));
+		command = line.substr(0, line.find(32));
 		std::cout << "commande " << command << "|"<< std::endl;
 		if (command != "PASS" && command != "CAP")
 		{

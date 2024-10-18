@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nsouchal <nsouchal@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tnicolau <tnicolau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 13:23:09 by tnicolau          #+#    #+#             */
-/*   Updated: 2024/10/17 15:42:55 by nsouchal         ###   ########.fr       */
+/*   Updated: 2024/10/18 14:01:56 by tnicolau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,10 @@
 #include <ctime>
 #include <sys/socket.h>
 #include <sys/types.h>
+#include "numerics.hpp"
+#include "Server.hpp"
+
+class	Server;
 
 class	Client
 {
@@ -31,13 +35,16 @@ class	Client
 		std::string	_realname;
 		std::string	_password;
 		bool		_registrationChecked;
+		Server&		_serverRef;
 	public:
-		Client();
+		Client(Server& server);
 		const int			&getFd();
+		const std::string	&getIPaddress();
 		const std::string	&getNickname();
 		const std::string	&getUsername();
 		const std::string	&getRealname();
 		const std::string	&getPassword();
+		Server&				getServerRef();
 		const bool			&getRegistration();
 		void				setFd(const int& new_fd);
 		void				setNick(const std::string &nickname);

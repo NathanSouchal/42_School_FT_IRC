@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nsouchal <nsouchal@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tnicolau <tnicolau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 12:56:31 by tnicolau          #+#    #+#             */
-/*   Updated: 2024/10/17 16:31:22 by nsouchal         ###   ########.fr       */
+/*   Updated: 2024/10/18 14:15:47 by tnicolau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@
 #include <vector>
 #include "Client.hpp"
 
+class	Client;
+
 class	Server
 {
 	private:
@@ -37,9 +39,11 @@ class	Server
 		std::vector<Client *>	clients;
 		std::vector<pollfd>	fds;
 		static bool	_signal;
+		std::string	_creationTime;
 	public:
 		Server(int port, std::string password);
 		~Server();
+		std::string	getCreationTime();
 		void	ServerSocket();
 		void	AcceptNewClient();
 		void	ServerProgram();
@@ -54,7 +58,7 @@ class	Server
 		void	password(const std::string& message, Client *client);
 		void	nickname(const std::string& message, Client *client);
 		void	user(const std::string& message, Client *client);
-		
+
 		Client	*findClient(int fd);
 };
 

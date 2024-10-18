@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nsouchal <nsouchal@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tnicolau <tnicolau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 13:23:42 by tnicolau          #+#    #+#             */
-/*   Updated: 2024/10/18 11:19:16 by nsouchal         ###   ########.fr       */
+/*   Updated: 2024/10/18 14:16:33 by tnicolau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Client.hpp"
 
-Client::Client()
+Client::Client(Server& server) : _serverRef(server)
 {
 	_nickname = "*";
 }
@@ -20,6 +20,11 @@ Client::Client()
 const int		&Client::getFd()
 {
 	return _fd;
+}
+
+const std::string	&Client::getIPaddress()
+{
+	return _IPaddress;
 }
 
 const std::string	&Client::getNickname()
@@ -48,6 +53,10 @@ const bool	&Client::getRegistration()
 	return _registrationChecked;
 }
 
+Server		&Client::getServerRef()
+{
+	return _serverRef;
+}
 
 void	Client::setFd(const int& new_fd)
 {
@@ -89,10 +98,18 @@ void	Client::setRealname(const std::string &realname)
 	_realname = realname;
 }
 
+void	Client::reply(std::string message)
+{
+	send(_fd, message.c_str(), message.size(), 0);
+}
+
 void	Client::setTrueRegistration()
 {
 	_registrationChecked = true;
 	std::cout << "Registered!!" << std::endl;
+	reply(RPL_WELCOME(getNickname(), getUsername(), getIPaddress()));
+	reply(RPL_YOURHOST(getNickname()));
+	reply(RPL_CREATED(getNickname(), _serverRef.getCreationTime()));
 }
 
 bool	Client::checkRegistration()
@@ -100,9 +117,4 @@ bool	Client::checkRegistration()
 	if (_username.empty() || _nickname.empty() || _password.empty() || _realname.empty())
 		return false;
 	return true;
-}
-
-void	Client::reply(std::string message)
-{
-	send(_fd, message.c_str(), message.size(), 0);
 }
