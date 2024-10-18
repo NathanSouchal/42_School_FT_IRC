@@ -6,7 +6,7 @@
 /*   By: nsouchal <nsouchal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 13:23:42 by tnicolau          #+#    #+#             */
-/*   Updated: 2024/10/17 16:03:43 by nsouchal         ###   ########.fr       */
+/*   Updated: 2024/10/18 11:19:16 by nsouchal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,7 @@ void	Client::setRealname(const std::string &realname)
 void	Client::setTrueRegistration()
 {
 	_registrationChecked = true;
+	std::cout << "Registered!!" << std::endl;
 }
 
 bool	Client::checkRegistration()
@@ -103,7 +104,5 @@ bool	Client::checkRegistration()
 
 void	Client::reply(std::string message)
 {
-	std::string	final_msg = ":ft_irc " + message;
-	
-	send(_fd, final_msg.c_str(), final_msg.size(), 0);
+	send(_fd, message.c_str(), message.size(), 0);
 }

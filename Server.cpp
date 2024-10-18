@@ -6,7 +6,7 @@
 /*   By: nsouchal <nsouchal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 12:56:29 by tnicolau          #+#    #+#             */
-/*   Updated: 2024/10/17 17:04:51 by nsouchal         ###   ########.fr       */
+/*   Updated: 2024/10/18 10:40:22 by nsouchal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,8 +157,6 @@ void	Server::password(const std::string& message, Client *client)
 	
 	pos = message.find(" ");
 	password_sent = message.substr(pos + 1);
-	std::cout << _password << "|" << std::endl;
-	std::cout << password_sent << "|" << std::endl;
 	if (client->checkRegistration())
 		client->reply(ERR_ALREADYREGISTERED(client->getNickname(), "PASS"));
 	else if (password_sent == _password)
@@ -181,9 +179,21 @@ void	Server::nickname(const std::string& message, Client *client)
 
 void	Server::user(const std::string& message, Client *client)
 {
-	(void)message;
-	(void)client;
-	// std::cout << "USER !!!" << std::endl;
+	int			pos;
+	int			pos2;
+	std::string	username_sent;
+	std::string	realname_sent;
+	
+	pos = message.find(32);
+	pos2 = (message.substr(pos + 1)).find(32);
+	username_sent = message.substr(pos + 1, pos2);
+	client->setUsername(username_sent);
+	pos = message.find(":");
+	realname_sent = message.substr(pos + 1);
+	client->setRealname(realname_sent);
+	std::cout << "username = " << client->getUsername() << " | realname = " << client->getRealname() << std::endl;
+	if (!(client->getNickname().empty()))
+		client->setTrueRegistration();
 }
 
 Client	*Server::findClient(int fd)
@@ -206,21 +216,21 @@ void	Server::parseMessage(const std::string& message, int fd)
 	
 	while (std::getline(reader, line))
 	{
+		// std::cout << "line " << line << std::endl;
+		if (!line.empty() && line[line.size() - 1] == '\r')
+    		line.erase(line.size() - 1);
 		std::cout << "line " << line << std::endl;
-		// if (line.size() > 1 && line[line.size() - 1] == '\r')
-		// {
-			command = line.substr(0, message.find(" "));
-			std::cout << "commande " << command << "|"<< std::endl;
-			if (command != "PASS" && command != "CAP")
-			{
-				if (current_client->getPassword().empty())
-					current_client->reply(ERR_NEEDMOREPARAMS(current_client->getNickname(), command));
-				else
-					checkCommand(line, current_client);
-			}
-			else if (command == "PASS")
-				password(line, current_client);
-		// }
+		command = line.substr(0, message.find(32));
+		std::cout << "commande " << command << "|"<< std::endl;
+		if (command != "PASS" && command != "CAP")
+		{
+			if (current_client->getPassword().empty())
+				current_client->reply(ERR_NEEDMOREPARAMS(current_client->getNickname(), command));
+			else
+				checkCommand(line, current_client);
+		}
+		else if (command == "PASS")
+			password(line, current_client);
 	}
 }
 
