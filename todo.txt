@@ -1,0 +1,1 @@
+verifier lors de la registration si nick user realname sont deja utilises

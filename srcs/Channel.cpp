@@ -6,7 +6,7 @@
 /*   By: nsouchal <nsouchal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/21 12:40:01 by nsouchal          #+#    #+#             */
-/*   Updated: 2024/10/21 13:18:04 by nsouchal         ###   ########.fr       */
+/*   Updated: 2024/10/21 16:13:26 by nsouchal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,16 @@ const std::string   &Channel::getName()
 const std::string   &Channel::getKey()
 {
     return (_key);
+}
+
+const bool  Channel::getInviteOnly()
+{
+    return _inviteOnly;
+}
+
+void    Channel::setInviteOnly()
+{
+    _inviteOnly = !_inviteOnly;
 }
 
 void    Channel::setKey(const std::string &key)

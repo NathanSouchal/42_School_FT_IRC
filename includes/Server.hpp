@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tnicolau <tnicolau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nsouchal <nsouchal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 12:56:31 by tnicolau          #+#    #+#             */
-/*   Updated: 2024/10/21 15:14:27 by tnicolau         ###   ########.fr       */
+/*   Updated: 2024/10/21 15:48:13 by nsouchal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,7 @@ class	Server
 		void	motd(const std::string& message, Client *client);
 		void	join(const std::string& message, Client *client);
 		bool	checkAddClientToChannel(const std::string &name, const std::string &key, Client *client);
+		void	createChannel(const std::string &name, const std::string &key, Client *client);
 		void	privmsg(const std::string& message, Client *client);
 		void	kick(const std::string& message, Client *client);
 		void	invite(const std::string& message, Client *client);
