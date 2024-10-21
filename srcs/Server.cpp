@@ -3,15 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tnicolau <tnicolau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nsouchal <nsouchal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 12:56:29 by tnicolau          #+#    #+#             */
-/*   Updated: 2024/10/18 15:53:30 by tnicolau         ###   ########.fr       */
+/*   Updated: 2024/10/21 13:07:25 by nsouchal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 #include "numerics.hpp"
+#include "Client.hpp"
+#include "Channel.hpp"
 
 bool	Server::_signal = false;
 
@@ -221,4 +223,9 @@ void	Server::ServerProgram()
 		}
 	}
 	CloseFds();
+}
+
+void	Server::addChannel(Channel *channel)
+{
+	serverChannels.push_back(channel);
 }

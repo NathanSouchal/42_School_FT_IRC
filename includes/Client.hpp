@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tnicolau <tnicolau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nsouchal <nsouchal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 13:23:09 by tnicolau          #+#    #+#             */
-/*   Updated: 2024/10/18 14:01:56 by tnicolau         ###   ########.fr       */
+/*   Updated: 2024/10/21 12:57:12 by nsouchal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 #include "numerics.hpp"
-#include "Server.hpp"
 
 class	Server;
 

@@ -3,14 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tnicolau <tnicolau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nsouchal <nsouchal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 13:23:42 by tnicolau          #+#    #+#             */
-/*   Updated: 2024/10/18 15:19:53 by tnicolau         ###   ########.fr       */
+/*   Updated: 2024/10/21 12:57:47 by nsouchal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Client.hpp"
+#include "Server.hpp"
 
 Client::Client(Server& server) : _serverRef(server)
 {

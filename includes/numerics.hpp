@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   numerics.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tnicolau <tnicolau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nsouchal <nsouchal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 15:09:25 by nsouchal          #+#    #+#             */
-/*   Updated: 2024/10/18 15:32:05 by tnicolau         ###   ########.fr       */
+/*   Updated: 2024/10/21 10:15:50 by nsouchal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,5 +35,5 @@
 
 #define RPL_MOTD(nick, motd) (std::string(":") + SERVER + " 372 " + std::string(nick) + " :" + std::string(motd) + "\r\n")
 #define RPL_MOTDSTART(nick) (std::string(":") + SERVER + " 375 " + std::string(nick) + " :- " + SERVER + " Message of the day - \r\n")
-#define RPL_ENDOFMOTD(nick) (std::string(":") + SERVER + " 376 " + std::string(nick) + " :End of /MOTD command.\r\n")s
+#define RPL_ENDOFMOTD(nick) (std::string(":") + SERVER + " 376 " + std::string(nick) + " :End of /MOTD command.\r\n")
 #endif

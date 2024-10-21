@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tnicolau <tnicolau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nsouchal <nsouchal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 12:56:31 by tnicolau          #+#    #+#             */
-/*   Updated: 2024/10/18 15:47:57 by tnicolau         ###   ########.fr       */
+/*   Updated: 2024/10/21 13:06:00 by nsouchal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,9 +25,10 @@
 #include <unistd.h>
 #include <csignal>
 #include <vector>
-#include "Client.hpp"
 
 class	Client;
+
+class	Channel;
 
 class	Server
 {
@@ -40,6 +41,7 @@ class	Server
 		std::vector<pollfd>	fds;
 		static bool	_signal;
 		std::string	_creationTime;
+		std::vector<Channel *> serverChannels;
 	public:
 		Server(int port, std::string password);
 		~Server();
@@ -58,8 +60,17 @@ class	Server
 		void	nickname(const std::string& message, Client *client);
 		void	user(const std::string& message, Client *client);
 		void	motd(const std::string& message, Client *client);
+		void	join(const std::string& message, Client *client);
+		void	privmsg(const std::string& message, Client *client);
+		void	kick(const std::string& message, Client *client);
+		void	invite(const std::string& message, Client *client);
+		void	topic(const std::string& message, Client *client);
+		void	mode(const std::string& message, Client *client);
+		void	lusers(const std::string& message, Client *client);
 
 		Client	*findClient(int fd);
+
+		void	addChannel(Channel *channel);
 };
 
 #endif
