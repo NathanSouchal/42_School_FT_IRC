@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   commands.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nsouchal <nsouchal@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tnicolau <tnicolau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 15:44:38 by tnicolau          #+#    #+#             */
-/*   Updated: 2024/10/21 14:18:21 by nsouchal         ###   ########.fr       */
+/*   Updated: 2024/10/21 15:37:48 by tnicolau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 #include "Client.hpp"
+#include "Channel.hpp"
 
 void	Server::nickname(const std::string& message, Client *client)
 {
@@ -55,7 +56,30 @@ void	Server::lusers(const std::string& message, Client *client)
 {
 	(void)message;
 	(void)client;
-	
+
+}
+
+bool	Server::checkAddClientToChannel(const std::string &name, const std::string &key, Client *client)
+{
+	for (size_t i = 0; i < serverChannels.size(); ++i)
+	{
+		if (serverChannels[i]->getName() == name)
+		{
+			if (!serverChannels[i]->getKey().empty())
+			{
+				if (serverChannels[i]->getKey() == key)
+				{
+					serverChannels[i]->addChannelClient(client);
+				}
+				else
+					client->reply(ERR_BADCHANNELKEY(client->getNickname(), name));
+			}
+			else
+				serverChannels[i]->addChannelClient(client);
+			return true;
+		}
+	}
+	return false;
 }
 
 void	Server::join(const std::string& message, Client *client)
@@ -67,6 +91,7 @@ void	Server::join(const std::string& message, Client *client)
 	std::vector<std::string>	vecChannelKeys;
 	std::stringstream			ss(channelNames);
 	std::string					temp;
+	std::string					key;
 
 	(void)client;
 	while (std::getline(ss, temp, ','))
@@ -81,6 +106,17 @@ void	Server::join(const std::string& message, Client *client)
 	{
 		if (!temp.empty())
 			vecChannelKeys.push_back(temp);
+	}
+
+	//
+	for (size_t i = 0; i < vecChannelNames.size(); ++i)
+	{
+		if (i < vecChannelKeys.size())
+			key = vecChannelKeys[i];
+		if (!checkAddClientToChannel(vecChannelNames[i], key, client))
+		{
+			
+		}
 	}
 }
 
