@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: tnicolau <tnicolau@student.42.fr>          +#+  +:+       +#+         #
+#    By: nsouchal <nsouchal@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/18 15:55:18 by tnicolau          #+#    #+#              #
-#    Updated: 2024/10/18 15:56:51 by tnicolau         ###   ########.fr        #
+#    Updated: 2024/10/21 09:57:44 by nsouchal         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,21 +14,24 @@ NAME = ircserv
 CC = c++
 FLAGS = -Wall -Wextra -Werror -std=c++98
 
-HEADER =	Server.hpp \
-			Client.hpp \
-			numerics.hpp
+DIR_SRCS 		= 	srcs/
+DIR_HEADERS		=	includes/
 
-SRC =	main.cpp \
-		Server.cpp \
-		Client.cpp \
-		commands.cpp
+HEADER =	$(DIR_HEADERS)Server.hpp \
+			$(DIR_HEADERS)Client.hpp \
+			$(DIR_HEADERS)numerics.hpp
+
+SRC =	$(DIR_SRCS)main.cpp \
+		$(DIR_SRCS)Server.cpp \
+		$(DIR_SRCS)Client.cpp \
+		$(DIR_SRCS)commands.cpp
 
 OBJS_DIR = .objs/
 OBJS = $(patsubst %.cpp, $(OBJS_DIR)%.o, $(SRC))
 
 $(OBJS_DIR)%.o: %.cpp $(HEADER)
 				@mkdir -p $(@D)
-				$(CC) $(FLAGS) -c $< -o $@
+				$(CC) $(FLAGS) -c $< -o $@ -Iincludes
 
 $(NAME):	$(OBJS) $(HEADER)
 			$(CC) $(OBJS) $(FLAGS) -o $(NAME)
