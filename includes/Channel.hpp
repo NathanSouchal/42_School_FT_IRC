@@ -6,7 +6,7 @@
 /*   By: tnicolau <tnicolau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/21 12:34:13 by nsouchal          #+#    #+#             */
-/*   Updated: 2024/10/22 15:07:05 by tnicolau         ###   ########.fr       */
+/*   Updated: 2024/10/22 17:02:45 by tnicolau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,24 +29,28 @@ class Channel
 		std::string				_topicCreator;
 		std::string				_topicCreationTime;
 		bool					_inviteOnly;
+		bool					_modeT;
 	public:
 		Channel(const std::string &name);
 		void				addChannelClient(Client *client, const std::string& name);
 		void				addChannelOperator(Client *client);
 
 		Client*				getChannelOperator(const std::string& nickname);
+		Client*				getChannelClient(const std::string& nickname);
 		const std::string	&getName();
 		const std::string	&getKey();
 		bool				getInviteOnly();
 		std::string			getChannelTopic();
 		std::string			getTopicCreator();
 		std::string			getTopicCreationTime();
+		bool				getModeT();
 
 		void				setKey(const std::string &key);
 		void				setInviteOnly();
 		void				setChannelTopic(const std::string& topic);
 		void				setTopicCreator(const std::string& creator);
 		void				setTopicCreationTime(const std::string& creationTime);
+		void				setModeT();
 };
 
 #endif

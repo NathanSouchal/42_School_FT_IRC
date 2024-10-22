@@ -6,7 +6,7 @@
 /*   By: tnicolau <tnicolau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 15:44:38 by tnicolau          #+#    #+#             */
-/*   Updated: 2024/10/22 16:30:45 by tnicolau         ###   ########.fr       */
+/*   Updated: 2024/10/22 17:21:40 by tnicolau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -202,8 +202,7 @@ void	Server::topic(const std::string& message, Client *client)
 	}
 	if (!findChannel(channel))
 		client->reply(ERR_NOSUCHCHANNEL(client->getNickname(), channel));
-	//si -t active les non-operateurs peuvent aussi mofifier le topic
-	else if (!findUserInChannel(client->getNickname(), channel))
+	else if (!findModeTClientInChannel(client->getNickname(), channel))
 		client->reply(ERR_NOTONCHANNEL(client->getNickname(), channel));
 	else
 	{
@@ -220,10 +219,23 @@ void	Server::topic(const std::string& message, Client *client)
 				client->reply(RPL_TOPICWHOTIME(client->getNickname(), channel, channelCopy->getTopicCreator(), channelCopy->getTopicCreationTime()));
 			}
 		}
-		//else
-		// TOPIC #test :Nouveau topic : Tente de changer le topic du canal #test.
-		// TOPIC #test : : Tente d'effacer le topic du canal #test.
-
+		else
+		{
+			//si -t non-active les non-operateurs peuvent pas mofifier le topic
+			if (!channelCopy->getModeT())
+				client->reply(ERR_CHANOPRIVSNEEDED(client->getNickname(), channel));
+			else
+			{
+				if (topic == ":")
+					channelCopy->setChannelTopic("");
+				else
+					channelCopy->setChannelTopic(topic);
+				channelCopy->setTopicCreator(client->getNickname());
+				channelCopy->setTopicCreationTime(getTimestamp());
+				//ici envoyer le nouveau topic a tous les membres du channel
+				//send(:nickname!username@hostname TOPIC #channel :New topic)
+			}
+		}
 	}
 	std::cout << "channel : " << channel << std::endl;
 }

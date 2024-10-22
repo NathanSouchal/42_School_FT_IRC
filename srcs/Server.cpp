@@ -6,7 +6,7 @@
 /*   By: tnicolau <tnicolau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 12:56:29 by tnicolau          #+#    #+#             */
-/*   Updated: 2024/10/22 16:30:57 by tnicolau         ###   ########.fr       */
+/*   Updated: 2024/10/22 17:07:46 by tnicolau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -270,14 +270,22 @@ Channel	*Server::findChannel(const std::string& channel)
 	return NULL;
 }
 
-bool	Server::findUserInChannel(const std::string& nickname, const std::string& channel)
+bool	Server::findModeTClientInChannel(const std::string& nickname, const std::string& channel)
 {
 	for (std::vector<Channel*>::iterator it = serverChannels.begin(); it != serverChannels.end(); ++it)
 	{
 		if ((*it)->getName() == channel)
 		{
-			if ((*it)->getChannelOperator(nickname))
-				return true;
+			if ((*it)->getModeT())
+			{
+				if ((*it)->getChannelClient(nickname))
+					return true;
+			}
+			else
+			{
+				if ((*it)->getChannelOperator(nickname))
+					return true;
+			}
 		}
 	}
 	return false;

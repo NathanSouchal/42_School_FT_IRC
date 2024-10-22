@@ -6,7 +6,7 @@
 /*   By: tnicolau <tnicolau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/21 12:40:01 by nsouchal          #+#    #+#             */
-/*   Updated: 2024/10/22 16:06:43 by tnicolau         ###   ########.fr       */
+/*   Updated: 2024/10/22 17:05:23 by tnicolau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,16 @@ Client*		Channel::getChannelOperator(const std::string& nickname)
 	return NULL;
 }
 
+Client*		Channel::getChannelClient(const std::string& nickname)
+{
+	for (std::vector<Client*>::iterator it = channelClients.begin(); it != channelClients.end(); ++it)
+	{
+		if ((*it)->getNickname() == nickname)
+			return *it;
+	}
+	return NULL;
+}
+
 std::string		Channel::getChannelTopic()
 {
 	return this->_channelTopic;
@@ -81,6 +91,16 @@ std::string		Channel::getTopicCreator()
 std::string		Channel::getTopicCreationTime()
 {
 	return this->_topicCreationTime;
+}
+
+bool		Channel::getModeT()
+{
+	return this->_modeT;
+}
+
+void		Channel::setModeT()
+{
+	this->_modeT = !_modeT;
 }
 
 void		Channel::setChannelTopic(const std::string& topic)
