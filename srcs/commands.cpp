@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nsouchal <nsouchal@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tnicolau <tnicolau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 15:44:38 by tnicolau          #+#    #+#             */
-/*   Updated: 2024/10/21 16:50:16 by nsouchal         ###   ########.fr       */
+/*   Updated: 2024/10/22 09:52:23 by tnicolau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,11 @@ void	Server::nickname(const std::string& message, Client *client)
 	else
 	{
 		nickname_sent = message.substr(pos + 1);
+		if (findNickName(nickname_sent))
+		{
+			client->reply(ERR_NICKNAMEINUSE(nickname_sent));
+			return ;
+		}
 		client->setNick(nickname_sent);
 		if (!(client->getRealname().empty()) && !(client->getUsername().empty()))
 			client->setTrueRegistration();
@@ -41,7 +46,7 @@ void	Server::user(const std::string& message, Client *client)
 	else
 	{
 		size_t		pos2 =(message.substr(pos + 1)).find(32);
-		
+
 		if (pos2 == std::string::npos)
 			client->reply(ERR_NEEDMOREPARAMS(client->getNickname(), "USER"));
 		else
@@ -49,10 +54,15 @@ void	Server::user(const std::string& message, Client *client)
 			username_sent = message.substr(pos + 1, pos2);
 			client->setUsername(username_sent);
 			pos = message.find(":");
-			realname_sent = message.substr(pos + 1);
-			client->setRealname(realname_sent);
-			if (!(client->getNickname().empty()))
-				client->setTrueRegistration();
+			if (pos == std::string::npos)
+				client->reply(ERR_NEEDMOREPARAMS(client->getNickname(), "USER"));
+			else
+			{
+				realname_sent = message.substr(pos + 1);
+				client->setRealname(realname_sent);
+				if (!(client->getNickname().empty()))
+					client->setTrueRegistration();
+			}
 		}
 	}
 }
@@ -69,7 +79,6 @@ void	Server::lusers(const std::string& message, Client *client)
 {
 	(void)message;
 	(void)client;
-
 }
 
 bool	Server::checkAddClientToChannel(const std::string &name, const std::string &key, Client *client)
@@ -86,14 +95,12 @@ bool	Server::checkAddClientToChannel(const std::string &name, const std::string 
 			if (!serverChannels[i]->getKey().empty())
 			{
 				if (serverChannels[i]->getKey() == key)
-				{
-					serverChannels[i]->addChannelClient(client);
-				}
+					serverChannels[i]->addChannelClient(client, name);
 				else
 					client->reply(ERR_BADCHANNELKEY(client->getNickname(), name));
 			}
 			else
-				serverChannels[i]->addChannelClient(client);
+				serverChannels[i]->addChannelClient(client, name);
 			return true;
 		}
 	}
@@ -103,7 +110,9 @@ bool	Server::checkAddClientToChannel(const std::string &name, const std::string 
 void	Server::createChannel(const std::string &name, const std::string &key, Client *client)
 {
 	Channel *channel = new Channel(name);
-	channel->addChannelClient(client);
+	std::cout << "Channel " << name << " created !" << std::endl;
+	channel->addChannelClient(client, name);
+	std::cout << client->getNickname() << " added to channel " << name << " !" << std::endl;
 	channel->addChannelOperator(client);
 	channel->setKey(key);
 
@@ -121,7 +130,6 @@ void	Server::join(const std::string& message, Client *client)
 	std::string					temp;
 	std::string					key;
 
-	(void)client;
 	while (std::getline(ss, temp, ','))
 	{
 		if (!temp.empty())
@@ -178,7 +186,7 @@ void	Server::checkCommand(const std::string& message, Client *current_client)
 {
 	size_t 		pos = message.find(" ");
 	std::string	command;
-	
+
 	if (pos == std::string::npos)
 		command = message;
 	else

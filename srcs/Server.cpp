@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nsouchal <nsouchal@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tnicolau <tnicolau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 12:56:29 by tnicolau          #+#    #+#             */
-/*   Updated: 2024/10/21 13:07:25 by nsouchal         ###   ########.fr       */
+/*   Updated: 2024/10/22 09:27:08 by tnicolau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,13 @@
 #include "numerics.hpp"
 #include "Client.hpp"
 #include "Channel.hpp"
+#include "utils.cpp"
 
 bool	Server::_signal = false;
 
 Server::Server(int port, std::string password) : _port(port), _password(password), serverSocketFd(0)
 {
-	time_t	timestamp;
-	time(&timestamp);
-	_creationTime = ctime(&timestamp);
+	_creationTime = getTimestamp();
 	std::cout << "Password : " << _password << "\nPort : " << _port << std::endl;
 	ServerSocket();
 	ServerProgram();
@@ -174,6 +173,16 @@ Client	*Server::findClient(int fd)
 			return clients[i];
 	}
 	return NULL;
+}
+
+bool	Server::findNickName(const std::string& nick)
+{
+	for (size_t i = 0; i < clients.size(); ++i)
+	{
+		if (clients[i]->getNickname() == nick)
+			return true;
+	}
+	return false;
 }
 
 void	Server::parseMessage(const std::string& message, int fd)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   numerics.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nsouchal <nsouchal@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tnicolau <tnicolau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 15:09:25 by nsouchal          #+#    #+#             */
-/*   Updated: 2024/10/21 16:21:21 by nsouchal         ###   ########.fr       */
+/*   Updated: 2024/10/22 09:16:34 by tnicolau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,11 @@
 #define RPL_MOTD(nick, motd) (std::string(":") + SERVER + " 372 " + std::string(nick) + " :" + std::string(motd) + "\r\n")
 #define RPL_MOTDSTART(nick) (std::string(":") + SERVER + " 375 " + std::string(nick) + " :- " + SERVER + " Message of the day - \r\n")
 #define RPL_ENDOFMOTD(nick) (std::string(":") + SERVER + " 376 " + std::string(nick) + " :End of /MOTD command.\r\n")
+
 #define ERR_BADCHANNELKEY(nick, channel) (std::string(":") + SERVER + " 475 " + std::string(nick) + " " + std::string(channel) + " :Cannot join channel (+k)\r\n")
 #define ERR_INVITEONLYCHAN(nick, channel) (std::string(":") + SERVER + " 473 " + std::string(nick) + " " + std::string(channel) + " :Cannot join channel (+i)\r\n")
+#define ERR_NICKNAMEINUSE(nick) (std::string(":") + SERVER + " 433 " + std::string(nick) + " " + std::string(nick) + " :Nickname is already in use\r\n")
+
+#define JOIN(nick, username, channel) (std::string(":") + std::string(nick) + "!" + std::string(username) + "@" + SERVER + " JOIN :" + std::string(channel) + "\r\n")
+
 #endif

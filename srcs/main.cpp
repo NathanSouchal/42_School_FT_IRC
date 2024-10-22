@@ -3,16 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nsouchal <nsouchal@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tnicolau <tnicolau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/10 10:10:09 by tnicolau          #+#    #+#             */
-/*   Updated: 2024/10/21 13:01:34 by nsouchal         ###   ########.fr       */
+/*   Updated: 2024/10/22 08:48:12 by tnicolau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
-
-#include <cstdlib>
 
 int	checkInput(char* port)
 {

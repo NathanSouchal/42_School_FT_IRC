@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nsouchal <nsouchal@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tnicolau <tnicolau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 12:56:31 by tnicolau          #+#    #+#             */
-/*   Updated: 2024/10/21 15:48:13 by nsouchal         ###   ########.fr       */
+/*   Updated: 2024/10/22 10:13:18 by tnicolau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 
 #include <iostream>
 #include <string>
+#include <cstdlib>
+#include <algorithm>
 #include <sstream>
 #include <sys/socket.h>
 #include <sys/types.h>
@@ -71,6 +73,7 @@ class	Server
 		void	lusers(const std::string& message, Client *client);
 
 		Client	*findClient(int fd);
+		bool	findNickName(const std::string& nick);
 
 		void	addChannel(Channel *channel);
 };

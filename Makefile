@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: nsouchal <nsouchal@student.42.fr>          +#+  +:+       +#+         #
+#    By: tnicolau <tnicolau@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/18 15:55:18 by tnicolau          #+#    #+#              #
-#    Updated: 2024/10/21 09:57:44 by nsouchal         ###   ########.fr        #
+#    Updated: 2024/10/22 08:52:30 by tnicolau         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,11 +19,13 @@ DIR_HEADERS		=	includes/
 
 HEADER =	$(DIR_HEADERS)Server.hpp \
 			$(DIR_HEADERS)Client.hpp \
+			$(DIR_HEADERS)Channel.hpp \
 			$(DIR_HEADERS)numerics.hpp
 
 SRC =	$(DIR_SRCS)main.cpp \
 		$(DIR_SRCS)Server.cpp \
 		$(DIR_SRCS)Client.cpp \
+		$(DIR_SRCS)Channel.cpp \
 		$(DIR_SRCS)commands.cpp
 
 OBJS_DIR = .objs/
