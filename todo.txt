@@ -1,3 +1,0 @@
-//ctrl+d exemple sujet
-//channels : plusieurs room du meme nom
-//parsing join # et &

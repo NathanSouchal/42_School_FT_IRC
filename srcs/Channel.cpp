@@ -6,7 +6,7 @@
 /*   By: tnicolau <tnicolau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/21 12:40:01 by nsouchal          #+#    #+#             */
-/*   Updated: 2024/10/22 15:06:58 by tnicolau         ###   ########.fr       */
+/*   Updated: 2024/10/22 16:06:43 by tnicolau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,10 +51,11 @@ void	Channel::addChannelClient(Client *client, const std::string& name)
 
 void	Channel::addChannelOperator(Client *client)
 {
-	std::vector<Client*>::iterator it = std::find(channelClients.begin(), channelClients.end(), client);
-	if (it != channelClients.end())
+	std::vector<Client*>::iterator it = std::find(channelOperators.begin(), channelOperators.end(), client);
+	if (it != channelOperators.end())
 		return ;
 	channelOperators.push_back(client);
+	std::cout << "Added channel Operator " << client->getNickname() << std::endl;
 }
 
 Client*		Channel::getChannelOperator(const std::string& nickname)
