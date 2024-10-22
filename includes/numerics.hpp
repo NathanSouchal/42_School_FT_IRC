@@ -6,7 +6,7 @@
 /*   By: tnicolau <tnicolau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 15:09:25 by nsouchal          #+#    #+#             */
-/*   Updated: 2024/10/22 15:32:51 by tnicolau         ###   ########.fr       */
+/*   Updated: 2024/10/22 16:30:13 by tnicolau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@
 #define RPL_LUSERUNKNOWN(nick, connections) (std::string(":") + SERVER + " 253 " + std::string(nick) + " " + std::string(connections) + " :unknown connection(s)\r\n")
 #define RPL_LUSERCHANNELS(nick, channels) (std::string(":") + SERVER + " 254 " + std::string(nick) + " " + std::string(channels) + " :channels formed\r\n")
 #define RPL_LUSERME(nick, clients) (std::string(":") + SERVER + " 255 " + std::string(nick) + " :I have " + std::string(clients) + " clients and 1 servers\r\n")
+#define RPL_LOCALUSERS(nick, nbClients, nbMaxClients) (std::string(":") + SERVER + " 265 " + std::string(nick) + " :Current local users " + std::string(nbClients) + ", max " + std::string(nbMaxClients) + "\r\n")
+#define RPL_GLOBALUSERS(nick, nbClients, nbMaxClients) (std::string(":") + SERVER + " 266 " + std::string(nick) + " :Current global users " + std::string(nbClients) + ", max " + std::string(nbMaxClients) + "\r\n")
 
 #define RPL_MOTD(nick, motd) (std::string(":") + SERVER + " 372 " + std::string(nick) + " :" + std::string(motd) + "\r\n")
 #define RPL_MOTDSTART(nick) (std::string(":") + SERVER + " 375 " + std::string(nick) + " :- " + SERVER + " Message of the day - \r\n")

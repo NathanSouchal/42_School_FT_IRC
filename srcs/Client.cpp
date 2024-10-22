@@ -6,7 +6,7 @@
 /*   By: tnicolau <tnicolau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 13:23:42 by tnicolau          #+#    #+#             */
-/*   Updated: 2024/10/22 14:40:36 by tnicolau         ###   ########.fr       */
+/*   Updated: 2024/10/22 16:30:50 by tnicolau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,6 +108,7 @@ void	Client::setTrueRegistration()
 {
 	_registrationChecked = true;
 	std::cout << "Registered!!" << std::endl;
+	_serverRef.modifyNbUsers(1);
 	reply(RPL_WELCOME(_nickname, _username, _IPaddress));
 	reply(RPL_YOURHOST(_nickname));
 	reply(RPL_CREATED(_nickname, _serverRef.getCreationTime()));

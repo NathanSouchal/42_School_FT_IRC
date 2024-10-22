@@ -6,13 +6,14 @@
 /*   By: tnicolau <tnicolau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 15:44:38 by tnicolau          #+#    #+#             */
-/*   Updated: 2024/10/22 16:11:51 by tnicolau         ###   ########.fr       */
+/*   Updated: 2024/10/22 16:30:45 by tnicolau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 #include "Client.hpp"
 #include "Channel.hpp"
+#include "utils.hpp"
 
 void	Server::nickname(const std::string& message, Client *client)
 {
@@ -78,7 +79,14 @@ void	Server::motd(const std::string& message, Client *client)
 void	Server::lusers(const std::string& message, Client *client)
 {
 	(void)message;
-	(void)client;
+
+	client->reply(RPL_LUSERCLIENT(client->getNickname(), convertInString(clients.size()), "0"));
+	client->reply(RPL_LUSEROP(client->getNickname(), "1"));
+	client->reply(RPL_LUSERUNKNOWN(client->getNickname(), convertInString(clients.size() - _nbUsers)));
+	client->reply(RPL_LUSERCHANNELS(client->getNickname(), convertInString(serverChannels.size())));
+	client->reply(RPL_LUSERME(client->getNickname(), convertInString(clients.size())));
+	client->reply(RPL_LOCALUSERS(client->getNickname(), convertInString(clients.size()), convertInString(_nbMaxClients)));
+	client->reply(RPL_GLOBALUSERS(client->getNickname(), convertInString(clients.size()), convertInString(_nbMaxClients)));
 }
 
 bool	Server::checkAddClientToChannel(const std::string &name, const std::string &key, Client *client)

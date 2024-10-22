@@ -6,7 +6,7 @@
 /*   By: tnicolau <tnicolau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 12:56:29 by tnicolau          #+#    #+#             */
-/*   Updated: 2024/10/22 16:06:13 by tnicolau         ###   ########.fr       */
+/*   Updated: 2024/10/22 16:30:57 by tnicolau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 
 bool	Server::_signal = false;
 
-Server::Server(int port, std::string password) : _port(port), _password(password), serverSocketFd(0)
+Server::Server(int port, std::string password) : _port(port), _password(password), serverSocketFd(0), _nbMaxClients(0), _nbUsers(0)
 {
 	_creationTime = getTimestamp();
 	std::cout << "Password : " << _password << "\nPort : " << _port << std::endl;
@@ -30,6 +30,26 @@ Server::~Server()
 {
 	for (size_t i = 0; i < clients.size(); ++i)
 		delete clients[i];
+}
+
+void		Server::setNbMaxClients(int newNb)
+{
+	_nbMaxClients = newNb;
+}
+
+const int	&Server::getNbMaxClients()
+{
+	return (_nbMaxClients);
+}
+
+void		Server::modifyNbUsers(int valueToAdd)
+{
+	_nbUsers += valueToAdd;
+}
+
+const int	&Server::getNbUsers()
+{
+	return (_nbUsers);
 }
 
 std::string	Server::getCreationTime()
@@ -109,7 +129,8 @@ void	Server::AcceptNewClient()
 	client->setIPaddress(inet_ntoa((clientAddress.sin_addr)));
 	clients.push_back(client);
 	fds.push_back(newPoll);
-
+	if (fds.size() > static_cast<size_t>(_nbMaxClients))
+		setNbMaxClients(clients.size());
 	std::cout << "Client " << fd << " connected !" << std::endl;
 	//sendPing(fd);
 }
