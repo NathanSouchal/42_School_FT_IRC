@@ -6,7 +6,7 @@
 /*   By: tnicolau <tnicolau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 15:44:38 by tnicolau          #+#    #+#             */
-/*   Updated: 2024/10/22 15:34:42 by tnicolau         ###   ########.fr       */
+/*   Updated: 2024/10/22 16:11:51 by tnicolau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,6 +194,7 @@ void	Server::topic(const std::string& message, Client *client)
 	}
 	if (!findChannel(channel))
 		client->reply(ERR_NOSUCHCHANNEL(client->getNickname(), channel));
+	//si -t active les non-operateurs peuvent aussi mofifier le topic
 	else if (!findUserInChannel(client->getNickname(), channel))
 		client->reply(ERR_NOTONCHANNEL(client->getNickname(), channel));
 	else
