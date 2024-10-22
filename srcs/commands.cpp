@@ -3,16 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   commands.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tnicolau <tnicolau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nsouchal <nsouchal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 15:44:38 by tnicolau          #+#    #+#             */
-/*   Updated: 2024/10/22 09:52:23 by tnicolau         ###   ########.fr       */
+/*   Updated: 2024/10/22 16:05:08 by nsouchal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Server.hpp"
 #include "Client.hpp"
 #include "Channel.hpp"
+#include "utils.hpp"
 
 void	Server::nickname(const std::string& message, Client *client)
 {
@@ -78,7 +79,14 @@ void	Server::motd(const std::string& message, Client *client)
 void	Server::lusers(const std::string& message, Client *client)
 {
 	(void)message;
-	(void)client;
+
+	client->reply(RPL_LUSERCLIENT(client->getNickname(), convertInString(clients.size()), "0"));
+	client->reply(RPL_LUSEROP(client->getNickname(), "1"));
+	client->reply(RPL_LUSERUNKNOWN(client->getNickname(), convertInString(clients.size() - _nbUsers)));
+	client->reply(RPL_LUSERCHANNELS(client->getNickname(), convertInString(serverChannels.size())));
+	client->reply(RPL_LUSERME(client->getNickname(), convertInString(clients.size())));
+	client->reply(RPL_LOCALUSERS(client->getNickname(), convertInString(clients.size()), convertInString(_nbMaxClients)));
+	client->reply(RPL_GLOBALUSERS(client->getNickname(), convertInString(clients.size()), convertInString(_nbMaxClients)));
 }
 
 bool	Server::checkAddClientToChannel(const std::string &name, const std::string &key, Client *client)
@@ -192,11 +200,11 @@ void	Server::checkCommand(const std::string& message, Client *current_client)
 	else
 		command = message.substr(0, pos);
 	void(Server::*function_ptr[])(const std::string&, Client *) = {&Server::nickname, &Server::user, &Server::motd,\
-	&Server::lusers, &Server::join, &Server::privmsg, &Server::kick, &Server::invite, &Server::topic,&Server::mode};
-	std::string commands[] = {"NICK", "USER", "MOTD", "LUSERS", "JOIN", "PRIVMSG", "KICK", "INVITE" "TOPIC", "MODE"};
+	&Server::lusers, &Server::join, &Server::privmsg, &Server::kick, &Server::invite, &Server::topic, &Server::mode};
+	std::string commands[] = {"NICK", "USER", "MOTD", "LUSERS", "JOIN", "PRIVMSG", "KICK", "INVITE", "TOPIC", "MODE"};
 	bool	found = false;
 
-	for (size_t i = 0; i < commands->length() + 1; i++)
+	for (size_t i = 0; i < sizeof(commands) / sizeof(commands[0]); i++)
 	{
 		if (commands[i] == command)
 		{

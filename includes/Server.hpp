@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tnicolau <tnicolau@student.42.fr>          +#+  +:+       +#+        */
+/*   By: nsouchal <nsouchal@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 12:56:31 by tnicolau          #+#    #+#             */
-/*   Updated: 2024/10/22 10:13:18 by tnicolau         ###   ########.fr       */
+/*   Updated: 2024/10/22 16:02:36 by nsouchal         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ class	Server
 		int	_port;
 		std::string	_password;
 		int	serverSocketFd;
+		int	_nbMaxClients;
+		int	_nbUsers;
 		std::vector<Client *>	clients;
 		std::vector<pollfd>	fds;
 		static bool	_signal;
@@ -47,6 +49,10 @@ class	Server
 	public:
 		Server(int port, std::string password);
 		~Server();
+		void		setNbMaxClients(int newNb);
+		const int	&getNbMaxClients();
+		void		modifyNbUsers(int valueToAdd);
+		const int	&getNbUsers();
 		std::string	getCreationTime();
 		void	ServerSocket();
 		void	AcceptNewClient();
