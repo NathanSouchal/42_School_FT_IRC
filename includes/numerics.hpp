@@ -6,7 +6,7 @@
 /*   By: tnicolau <tnicolau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/17 15:09:25 by nsouchal          #+#    #+#             */
-/*   Updated: 2024/10/22 09:16:34 by tnicolau         ###   ########.fr       */
+/*   Updated: 2024/10/22 15:32:51 by tnicolau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,15 @@
 #define RPL_MOTDSTART(nick) (std::string(":") + SERVER + " 375 " + std::string(nick) + " :- " + SERVER + " Message of the day - \r\n")
 #define RPL_ENDOFMOTD(nick) (std::string(":") + SERVER + " 376 " + std::string(nick) + " :End of /MOTD command.\r\n")
 
+#define RPL_NOTOPIC(nick, channel) (std::string(":") + SERVER + " 331 " + std::string(nick) + " " + std::string(channel) + " :No topic is set\r\n")
+#define RPL_TOPIC(nick, channel, topic) (std::string(":") + SERVER + " 332 " + std::string(nick) + " " + std::string(channel) + " :" + std::string(topic) + "\r\n")
+#define RPL_TOPICWHOTIME(nick, channel, who, when) (std::string(":") + SERVER + " 333 " + std::string(nick) + " " + std::string(channel) + " " + std::string(who) + " " + std::string(when) + "\r\n")
+
 #define ERR_BADCHANNELKEY(nick, channel) (std::string(":") + SERVER + " 475 " + std::string(nick) + " " + std::string(channel) + " :Cannot join channel (+k)\r\n")
 #define ERR_INVITEONLYCHAN(nick, channel) (std::string(":") + SERVER + " 473 " + std::string(nick) + " " + std::string(channel) + " :Cannot join channel (+i)\r\n")
 #define ERR_NICKNAMEINUSE(nick) (std::string(":") + SERVER + " 433 " + std::string(nick) + " " + std::string(nick) + " :Nickname is already in use\r\n")
+#define ERR_NOTONCHANNEL(nick, channel) (std::string(":") + SERVER + " 442 " + std::string(nick) + " " + std::string(channel) + " :You're not on that channel\r\n")
+#define ERR_NOSUCHCHANNEL(nick, channel) (std::string(":") + SERVER + " 403 " + std::string(nick) + " " + std::string(channel) + " :No such channel\r\n")
 
 #define JOIN(nick, username, channel) (std::string(":") + std::string(nick) + "!" + std::string(username) + "@" + SERVER + " JOIN :" + std::string(channel) + "\r\n")
 
