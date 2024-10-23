@@ -4,8 +4,8 @@
 # include <iostream>
 # include <sstream>
 
-time_t						getTimestamp();
-std::vector<std::string>	parseParams(const std::string& src);
+const time_t						getTimestamp();
+std::vector<std::string>	        parseParams(const std::string& src);
 
 template <typename T> std::string   convertInString(T toConvert)
 {
@@ -14,5 +14,6 @@ template <typename T> std::string   convertInString(T toConvert)
     oss << toConvert;
     return (oss.str());
 }
+bool	                            checkChannelName(std::string name, Client *client);
 
 #endif

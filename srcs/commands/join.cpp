@@ -32,7 +32,11 @@ void	Server::join(const std::string& message, Client *client)
 	while (std::getline(ss2, temp, ','))
 	{
 		if (!temp.empty())
+		{
+			if (!checkChannelName(temp, client))
+				return ;
 			vecChannelNames.push_back(temp);
+		}
 	}
 	for (size_t i = 0; i < vecChannelNames.size(); ++i)
 	{
@@ -58,12 +62,18 @@ bool	Server::checkAddClientToChannel(const std::string &name, const std::string 
 			if (!serverChannels[i]->getKey().empty())
 			{
 				if (serverChannels[i]->getKey() == key)
-					serverChannels[i]->addChannelClient(client, name);
+				{
+					serverChannels[i]->addChannelClient(client);
+					serverChannels[i]->replySuccessfullJoin(client);
+				}
 				else
 					client->reply(ERR_BADCHANNELKEY(client->getNickname(), name));
 			}
 			else
-				serverChannels[i]->addChannelClient(client, name);
+			{
+				serverChannels[i]->addChannelClient(client);
+				serverChannels[i]->replySuccessfullJoin(client);
+			}
 			return true;
 		}
 	}
@@ -74,10 +84,19 @@ void	Server::createChannel(const std::string &name, const std::string &key, Clie
 {
 	Channel *channel = new Channel(name);
 	std::cout << "Channel " << name << " created !" << std::endl;
-	channel->addChannelClient(client, name);
+	channel->addChannelClient(client);
 	std::cout << client->getNickname() << " added to channel " << name << " !" << std::endl;
 	channel->addChannelOperator(client);
 	channel->setKey(key);
+	channel->replySuccessfullJoin(client);
 
 	serverChannels.push_back(channel);
+}
+
+bool	checkChannelName(std::string name, Client *client)
+{
+	if (name[0] == '&' || name[0] == '#')
+		return true;
+	client->reply(ERR_NOSUCHCHANNEL(client->getNickname(), name));
+	return false;
 }
