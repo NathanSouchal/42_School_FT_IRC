@@ -6,7 +6,7 @@
 /*   By: tnicolau <tnicolau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/21 12:34:13 by nsouchal          #+#    #+#             */
-/*   Updated: 2024/10/22 17:02:45 by tnicolau         ###   ########.fr       */
+/*   Updated: 2024/10/23 09:56:59 by tnicolau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ class Channel
 		void				setTopicCreator(const std::string& creator);
 		void				setTopicCreationTime(const std::string& creationTime);
 		void				setModeT();
+		void				sendMessageToAllClients(const std::string& src);
 };
 
 #endif

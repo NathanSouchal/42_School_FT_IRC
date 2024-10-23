@@ -6,7 +6,7 @@
 /*   By: tnicolau <tnicolau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 12:56:29 by tnicolau          #+#    #+#             */
-/*   Updated: 2024/10/22 17:07:46 by tnicolau         ###   ########.fr       */
+/*   Updated: 2024/10/23 11:42:59 by tnicolau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "numerics.hpp"
 #include "Client.hpp"
 #include "Channel.hpp"
-#include "utils.cpp"
+#include "utils.hpp"
 
 bool	Server::_signal = false;
 
@@ -268,25 +268,4 @@ Channel	*Server::findChannel(const std::string& channel)
 			return *it;
 	}
 	return NULL;
-}
-
-bool	Server::findModeTClientInChannel(const std::string& nickname, const std::string& channel)
-{
-	for (std::vector<Channel*>::iterator it = serverChannels.begin(); it != serverChannels.end(); ++it)
-	{
-		if ((*it)->getName() == channel)
-		{
-			if ((*it)->getModeT())
-			{
-				if ((*it)->getChannelClient(nickname))
-					return true;
-			}
-			else
-			{
-				if ((*it)->getChannelOperator(nickname))
-					return true;
-			}
-		}
-	}
-	return false;
 }

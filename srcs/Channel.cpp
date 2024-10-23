@@ -6,7 +6,7 @@
 /*   By: tnicolau <tnicolau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/21 12:40:01 by nsouchal          #+#    #+#             */
-/*   Updated: 2024/10/22 17:05:23 by tnicolau         ###   ########.fr       */
+/*   Updated: 2024/10/23 13:22:17 by tnicolau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,5 +115,15 @@ void		Channel::setTopicCreator(const std::string& creator)
 
 void		Channel::setTopicCreationTime(const std::string& creationTime)
 {
+	std::cout << "creationTime :" << creationTime << std::endl;
 	this->_topicCreationTime = creationTime;
+}
+
+void		Channel::sendMessageToAllClients(const std::string& src)
+{
+	for (std::vector<Client*>::iterator it = channelClients.begin(); it != channelClients.end(); ++it)
+	{
+		if (src == "TOPIC")
+			(*it)->reply(TOPIC((*it)->getNickname(), (*it)->getUsername(), this->getName(), this->getChannelTopic()));
+	}
 }

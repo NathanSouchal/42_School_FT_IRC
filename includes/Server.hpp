@@ -6,7 +6,7 @@
 /*   By: tnicolau <tnicolau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 12:56:31 by tnicolau          #+#    #+#             */
-/*   Updated: 2024/10/22 17:06:59 by tnicolau         ###   ########.fr       */
+/*   Updated: 2024/10/23 09:48:47 by tnicolau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,7 +83,6 @@ class	Server
 
 		void	addChannel(Channel *channel);
 		Channel	*findChannel(const std::string& name);
-		bool	findModeTClientInChannel(const std::string& nickname, const std::string& channel);
 };
 
 #endif

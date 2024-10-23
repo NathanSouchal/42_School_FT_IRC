@@ -6,7 +6,7 @@
 /*   By: tnicolau <tnicolau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 15:44:38 by tnicolau          #+#    #+#             */
-/*   Updated: 2024/10/22 17:21:40 by tnicolau         ###   ########.fr       */
+/*   Updated: 2024/10/23 13:27:07 by tnicolau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -187,27 +187,32 @@ void	Server::invite(const std::string& message, Client *client)
 
 void	Server::topic(const std::string& message, Client *client)
 {
-	size_t 		pos = message.find(" ");
-	std::string	command = message.substr(pos + 1);
-	size_t 		pos2 = command.find(" ");
-	std::string	channel, topic;
-
-	if (pos2 == std::string::npos)
-		channel = command;
-	else
+	std::cout << "message : " << message << std::endl;
+	size_t		pos = message.find(":");
+	if (pos == std::string::npos)
 	{
-		channel = command.substr(0, pos);
-		topic = command.substr(pos2 + 1);
-		std::cout << "topic : " << topic << std::endl;
+		client->reply(ERR_NEEDMOREPARAMS(client->getNickname(), "TOPIC"));
+		return ;
+	}
+	std::string	param = message.substr(pos + 1);
+	std::string	channel, topic;
+	std::vector<std::string>	parsedParams = parseParams(param);
+	channel = parsedParams[0];
+	if (parsedParams.size() == 2)
+		topic = parsedParams[1];
+	if (parsedParams.size() > 2)
+	{
+		client->reply(ERR_NEEDMOREPARAMS(client->getNickname(), "TOPIC"));
+		return ;
 	}
 	if (!findChannel(channel))
 		client->reply(ERR_NOSUCHCHANNEL(client->getNickname(), channel));
-	else if (!findModeTClientInChannel(client->getNickname(), channel))
-		client->reply(ERR_NOTONCHANNEL(client->getNickname(), channel));
 	else
 	{
 		Channel*	channelCopy = findChannel(channel);
 
+		if (!channelCopy->getChannelClient(client->getNickname()))
+			client->reply(ERR_NOTONCHANNEL(client->getNickname(), channel));
 		if (topic.empty())
 		{
 			// Demande le topic actuel du canal
@@ -221,23 +226,27 @@ void	Server::topic(const std::string& message, Client *client)
 		}
 		else
 		{
-			//si -t non-active les non-operateurs peuvent pas mofifier le topic
-			if (!channelCopy->getModeT())
+			if (!channelCopy->getModeT() && !channelCopy->getChannelOperator(client->getNickname()))
 				client->reply(ERR_CHANOPRIVSNEEDED(client->getNickname(), channel));
+			//si -t non-active les non-operateurs peuvent pas mofifier le topic
 			else
 			{
 				if (topic == ":")
 					channelCopy->setChannelTopic("");
 				else
+				{
+					if (topic[0] == ':')
+						topic = topic.substr(1);
 					channelCopy->setChannelTopic(topic);
+				}
 				channelCopy->setTopicCreator(client->getNickname());
-				channelCopy->setTopicCreationTime(getTimestamp());
+				channelCopy->setTopicCreationTime(convertInString(getTimestamp()));
 				//ici envoyer le nouveau topic a tous les membres du channel
-				//send(:nickname!username@hostname TOPIC #channel :New topic)
+				channelCopy->sendMessageToAllClients("TOPIC");
 			}
 		}
 	}
-	std::cout << "channel : " << channel << std::endl;
+	std::cout << "channel : " << channel << "|" << std::endl;
 }
 
 void	Server::mode(const std::string& message, Client *client)
