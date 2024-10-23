@@ -44,6 +44,8 @@ class	Server
 		std::string	getCreationTime();
 		void	ServerSocket();
 		void	AcceptNewClient();
+		void	clearClient(int fd);
+		void	clearAllClients();
 		void	ServerProgram();
 		void	CloseFds();
 		void	ReceiveData(int fd);
