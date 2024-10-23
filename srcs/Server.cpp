@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nsouchal <nsouchal@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tnicolau <tnicolau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 12:56:29 by tnicolau          #+#    #+#             */
-/*   Updated: 2024/10/22 16:01:19 by nsouchal         ###   ########.fr       */
+/*   Updated: 2024/10/23 11:42:59 by tnicolau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "numerics.hpp"
 #include "Client.hpp"
 #include "Channel.hpp"
-#include "utils.cpp"
+#include "utils.hpp"
 
 bool	Server::_signal = false;
 
@@ -49,7 +49,7 @@ void		Server::modifyNbUsers(int valueToAdd)
 
 const int	&Server::getNbUsers()
 {
-	return (_nbUsers);	
+	return (_nbUsers);
 }
 
 std::string	Server::getCreationTime()
@@ -258,4 +258,14 @@ void	Server::ServerProgram()
 void	Server::addChannel(Channel *channel)
 {
 	serverChannels.push_back(channel);
+}
+
+Channel	*Server::findChannel(const std::string& channel)
+{
+	for (std::vector<Channel*>::iterator it = serverChannels.begin(); it != serverChannels.end(); ++it)
+	{
+		if ((*it)->getName() == channel)
+			return *it;
+	}
+	return NULL;
 }

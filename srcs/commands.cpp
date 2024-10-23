@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   commands.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nsouchal <nsouchal@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tnicolau <tnicolau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 15:44:38 by tnicolau          #+#    #+#             */
-/*   Updated: 2024/10/22 16:05:08 by nsouchal         ###   ########.fr       */
+/*   Updated: 2024/10/23 13:27:07 by tnicolau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,27 +129,33 @@ void	Server::createChannel(const std::string &name, const std::string &key, Clie
 
 void	Server::join(const std::string& message, Client *client)
 {
-	std::string 				parameters = message.substr(message.find(" ") + 1);
-	std::string 				channelNames = parameters.substr(0, parameters.find(" "));
-	std::string 				channelKeys = parameters.substr(parameters.find(" ") + 1);
 	std::vector<std::string>	vecChannelNames;
 	std::vector<std::string>	vecChannelKeys;
-	std::stringstream			ss(channelNames);
 	std::string					temp;
 	std::string					key;
 
-	while (std::getline(ss, temp, ','))
+	std::string					parameters = message.substr(message.find(" ") + 1);
+	size_t 		pos = parameters.find(" ");
+	std::string					channelNames;
+	if (pos == std::string::npos)
+		channelNames = parameters;
+	else
+	{
+		channelNames = parameters.substr(0, pos);
+		std::string					channelKeys = parameters.substr(pos + 1);
+		std::stringstream			ss1(channelKeys);
+		while (std::getline(ss1, temp, ','))
+		{
+			if (!temp.empty())
+				vecChannelKeys.push_back(temp);
+		}
+		std::cout << "KEYS : " << channelKeys << std::endl;
+	}
+	std::stringstream			ss2(channelNames);
+	while (std::getline(ss2, temp, ','))
 	{
 		if (!temp.empty())
 			vecChannelNames.push_back(temp);
-	}
-	temp.clear();
-	ss.clear();
-	ss.str(channelKeys);
-	while (std::getline(ss, temp, ','))
-	{
-		if (!temp.empty())
-			vecChannelKeys.push_back(temp);
 	}
 	for (size_t i = 0; i < vecChannelNames.size(); ++i)
 	{
@@ -158,6 +164,7 @@ void	Server::join(const std::string& message, Client *client)
 		if (!checkAddClientToChannel(vecChannelNames[i], key, client))
 			createChannel(vecChannelNames[i], key, client);
 	}
+	std::cout << "CHANNELS : " << channelNames << std::endl;
 }
 
 void	Server::privmsg(const std::string& message, Client *client)
@@ -180,8 +187,66 @@ void	Server::invite(const std::string& message, Client *client)
 
 void	Server::topic(const std::string& message, Client *client)
 {
-	(void)message;
-	(void)client;
+	std::cout << "message : " << message << std::endl;
+	size_t		pos = message.find(":");
+	if (pos == std::string::npos)
+	{
+		client->reply(ERR_NEEDMOREPARAMS(client->getNickname(), "TOPIC"));
+		return ;
+	}
+	std::string	param = message.substr(pos + 1);
+	std::string	channel, topic;
+	std::vector<std::string>	parsedParams = parseParams(param);
+	channel = parsedParams[0];
+	if (parsedParams.size() == 2)
+		topic = parsedParams[1];
+	if (parsedParams.size() > 2)
+	{
+		client->reply(ERR_NEEDMOREPARAMS(client->getNickname(), "TOPIC"));
+		return ;
+	}
+	if (!findChannel(channel))
+		client->reply(ERR_NOSUCHCHANNEL(client->getNickname(), channel));
+	else
+	{
+		Channel*	channelCopy = findChannel(channel);
+
+		if (!channelCopy->getChannelClient(client->getNickname()))
+			client->reply(ERR_NOTONCHANNEL(client->getNickname(), channel));
+		if (topic.empty())
+		{
+			// Demande le topic actuel du canal
+			if (channelCopy->getChannelTopic().empty())
+				client->reply(RPL_NOTOPIC(client->getNickname(), channel));
+			else
+			{
+				client->reply(RPL_TOPIC(client->getNickname(), channel, channelCopy->getChannelTopic()));
+				client->reply(RPL_TOPICWHOTIME(client->getNickname(), channel, channelCopy->getTopicCreator(), channelCopy->getTopicCreationTime()));
+			}
+		}
+		else
+		{
+			if (!channelCopy->getModeT() && !channelCopy->getChannelOperator(client->getNickname()))
+				client->reply(ERR_CHANOPRIVSNEEDED(client->getNickname(), channel));
+			//si -t non-active les non-operateurs peuvent pas mofifier le topic
+			else
+			{
+				if (topic == ":")
+					channelCopy->setChannelTopic("");
+				else
+				{
+					if (topic[0] == ':')
+						topic = topic.substr(1);
+					channelCopy->setChannelTopic(topic);
+				}
+				channelCopy->setTopicCreator(client->getNickname());
+				channelCopy->setTopicCreationTime(convertInString(getTimestamp()));
+				//ici envoyer le nouveau topic a tous les membres du channel
+				channelCopy->sendMessageToAllClients("TOPIC");
+			}
+		}
+	}
+	std::cout << "channel : " << channel << "|" << std::endl;
 }
 
 void	Server::mode(const std::string& message, Client *client)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: nsouchal <nsouchal@student.42.fr>          +#+  +:+       +#+        */
+/*   By: tnicolau <tnicolau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/11 12:56:31 by tnicolau          #+#    #+#             */
-/*   Updated: 2024/10/22 16:02:36 by nsouchal         ###   ########.fr       */
+/*   Updated: 2024/10/23 09:48:47 by tnicolau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ class	Server
 		bool	findNickName(const std::string& nick);
 
 		void	addChannel(Channel *channel);
+		Channel	*findChannel(const std::string& name);
 };
 
 #endif
