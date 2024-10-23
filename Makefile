@@ -6,7 +6,7 @@
 #    By: tnicolau <tnicolau@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/18 15:55:18 by tnicolau          #+#    #+#              #
-#    Updated: 2024/10/23 11:40:50 by tnicolau         ###   ########.fr        #
+#    Updated: 2024/10/23 14:00:27 by tnicolau         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,6 +15,7 @@ CC = c++
 FLAGS = -Wall -Wextra -Werror -std=c++98
 
 DIR_SRCS 		= 	srcs/
+DIR_CMD 		= 	srcs/commands/
 DIR_HEADERS		=	includes/
 
 HEADER =	$(DIR_HEADERS)Server.hpp \
@@ -27,8 +28,19 @@ SRC =	$(DIR_SRCS)main.cpp \
 		$(DIR_SRCS)Server.cpp \
 		$(DIR_SRCS)Client.cpp \
 		$(DIR_SRCS)Channel.cpp \
-		$(DIR_SRCS)commands.cpp \
-		$(DIR_SRCS)utils.cpp
+		$(DIR_SRCS)parseMessage.cpp \
+		$(DIR_SRCS)serverSetup.cpp \
+		$(DIR_SRCS)utils.cpp \
+		$(DIR_CMD)invite.cpp \
+		$(DIR_CMD)join.cpp \
+		$(DIR_CMD)kick.cpp \
+		$(DIR_CMD)lusers.cpp \
+		$(DIR_CMD)mode.cpp \
+		$(DIR_CMD)motd.cpp \
+		$(DIR_CMD)nick.cpp \
+		$(DIR_CMD)privmsg.cpp \
+		$(DIR_CMD)topic.cpp \
+		$(DIR_CMD)user.cpp
 
 OBJS_DIR = .objs/
 OBJS = $(patsubst %.cpp, $(OBJS_DIR)%.o, $(SRC))

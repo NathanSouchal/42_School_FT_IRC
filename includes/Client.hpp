@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   Client.hpp                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: nsouchal <nsouchal@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/11 13:23:09 by tnicolau          #+#    #+#             */
-/*   Updated: 2024/10/21 12:57:12 by nsouchal         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #ifndef CLIENT_HPP
 #define CLIENT_HPP
 
@@ -18,7 +6,6 @@
 #include <ctime>
 #include <sys/socket.h>
 #include <sys/types.h>
-#include "numerics.hpp"
 
 class	Server;
 

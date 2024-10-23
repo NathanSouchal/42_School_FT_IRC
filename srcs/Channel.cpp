@@ -1,17 +1,6 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   Channel.cpp                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: tnicolau <tnicolau@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/21 12:40:01 by nsouchal          #+#    #+#             */
-/*   Updated: 2024/10/23 13:22:17 by tnicolau         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "Channel.hpp"
 #include "Client.hpp"
+#include "numerics.hpp"
 
 Channel::Channel(const std::string &name): _name(name) {}
 
