@@ -35,14 +35,14 @@ std::string	Channel::generateUserList()
 
 	for (size_t i = 0; i < channelOperators.size(); ++i)
 	{
-		userList + "@" + channelOperators[i]->getNickname();
+		userList = userList + "@" + channelOperators[i]->getNickname();
 		if (i != channelOperators.size() - 1)
 			userList + " ";
 	}
 	for (size_t i = 0; i < channelClients.size(); ++i)
 	{
 		if (std::find(channelOperators.begin(), channelOperators.end(), channelClients[i]) ==  channelOperators.end())
-			userList + " " + channelClients[i]->getNickname();
+			userList = userList + " " + channelClients[i]->getNickname();
 	}
 	return userList;
 }

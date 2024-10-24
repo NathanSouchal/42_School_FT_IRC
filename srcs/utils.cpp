@@ -1,6 +1,6 @@
 #include "Server.hpp"
 
-const time_t	getTimestamp()
+time_t	getTimestamp()
 {
 	time_t	timestamp;
 	time(&timestamp);

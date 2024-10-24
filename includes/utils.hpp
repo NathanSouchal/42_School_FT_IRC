@@ -4,7 +4,7 @@
 # include <iostream>
 # include <sstream>
 
-const time_t						getTimestamp();
+time_t						        getTimestamp();
 std::vector<std::string>	        parseParams(const std::string& src);
 
 template <typename T> std::string   convertInString(T toConvert)

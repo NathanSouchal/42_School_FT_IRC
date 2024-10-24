@@ -88,9 +88,8 @@ void	Server::createChannel(const std::string &name, const std::string &key, Clie
 	std::cout << client->getNickname() << " added to channel " << name << " !" << std::endl;
 	channel->addChannelOperator(client);
 	channel->setKey(key);
-	channel->replySuccessfullJoin(client);
-
 	serverChannels.push_back(channel);
+	channel->replySuccessfullJoin(client);
 }
 
 bool	checkChannelName(std::string name, Client *client)
