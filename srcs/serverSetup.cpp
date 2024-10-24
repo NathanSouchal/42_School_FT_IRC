@@ -34,6 +34,38 @@ void	Server::ServerSocket()
 	fds.push_back(newPoll);
 }
 
+void	Server::clearClient(int fd)
+{
+	for (size_t i = 0; i < fds.size(); ++i)
+	{
+		if (fds[i].fd == fd)
+		{
+			fds.erase(fds.begin() + i);
+			break ;
+		}
+	}
+	for (size_t i = 0; i < clients.size(); ++i)
+	{
+		if (clients[i]->getFd() == fd)
+		{
+			if (clients[i]->getRegistration())
+				modifyNbUsers(-1);
+			clients.erase(clients.begin() + i);
+			break ;
+		}
+	}
+}
+
+void	Server::clearAllClients()
+{
+	for (size_t i = 0; i < fds.size(); ++i)
+		fds.erase(fds.begin() + i);
+	fds.clear();
+	for (size_t i = 0; i < clients.size(); ++i)
+		clients.erase(clients.begin() + i);
+	clients.clear();
+}
+
 void	Server::AcceptNewClient()
 {
 	Client	*client = new Client(*this);
@@ -71,14 +103,15 @@ void	Server::ReceiveData(int fd)
 	ssize_t bytes = recv(fd, buffer, sizeof(buffer) - 1 , 0); //-> receive the data
 
 	if (bytes == 0)
-	{ //-> check if the client disconnected
-		std::cout << "Client " << fd << " disconnected" << std::endl;
-		//ClearClients(fd); //-> clear the client
+	{
+		std::cerr << "Client " << fd << " disconnected" << std::endl;
+		clearClient(fd); //-> clear the client
 		close(fd); //-> close the client socket
 	}
 	else if (bytes < 0)
 	{
-		std::cout << "Client " << fd << " error made him disconnect" << std::endl;
+		std::cerr << "Client " << fd << " error made him disconnect" << std::endl;
+		clearClient(fd);
 		close(fd);
 	}
 	else
