@@ -31,6 +31,9 @@
 #define RPL_TOPIC(nick, channel, topic) (std::string(":") + SERVER + " 332 " + std::string(nick) + " " + std::string(channel) + " :" + std::string(topic) + "\r\n")
 #define RPL_TOPICWHOTIME(nick, channel, who, when) (std::string(":") + SERVER + " 333 " + std::string(nick) + " " + std::string(channel) + " " + std::string(who) + " " + std::string(when) + "\r\n")
 
+#define RPL_UMODEIS(nick, modes) (std::string(":") + SERVER + " 221 " + std::string(nick) + " :" + std::string(modes) + "\r\n")
+#define RPL_CHANNELMODEIS(nick, channel, modes, arguments) (std::string(":") + SERVER + " 324 " + std::string(nick) + " " + std::string(channel) + " " + std::string(modes) + " " + std::string(arguments) + "\r\n")
+
 #define ERR_BADCHANNELKEY(nick, channel) (std::string(":") + SERVER + " 475 " + std::string(nick) + " " + std::string(channel) + " :Cannot join channel (+k)\r\n")
 #define ERR_INVITEONLYCHAN(nick, channel) (std::string(":") + SERVER + " 473 " + std::string(nick) + " " + std::string(channel) + " :Cannot join channel (+i)\r\n")
 #define ERR_NICKNAMEINUSE(nick) (std::string(":") + SERVER + " 433 " + std::string(nick) + " " + std::string(nick) + " :Nickname is already in use\r\n")
