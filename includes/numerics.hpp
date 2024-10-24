@@ -40,6 +40,11 @@
 #define ERR_NOSUCHCHANNEL(nick, channel) (std::string(":") + SERVER + " 403 " + std::string(nick) + " " + std::string(channel) + " :No such channel\r\n")
 #define ERR_CHANOPRIVSNEEDED(nick, channel) (std::string(":") + SERVER + " 482 " + std::string(nick) + " " + std::string(channel) + " :You're not channel operator\r\n")
 
+#define ERR_NORECIPIENT(nick, command) (std::string(":") + SERVER + " 411 " + std::string(nick) + " :No recipient given " + std::string(command) + "\r\n")
+#define ERR_NOTEXTTOSEND(nick) (std::string(":") + SERVER + " 412 " + std::string(nick) + " :No text to send\r\n")
+#define ERR_NOSUCHNICK(nick, nickDestination) (std::string(":") + SERVER + " 401 " + std::string(nick) + " " + std::string(nickDestination) + " " + ":No such nick/channel\r\n")
+#define ERR_CANNOTSENDTOCHAN(nick, channel) (std::string(":") + SERVER + " 404 " + std::string(nick) + " " + std::string(channel) + " " + ":Cannot send to channel\r\n")
+
 #define JOIN(nick, username, channel) (std::string(":") + std::string(nick) + "!" + std::string(username) + "@" + SERVER + " JOIN :" + std::string(channel) + "\r\n")
 #define TOPIC(nick, username, channel, topic) (std::string(":") + std::string(nick) + "!" + std::string(username) + "@" + SERVER + " TOPIC " + std::string(channel) + " :" + std::string(topic) + "\r\n")
 
