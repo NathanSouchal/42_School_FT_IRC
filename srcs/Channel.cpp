@@ -65,6 +65,7 @@ void	Channel::addChannelClient(Client *client)
 	if (it != channelClients.end())
 		return ;
 	channelClients.push_back(client);
+	replySuccessfullJoin(client);
 }
 
 void	Channel::addChannelOperator(Client *client)

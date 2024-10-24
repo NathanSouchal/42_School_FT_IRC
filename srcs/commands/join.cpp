@@ -63,18 +63,12 @@ bool	Server::checkAddClientToChannel(const std::string &name, const std::string 
 			if (!serverChannels[i]->getKey().empty())
 			{
 				if (serverChannels[i]->getKey() == key)
-				{
 					serverChannels[i]->addChannelClient(client);
-					serverChannels[i]->replySuccessfullJoin(client);
-				}
 				else
 					client->reply(ERR_BADCHANNELKEY(client->getNickname(), name));
 			}
 			else
-			{
 				serverChannels[i]->addChannelClient(client);
-				serverChannels[i]->replySuccessfullJoin(client);
-			}
 			return true;
 		}
 	}
@@ -85,12 +79,11 @@ void	Server::createChannel(const std::string &name, const std::string &key, Clie
 {
 	Channel *channel = new Channel(name);
 	std::cout << "Channel " << name << " created !" << std::endl;
+	channel->addChannelOperator(client);
 	channel->addChannelClient(client);
 	std::cout << client->getNickname() << " added to channel " << name << " !" << std::endl;
-	channel->addChannelOperator(client);
 	channel->setKey(key);
 	serverChannels.push_back(channel);
-	channel->replySuccessfullJoin(client);
 }
 
 bool	checkChannelName(std::string name, Client *client)
