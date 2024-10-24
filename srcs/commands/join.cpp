@@ -11,16 +11,17 @@ void	Server::join(const std::string& message, Client *client)
 	std::string					temp;
 	std::string					key;
 
-	std::string					parameters = message.substr(message.find(" ") + 1);
-	size_t 		pos = parameters.find(" ");
-	std::string					channelNames;
-	if (pos == std::string::npos)
-		channelNames = parameters;
-	else
+	std::vector<std::string>	parameters = parseParams(message.substr(message.find(" ") + 1));
+	if (parameters.size() > 2)
 	{
-		channelNames = parameters.substr(0, pos);
-		std::string					channelKeys = parameters.substr(pos + 1);
-		std::stringstream			ss1(channelKeys);
+		client->reply(ERR_NEEDMOREPARAMS(client->getNickname(), "JOIN"));
+		return ;
+	}
+	std::string					channelNames = parameters[0];
+	if (parameters.size() == 2)
+	{
+		std::string			channelKeys = parameters[1];
+		std::stringstream	ss1(channelKeys);
 		while (std::getline(ss1, temp, ','))
 		{
 			if (!temp.empty())
