@@ -30,6 +30,8 @@
 #define RPL_NOTOPIC(nick, channel) (std::string(":") + SERVER + " 331 " + std::string(nick) + " " + std::string(channel) + " :No topic is set\r\n")
 #define RPL_TOPIC(nick, channel, topic) (std::string(":") + SERVER + " 332 " + std::string(nick) + " " + std::string(channel) + " :" + std::string(topic) + "\r\n")
 #define RPL_TOPICWHOTIME(nick, channel, who, when) (std::string(":") + SERVER + " 333 " + std::string(nick) + " " + std::string(channel) + " " + std::string(who) + " " + std::string(when) + "\r\n")
+#define RPL_NAMREPLY(nick, channel, user_list) (std::string(":") + SERVER + " 353 " + std::string(nick) + " = " + std::string(channel) + " :" + std::string(user_list) + "\r\n")
+#define RPL_ENDOFNAMES(nick, channel) (std::string(":") + SERVER + " 366 " + std::string(nick) + " " + std::string(channel) + " :" + "End of /NAMES list\r\n")
 
 #define ERR_BADCHANNELKEY(nick, channel) (std::string(":") + SERVER + " 475 " + std::string(nick) + " " + std::string(channel) + " :Cannot join channel (+k)\r\n")
 #define ERR_INVITEONLYCHAN(nick, channel) (std::string(":") + SERVER + " 473 " + std::string(nick) + " " + std::string(channel) + " :Cannot join channel (+i)\r\n")

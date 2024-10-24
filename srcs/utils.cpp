@@ -1,10 +1,18 @@
-#include "Server.hpp"
+#include "utils.hpp"
 
 time_t	getTimestamp()
 {
 	time_t	timestamp;
 	time(&timestamp);
 	return timestamp;
+}
+
+std::string	getTimestampDate()
+{
+	time_t	timestamp;
+	time(&timestamp);
+	std::string timeString = ctime(&timestamp);
+	return timeString;
 }
 
 std::vector<std::string>	parseParams(const std::string& src)
