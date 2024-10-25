@@ -2,7 +2,10 @@
 #include "Client.hpp"
 #include "numerics.hpp"
 
-Channel::Channel(const std::string &name): _name(name) {}
+Channel::Channel(const std::string &name): _name(name)
+{
+	_userLimit = 10;
+}
 
 const std::string	&Channel::getName()
 {
@@ -32,7 +35,7 @@ void	Channel::setKey(const std::string &key)
 void	Channel::addChannelClient(Client *client, const std::string& name)
 {
 	std::vector<Client*>::iterator it = std::find(channelClients.begin(), channelClients.end(), client);
-	if (it != channelClients.end())
+	if (it != channelClients.end() || !client)
 		return ;
 	channelClients.push_back(client);
 	client->reply(JOIN(client->getNickname(), client->getUsername(), name));
@@ -41,10 +44,20 @@ void	Channel::addChannelClient(Client *client, const std::string& name)
 void	Channel::addChannelOperator(Client *client)
 {
 	std::vector<Client*>::iterator it = std::find(channelOperators.begin(), channelOperators.end(), client);
-	if (it != channelOperators.end())
+	if (it != channelOperators.end() || !client)
 		return ;
 	channelOperators.push_back(client);
 	std::cout << "Added channel Operator " << client->getNickname() << std::endl;
+}
+
+void	Channel::deleteChannelOperator(Client *client)
+{
+	std::vector<Client*>::iterator it = std::find(channelOperators.begin(), channelOperators.end(), client);
+	if (it != channelOperators.end())
+	{
+		channelOperators.erase(it);
+		std::cout << "Deleted channel Operator " << client->getNickname() << std::endl;
+	}
 }
 
 Client*		Channel::getChannelOperator(const std::string& nickname)
@@ -87,6 +100,11 @@ bool		Channel::getModeT()
 	return this->_modeT;
 }
 
+int			Channel::getUserLimit()
+{
+	return this->_userLimit;
+}
+
 void		Channel::setModeT()
 {
 	this->_modeT = !_modeT;
@@ -108,11 +126,18 @@ void		Channel::setTopicCreationTime(const std::string& creationTime)
 	this->_topicCreationTime = creationTime;
 }
 
-void		Channel::sendMessageToAllClients(const std::string& src)
+void		Channel::setUserLimit(int limit)
+{
+	this->_userLimit = limit;
+}
+
+void		Channel::sendMessageToAllClients(const std::string& src, const std::string& param1, const std::string& param2)
 {
 	for (std::vector<Client*>::iterator it = channelClients.begin(); it != channelClients.end(); ++it)
 	{
 		if (src == "TOPIC")
 			(*it)->reply(TOPIC((*it)->getNickname(), (*it)->getUsername(), this->getName(), this->getChannelTopic()));
+		else if (src == "MODE")
+			(*it)->reply(MODE((*it)->getNickname(), (*it)->getUsername(), (*it)->getIPaddress(), this->getName(), param1, param2));
 	}
 }

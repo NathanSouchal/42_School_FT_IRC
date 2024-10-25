@@ -33,6 +33,7 @@
 
 #define RPL_UMODEIS(nick, modes) (std::string(":") + SERVER + " 221 " + std::string(nick) + " :" + std::string(modes) + "\r\n")
 #define RPL_CHANNELMODEIS(nick, channel, modes, arguments) (std::string(":") + SERVER + " 324 " + std::string(nick) + " " + std::string(channel) + " " + std::string(modes) + " " + std::string(arguments) + "\r\n")
+#define ERR_INVALIDMODEPARAM(nick, channel, mode, param) (std::string(":") + SERVER + " 696 " + std::string(nick) + " " + std::string(channel) + " " + std::string(mode) + " " + std::string(param) + " :Invalid channel mode parameter\r\n")
 
 #define ERR_BADCHANNELKEY(nick, channel) (std::string(":") + SERVER + " 475 " + std::string(nick) + " " + std::string(channel) + " :Cannot join channel (+k)\r\n")
 #define ERR_INVITEONLYCHAN(nick, channel) (std::string(":") + SERVER + " 473 " + std::string(nick) + " " + std::string(channel) + " :Cannot join channel (+i)\r\n")
@@ -43,5 +44,6 @@
 
 #define JOIN(nick, username, channel) (std::string(":") + std::string(nick) + "!" + std::string(username) + "@" + SERVER + " JOIN :" + std::string(channel) + "\r\n")
 #define TOPIC(nick, username, channel, topic) (std::string(":") + std::string(nick) + "!" + std::string(username) + "@" + SERVER + " TOPIC " + std::string(channel) + " :" + std::string(topic) + "\r\n")
+#define MODE(nick, username, ip, channel, modes, params) (std::string(":") + std::string(nick) + "!" + std::string(username) + "@" + std::string(ip) + " MODE " + std::string(channel) + " " + std::string(modes) + " " + std::string(params) + "\r\n")
 
 #endif

@@ -15,6 +15,7 @@
 #include <unistd.h>
 #include <csignal>
 #include <vector>
+#include <map>
 
 class	Client;
 
@@ -77,6 +78,8 @@ class	Server
 		void	mode(const std::string& message, Client *client);
 		std::vector<std::string>	parseModes(const std::string& src);
 		bool	checkModeParams(const std::vector<std::string>& modes, const std::vector<std::string>& params);
+		std::map<std::string, std::string>	joinModesAndParams(const std::vector<std::string>& modes, const std::vector<std::string>& params);
+		void	setNewModes(std::map<std::string, std::string> modesAndParams, Channel* channel, Client* client);
 };
 
 #endif
