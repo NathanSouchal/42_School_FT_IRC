@@ -38,6 +38,7 @@ class Channel
 		std::string			getTopicCreationTime();
 		bool				getModeT();
 		int					getUserLimit();
+		std::string			getActiveModes();
 
 		void				setKey(const std::string &key);
 		void				setInviteOnly();

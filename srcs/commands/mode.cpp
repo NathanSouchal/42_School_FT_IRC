@@ -91,7 +91,22 @@ void	Server::mode(const std::string& message, Client *client)
 	//ici return modes actuels du channel
 	//si pas operateur retourne tout sans les params, sinon retourne tout
 	if (parsedMessage.size() == 2)
-		return client->reply(RPL_CHANNELMODEIS(client->getNickname(), channel, "+k", "password"));
+	{
+		if (!channelCopy->getChannelOperator(client->getNickname()))
+			return client->reply(RPL_CHANNELMODEIS1(client->getNickname(), channel, channelCopy->getActiveModes()));
+		else
+		{
+			std::string	activeParams;
+			if (!channelCopy->getKey().empty())
+			{
+				activeParams += channelCopy->getKey();
+				activeParams += " ";
+			}
+			activeParams += convertInString(channelCopy->getUserLimit());
+			return client->reply(RPL_CHANNELMODEIS2(client->getNickname(), channel, channelCopy->getActiveModes(), activeParams));
+		}
+
+	}
 	if (!channelCopy->getChannelOperator(client->getNickname()))
 		return client->reply(ERR_CHANOPRIVSNEEDED(client->getNickname(), channel));
 	parsedModes = parseModes(parsedMessage[2]);

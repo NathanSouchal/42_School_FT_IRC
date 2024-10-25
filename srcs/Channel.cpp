@@ -105,6 +105,22 @@ int			Channel::getUserLimit()
 	return this->_userLimit;
 }
 
+std::string	Channel::getActiveModes()
+{
+	std::string	result = "+";
+
+	if (getInviteOnly())
+		result += "i";
+	if (getModeT())
+		result += "t";
+	if (!getKey().empty())
+		result += "k";
+	if (channelOperators.size())
+		result += "o";
+	result += "l";
+	return result;
+}
+
 void		Channel::setModeT()
 {
 	this->_modeT = !_modeT;
