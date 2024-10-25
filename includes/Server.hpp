@@ -75,8 +75,8 @@ class	Server
 
 		//MODE
 		void	mode(const std::string& message, Client *client);
-		std::vector<std::string>	parseModes(const std::string& src, Client *client);
-		void	parseParameters(const std::string& src, Client *client);
+		std::vector<std::string>	parseModes(const std::string& src);
+		bool	checkModeParams(const std::vector<std::string>& modes, const std::vector<std::string>& params);
 };
 
 #endif
