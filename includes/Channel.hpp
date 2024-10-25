@@ -23,28 +23,30 @@ class Channel
 		bool					_modeT;
 	public:
 		Channel(const std::string &name);
-		void				addChannelClient(Client *client);
-		void				addChannelOperator(Client *client);
-		std::string			generateUserList();
-		void				replySuccessfullJoin(Client *client);
+		void					addChannelClient(Client *client);
+		void					addChannelOperator(Client *client);
+		std::string				generateUserList();
+		void					replySuccessfullJoin(Client *client);
 
-		Client*				getChannelOperator(const std::string& nickname);
-		Client*				getChannelClient(const std::string& nickname);
-		const std::string	&getName();
-		const std::string	&getKey();
-		bool				getInviteOnly();
-		std::string			getChannelTopic();
-		std::string			getTopicCreator();
-		std::string			getTopicCreationTime();
-		bool				getModeT();
+		Client*					findOperatorInChannel(const std::string& nickname);
+		Client*					findClientInChannel(const std::string& nickname);
+		const std::string		&getName();
+		const std::string		&getKey();
+		bool					getInviteOnly();
+		std::string				getChannelTopic();
+		std::string				getTopicCreator();
+		std::string				getTopicCreationTime();
+		bool					getModeT();
+		std::vector<Client *>	getClientList();
 
-		void				setKey(const std::string &key);
-		void				setInviteOnly();
-		void				setChannelTopic(const std::string& topic);
-		void				setTopicCreator(const std::string& creator);
-		void				setTopicCreationTime(const std::string& creationTime);
-		void				setModeT();
-		void				sendMessageToAllClients(const std::string& src);
+		void					setKey(const std::string &key);
+		void					setInviteOnly();
+		void					setChannelTopic(const std::string& topic);
+		void					setTopicCreator(const std::string& creator);
+		void					setTopicCreationTime(const std::string& creationTime);
+		void					setModeT();
+		void					sendMessageToAllClients(const std::string& src);
+		void					informUsersOnJoin(Client *client);
 };
 
 #endif

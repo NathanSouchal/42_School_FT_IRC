@@ -2,6 +2,7 @@
 #include "Client.hpp"
 #include "numerics.hpp"
 #include "utils.hpp"
+#include "Channel.hpp"
 
 void	Server::privmsg(const std::string& message, Client *client)
 {
@@ -28,9 +29,53 @@ void	Server::privmsg(const std::string& message, Client *client)
 	}
 	for (size_t i = 0; i < targets.size(); ++i)
 	{
-		if (targets[i][0] == '&' || targets[i][0] == '#') {}
-			//messageToChannelFunction
-		else {}
-			//messageToUserFunction
+		if (targets[i][0] == '&' || targets[i][0] == '#') 
+			messageToChannel(msgToSend, client, targets[i]);
+		else
+			messageToUser(msgToSend, client, targets[i]);
+			
 	}
+}
+
+void	Server::messageToChannel(const std::string& msgToSend, Client *client, std::string channelName)
+{
+	std::string				commandToSend;
+	Channel					*channel;
+	std::vector<Client *>	channelClients;
+
+	channel = findChannel(channelName);
+	if (!channel)
+	{
+		client->reply(ERR_NOSUCHCHANNEL(client->getNickname(), channelName));
+		return ;
+	}
+	if (!channel->findClientInChannel(client->getNickname()))
+	{
+		client->reply(ERR_NOTONCHANNEL(client->getNickname(), channelName));
+		return ;
+	}
+	commandToSend = ":" + client->getNickname() + "!" + client->getUsername() + "@" + client->getIPaddress() \
+	+ " PRIVMSG " + channelName + " :" + msgToSend;
+	channelClients = channel->getClientList();
+	for (size_t i = 0; i < channelClients.size(); ++i)
+	{
+		if (channelClients[i] != client)
+			channelClients[i]->reply(commandToSend);
+	}
+}
+
+void	Server::messageToUser(const std::string& msgToSend, Client *client, std::string targetUserName)
+{
+	std::string	commandToSend;
+	Client		*targetUser;			
+
+	targetUser = findClient(client->getFd());
+	if (!targetUser)
+	{
+		client->reply(ERR_NOSUCHNICK(client->getNickname(), targetUserName));
+		return ;
+	}
+	commandToSend = ":" + client->getNickname() + "!" + client->getUsername() + "@" + client->getIPaddress() \
+	+ " PRIVMSG " + targetUser->getNickname() + " :" + msgToSend;
+	targetUser->reply(commandToSend);
 }

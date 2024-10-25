@@ -69,6 +69,7 @@ bool	Server::checkAddClientToChannel(const std::string &name, const std::string 
 			}
 			else
 				serverChannels[i]->addChannelClient(client);
+			serverChannels[i]->informUsersOnJoin(client);
 			return true;
 		}
 	}

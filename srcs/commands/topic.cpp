@@ -30,7 +30,7 @@ void	Server::topic(const std::string& message, Client *client)
 	{
 		Channel*	channelCopy = findChannel(channel);
 
-		if (!channelCopy->getChannelClient(client->getNickname()))
+		if (!channelCopy->findClientInChannel(client->getNickname()))
 			client->reply(ERR_NOTONCHANNEL(client->getNickname(), channel));
 		if (topic.empty())
 		{
@@ -45,7 +45,7 @@ void	Server::topic(const std::string& message, Client *client)
 		}
 		else
 		{
-			if (!channelCopy->getModeT() && !channelCopy->getChannelOperator(client->getNickname()))
+			if (!channelCopy->getModeT() && !channelCopy->findOperatorInChannel(client->getNickname()))
 				client->reply(ERR_CHANOPRIVSNEEDED(client->getNickname(), channel));
 			//si -t non-active les non-operateurs peuvent pas mofifier le topic
 			else

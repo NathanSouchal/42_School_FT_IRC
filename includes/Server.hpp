@@ -58,10 +58,15 @@ class	Server
 		void	nickname(const std::string& message, Client *client);
 		void	user(const std::string& message, Client *client);
 		void	motd(const std::string& message, Client *client);
+
 		void	join(const std::string& message, Client *client);
 		bool	checkAddClientToChannel(const std::string &name, const std::string &key, Client *client);
 		void	createChannel(const std::string &name, const std::string &key, Client *client);
+
 		void	privmsg(const std::string& message, Client *client);
+		void	messageToChannel(const std::string& msgToSend, Client *client, std::string channelName);
+		void	messageToUser(const std::string& msgToSend, Client *client, std::string targetUserName);
+
 		void	kick(const std::string& message, Client *client);
 		void	invite(const std::string& message, Client *client);
 		void	topic(const std::string& message, Client *client);
