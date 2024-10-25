@@ -35,9 +35,6 @@ std::vector<std::string>	Server::parseModes(const std::string& src)
 	return parsedModes;
 }
 
-//normalement rep ERR_INVALIDMODEPARAM, mais comment savoir quel mode associe a quel paran est invalide ?
-//pour l'instant erreur generique ERR_NEEDMOREPARAMS
-
 bool	Server::checkModeParams(const std::vector<std::string>& modes, const std::vector<std::string>& params)
 {
 	size_t	paramCounter = 0;
@@ -231,3 +228,6 @@ void	Server::setNewModes(std::map<std::string, std::string> modesAndParams, Chan
 //MODE #channel +mode-mode user1 user2
 
 //Si mode deja actif ou inactif, on ignore
+
+//Normalement si mauvaise combinaison mode+param on rep ERR_INVALIDMODEPARAM au client, mais comment savoir quel mode associe a quel param est invalide ?
+//pour l'instant erreur generique ERR_NEEDMOREPARAMS
