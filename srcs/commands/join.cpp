@@ -27,7 +27,6 @@ void	Server::join(const std::string& message, Client *client)
 			if (!temp.empty())
 				vecChannelKeys.push_back(temp);
 		}
-		std::cout << "KEYS : " << channelKeys << std::endl;
 	}
 	std::stringstream			ss2(channelNames);
 	while (std::getline(ss2, temp, ','))
@@ -46,7 +45,6 @@ void	Server::join(const std::string& message, Client *client)
 		if (!checkAddClientToChannel(vecChannelNames[i], key, client))
 			createChannel(vecChannelNames[i], key, client);
 	}
-	std::cout << "CHANNELS : " << channelNames << std::endl;
 }
 
 bool	Server::checkAddClientToChannel(const std::string &name, const std::string &key, Client *client)

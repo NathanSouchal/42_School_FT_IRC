@@ -74,6 +74,7 @@ class	Server
 		void	lusers(const std::string& message, Client *client);
 
 		Client	*findClient(int fd);
+		Client	*findClientByNickname(std::string nickname);
 		bool	findNickName(const std::string& nick);
 
 		void	addChannel(Channel *channel);

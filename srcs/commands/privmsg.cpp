@@ -21,6 +21,8 @@ void	Server::privmsg(const std::string& message, Client *client)
 		return ;
 	}
 	msgToSend = parameters[1];
+	if (msgToSend[0] == ':')
+		msgToSend = msgToSend.substr(msgToSend.find(':') + 1);
 	std::stringstream			ss(parameters[0]);
 	while (std::getline(ss, temp, ','))
 	{
@@ -55,12 +57,11 @@ void	Server::messageToChannel(const std::string& msgToSend, Client *client, std:
 		return ;
 	}
 	commandToSend = ":" + client->getNickname() + "!" + client->getUsername() + "@" + client->getIPaddress() \
-	+ " PRIVMSG " + channelName + " :" + msgToSend;
+	+ " PRIVMSG " + channelName + " :" + msgToSend + "\r\n";
 	channelClients = channel->getClientList();
 	for (size_t i = 0; i < channelClients.size(); ++i)
 	{
-		if (channelClients[i] != client)
-			channelClients[i]->reply(commandToSend);
+		channelClients[i]->reply(commandToSend);
 	}
 }
 
@@ -69,13 +70,13 @@ void	Server::messageToUser(const std::string& msgToSend, Client *client, std::st
 	std::string	commandToSend;
 	Client		*targetUser;			
 
-	targetUser = findClient(client->getFd());
+	targetUser = findClientByNickname(targetUserName);
 	if (!targetUser)
 	{
 		client->reply(ERR_NOSUCHNICK(client->getNickname(), targetUserName));
 		return ;
 	}
 	commandToSend = ":" + client->getNickname() + "!" + client->getUsername() + "@" + client->getIPaddress() \
-	+ " PRIVMSG " + targetUser->getNickname() + " :" + msgToSend;
+	+ " PRIVMSG " + targetUser->getNickname() + " :" + msgToSend + "\r\n";
 	targetUser->reply(commandToSend);
 }

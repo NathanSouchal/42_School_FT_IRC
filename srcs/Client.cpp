@@ -91,6 +91,7 @@ void	Client::setRealname(const std::string &realname)
 void	Client::reply(std::string message)
 {
 	send(_fd, message.c_str(), message.size(), 0);
+	std::cout << "fd: " << _fd << ", message: " << message << std::endl;
 }
 
 void	Client::setTrueRegistration()

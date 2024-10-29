@@ -104,6 +104,16 @@ Client	*Server::findClient(int fd)
 	return NULL;
 }
 
+Client	*Server::findClientByNickname(std::string nickname)
+{
+	for (size_t i = 0; i < clients.size(); ++i)
+	{
+		if (clients[i]->getNickname() == nickname)
+			return clients[i];
+	}
+	return NULL;
+}
+
 bool	Server::findNickName(const std::string& nick)
 {
 	for (size_t i = 0; i < clients.size(); ++i)
