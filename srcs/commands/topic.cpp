@@ -61,7 +61,7 @@ void	Server::topic(const std::string& message, Client *client)
 				channelCopy->setTopicCreator(client->getNickname());
 				channelCopy->setTopicCreationTime(convertInString(getTimestamp()));
 				//ici envoyer le nouveau topic a tous les membres du channel
-				channelCopy->sendMessageToAllClients("TOPIC");
+				channelCopy->sendMessageToAllClients("TOPIC", "", "");
 			}
 		}
 	}
