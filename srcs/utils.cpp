@@ -38,4 +38,3 @@ std::vector<std::string>	parseParams(const std::string& src)
 	}
 	return result;
 }
-

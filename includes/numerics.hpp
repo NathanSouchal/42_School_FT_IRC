@@ -33,14 +33,23 @@
 #define RPL_NAMREPLY(nick, channel, user_list) (std::string(":") + SERVER + " 353 " + std::string(nick) + " = " + std::string(channel) + " :" + std::string(user_list) + "\r\n")
 #define RPL_ENDOFNAMES(nick, channel) (std::string(":") + SERVER + " 366 " + std::string(nick) + " " + std::string(channel) + " :" + "End of /NAMES list\r\n")
 
+#define RPL_UMODEIS(nick, modes) (std::string(":") + SERVER + " 221 " + std::string(nick) + " :" + std::string(modes) + "\r\n")
+#define RPL_CHANNELMODEIS1(nick, channel, modes) (std::string(":") + SERVER + " 324 " + std::string(nick) + " " + std::string(channel) + " " + std::string(modes) + "\r\n")
+#define RPL_CHANNELMODEIS2(nick, channel, modes, params) (std::string(":") + SERVER + " 324 " + std::string(nick) + " " + std::string(channel) + " " + std::string(modes) + " " + std::string(params) + "\r\n")
+#define ERR_UNKNOWNMODE(nick, mode) (std::string(":") + SERVER + " 472 " + std::string(nick) + " " + std::string(mode) + " :is unknown mode char to me\r\n")
+#define ERR_NOSUCHNICK(nick, str) (std::string(":") + SERVER + " 401 " + std::string(nick) + " " + std::string(str) + " :No such nick/channel\r\n")
+#define ERR_INVALIDMODEPARAM(nick, channel, mode, params) (std::string(":") + SERVER + " 696 " + std::string(nick) + " " + std::string(channel) + " " + std::string(mode) + " " + std::string(params) + " :Invalid channel mode parameter\r\n")
+
 #define ERR_BADCHANNELKEY(nick, channel) (std::string(":") + SERVER + " 475 " + std::string(nick) + " " + std::string(channel) + " :Cannot join channel (+k)\r\n")
 #define ERR_INVITEONLYCHAN(nick, channel) (std::string(":") + SERVER + " 473 " + std::string(nick) + " " + std::string(channel) + " :Cannot join channel (+i)\r\n")
 #define ERR_NICKNAMEINUSE(nick) (std::string(":") + SERVER + " 433 " + std::string(nick) + " " + std::string(nick) + " :Nickname is already in use\r\n")
 #define ERR_NOTONCHANNEL(nick, channel) (std::string(":") + SERVER + " 442 " + std::string(nick) + " " + std::string(channel) + " :You're not on that channel\r\n")
 #define ERR_NOSUCHCHANNEL(nick, channel) (std::string(":") + SERVER + " 403 " + std::string(nick) + " " + std::string(channel) + " :No such channel\r\n")
+#define ERR_USERNOTINCHANNEL(nick, str, channel) (std::string(":") + SERVER + " 441 " + std::string(nick) + " " + std::string(str) + " " + std::string(channel) + " :They aren't on that channel\r\n")
 #define ERR_CHANOPRIVSNEEDED(nick, channel) (std::string(":") + SERVER + " 482 " + std::string(nick) + " " + std::string(channel) + " :You're not channel operator\r\n")
 
 #define JOIN(nick, username, channel) (std::string(":") + std::string(nick) + "!" + std::string(username) + "@" + SERVER + " JOIN :" + std::string(channel) + "\r\n")
 #define TOPIC(nick, username, channel, topic) (std::string(":") + std::string(nick) + "!" + std::string(username) + "@" + SERVER + " TOPIC " + std::string(channel) + " :" + std::string(topic) + "\r\n")
+#define MODE(nick, username, ip, channel, modes, params) (std::string(":") + std::string(nick) + "!" + std::string(username) + "@" + std::string(ip) + " MODE " + std::string(channel) + " " + std::string(modes) + " " + std::string(params) + "\r\n")
 
 #endif
