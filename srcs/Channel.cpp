@@ -32,13 +32,43 @@ void	Channel::setKey(const std::string &key)
 	_key = key;
 }
 
-void	Channel::addChannelClient(Client *client, const std::string& name)
+std::string	Channel::generateUserList()
+{
+	std::string	userList;
+
+	for (size_t i = 0; i < channelOperators.size(); ++i)
+	{
+		userList = userList + "@" + channelOperators[i]->getNickname();
+		if (i != channelOperators.size() - 1)
+			userList + " ";
+	}
+	for (size_t i = 0; i < channelClients.size(); ++i)
+	{
+		if (std::find(channelOperators.begin(), channelOperators.end(), channelClients[i]) ==  channelOperators.end())
+			userList = userList + " " + channelClients[i]->getNickname();
+	}
+	return userList;
+}
+
+void	Channel::replySuccessfullJoin(Client *client)
+{
+	client->reply(JOIN(client->getNickname(), client->getUsername(), _name));
+	if (!_channelTopic.empty())
+	{
+		client->reply(RPL_TOPIC(client->getNickname(), _name, _channelTopic));
+		client->reply(RPL_TOPICWHOTIME(client->getNickname(), _name, _topicCreator, _topicCreationTime));
+	}
+	client->reply(RPL_NAMREPLY(client->getNickname(), _name, generateUserList()));
+	client->reply(RPL_ENDOFNAMES(client->getNickname(), _name));
+}
+
+void	Channel::addChannelClient(Client *client)
 {
 	std::vector<Client*>::iterator it = std::find(channelClients.begin(), channelClients.end(), client);
 	if (it != channelClients.end() || !client)
 		return ;
 	channelClients.push_back(client);
-	client->reply(JOIN(client->getNickname(), client->getUsername(), name));
+	replySuccessfullJoin(client);
 }
 
 void	Channel::addChannelOperator(Client *client)

@@ -24,9 +24,11 @@ class Channel
 		int						_userLimit;
 	public:
 		Channel(const std::string &name);
-		void				addChannelClient(Client *client, const std::string& name);
+		void				addChannelClient(Client *client);
 		void				addChannelOperator(Client *client);
 		void				deleteChannelOperator(Client *client);
+		std::string			generateUserList();
+		void				replySuccessfullJoin(Client *client);
 
 		Client*				getChannelOperator(const std::string& nickname);
 		Client*				getChannelClient(const std::string& nickname);

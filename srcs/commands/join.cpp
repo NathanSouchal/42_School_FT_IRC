@@ -11,16 +11,17 @@ void	Server::join(const std::string& message, Client *client)
 	std::string					temp;
 	std::string					key;
 
-	std::string					parameters = message.substr(message.find(" ") + 1);
-	size_t 		pos = parameters.find(" ");
-	std::string					channelNames;
-	if (pos == std::string::npos)
-		channelNames = parameters;
-	else
+	std::vector<std::string>	parameters = parseParams(message.substr(message.find(" ") + 1));
+	if (parameters.size() > 2)
 	{
-		channelNames = parameters.substr(0, pos);
-		std::string					channelKeys = parameters.substr(pos + 1);
-		std::stringstream			ss1(channelKeys);
+		client->reply(ERR_NEEDMOREPARAMS(client->getNickname(), "JOIN"));
+		return ;
+	}
+	std::string					channelNames = parameters[0];
+	if (parameters.size() == 2)
+	{
+		std::string			channelKeys = parameters[1];
+		std::stringstream	ss1(channelKeys);
 		while (std::getline(ss1, temp, ','))
 		{
 			if (!temp.empty())
@@ -32,7 +33,11 @@ void	Server::join(const std::string& message, Client *client)
 	while (std::getline(ss2, temp, ','))
 	{
 		if (!temp.empty())
+		{
+			if (!checkChannelName(temp, client))
+				return ;
 			vecChannelNames.push_back(temp);
+		}
 	}
 	for (size_t i = 0; i < vecChannelNames.size(); ++i)
 	{
@@ -58,12 +63,12 @@ bool	Server::checkAddClientToChannel(const std::string &name, const std::string 
 			if (!serverChannels[i]->getKey().empty())
 			{
 				if (serverChannels[i]->getKey() == key)
-					serverChannels[i]->addChannelClient(client, name);
+					serverChannels[i]->addChannelClient(client);
 				else
 					client->reply(ERR_BADCHANNELKEY(client->getNickname(), name));
 			}
 			else
-				serverChannels[i]->addChannelClient(client, name);
+				serverChannels[i]->addChannelClient(client);
 			return true;
 		}
 	}
@@ -74,10 +79,17 @@ void	Server::createChannel(const std::string &name, const std::string &key, Clie
 {
 	Channel *channel = new Channel(name);
 	std::cout << "Channel " << name << " created !" << std::endl;
-	channel->addChannelClient(client, name);
-	std::cout << client->getNickname() << " added to channel " << name << " !" << std::endl;
 	channel->addChannelOperator(client);
+	channel->addChannelClient(client);
+	std::cout << client->getNickname() << " added to channel " << name << " !" << std::endl;
 	channel->setKey(key);
-
 	serverChannels.push_back(channel);
+}
+
+bool	checkChannelName(std::string name, Client *client)
+{
+	if (name[0] == '&' || name[0] == '#')
+		return true;
+	client->reply(ERR_NOSUCHCHANNEL(client->getNickname(), name));
+	return false;
 }
