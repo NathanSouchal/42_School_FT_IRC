@@ -52,7 +52,7 @@ std::string	Channel::generateUserList()
 
 void	Channel::replySuccessfullJoin(Client *client)
 {
-	client->reply(JOIN(client->getNickname(), client->getUsername(), _name));
+	client->reply(JOIN(client->getNickname(), client->getUsername(), client->getIPaddress(), _name));
 	if (!_channelTopic.empty())
 	{
 		client->reply(RPL_TOPIC(client->getNickname(), _name, _channelTopic));
@@ -90,7 +90,7 @@ void	Channel::deleteChannelOperator(Client *client)
 	}
 }
 
-Client*		Channel::getChannelOperator(const std::string& nickname)
+Client*		Channel::findOperatorInChannel(const std::string& nickname)
 {
 	for (std::vector<Client*>::iterator it = channelOperators.begin(); it != channelOperators.end(); ++it)
 	{
@@ -100,7 +100,7 @@ Client*		Channel::getChannelOperator(const std::string& nickname)
 	return NULL;
 }
 
-Client*		Channel::getChannelClient(const std::string& nickname)
+Client*		Channel::findClientInChannel(const std::string& nickname)
 {
 	for (std::vector<Client*>::iterator it = channelClients.begin(); it != channelClients.end(); ++it)
 	{
@@ -182,8 +182,26 @@ void		Channel::sendMessageToAllClients(const std::string& src, const std::string
 	for (std::vector<Client*>::iterator it = channelClients.begin(); it != channelClients.end(); ++it)
 	{
 		if (src == "TOPIC")
-			(*it)->reply(TOPIC((*it)->getNickname(), (*it)->getUsername(), this->getName(), this->getChannelTopic()));
+			(*it)->reply(TOPIC((*it)->getNickname(), (*it)->getUsername(), this->getName(), (*it)->getIPaddress(), this->getChannelTopic()));
 		else if (src == "MODE")
 			(*it)->reply(MODE((*it)->getNickname(), (*it)->getUsername(), (*it)->getIPaddress(), this->getName(), param1, param2));
+	}
+}
+
+std::vector<Client *>	Channel::getClientList()
+{
+	return channelClients;
+}
+
+void	Channel::informUsersOnJoin(Client *client)
+{
+	for (size_t i = 0; i < channelClients.size(); ++i)
+	{
+		if (channelClients[i] != client)
+		{
+			channelClients[i]->reply(JOIN(client->getNickname(), client->getUsername(), client->getIPaddress(), _name));
+			channelClients[i]->reply(RPL_NAMREPLY(client->getNickname(), _name, generateUserList()));
+			channelClients[i]->reply(RPL_ENDOFNAMES(client->getNickname(), _name));
+		}
 	}
 }

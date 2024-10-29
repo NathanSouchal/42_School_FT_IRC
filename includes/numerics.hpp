@@ -37,7 +37,6 @@
 #define RPL_CHANNELMODEIS1(nick, channel, modes) (std::string(":") + SERVER + " 324 " + std::string(nick) + " " + std::string(channel) + " " + std::string(modes) + "\r\n")
 #define RPL_CHANNELMODEIS2(nick, channel, modes, params) (std::string(":") + SERVER + " 324 " + std::string(nick) + " " + std::string(channel) + " " + std::string(modes) + " " + std::string(params) + "\r\n")
 #define ERR_UNKNOWNMODE(nick, mode) (std::string(":") + SERVER + " 472 " + std::string(nick) + " " + std::string(mode) + " :is unknown mode char to me\r\n")
-#define ERR_NOSUCHNICK(nick, str) (std::string(":") + SERVER + " 401 " + std::string(nick) + " " + std::string(str) + " :No such nick/channel\r\n")
 #define ERR_INVALIDMODEPARAM(nick, channel, mode, params) (std::string(":") + SERVER + " 696 " + std::string(nick) + " " + std::string(channel) + " " + std::string(mode) + " " + std::string(params) + " :Invalid channel mode parameter\r\n")
 
 #define ERR_BADCHANNELKEY(nick, channel) (std::string(":") + SERVER + " 475 " + std::string(nick) + " " + std::string(channel) + " :Cannot join channel (+k)\r\n")
@@ -48,8 +47,13 @@
 #define ERR_USERNOTINCHANNEL(nick, str, channel) (std::string(":") + SERVER + " 441 " + std::string(nick) + " " + std::string(str) + " " + std::string(channel) + " :They aren't on that channel\r\n")
 #define ERR_CHANOPRIVSNEEDED(nick, channel) (std::string(":") + SERVER + " 482 " + std::string(nick) + " " + std::string(channel) + " :You're not channel operator\r\n")
 
-#define JOIN(nick, username, channel) (std::string(":") + std::string(nick) + "!" + std::string(username) + "@" + SERVER + " JOIN :" + std::string(channel) + "\r\n")
-#define TOPIC(nick, username, channel, topic) (std::string(":") + std::string(nick) + "!" + std::string(username) + "@" + SERVER + " TOPIC " + std::string(channel) + " :" + std::string(topic) + "\r\n")
+#define ERR_NORECIPIENT(nick, command) (std::string(":") + SERVER + " 411 " + std::string(nick) + " :No recipient given " + std::string(command) + "\r\n")
+#define ERR_NOTEXTTOSEND(nick) (std::string(":") + SERVER + " 412 " + std::string(nick) + " :No text to send\r\n")
+#define ERR_NOSUCHNICK(nick, nickDestination) (std::string(":") + SERVER + " 401 " + std::string(nick) + " " + std::string(nickDestination) + " " + ":No such nick/channel\r\n")
+#define ERR_CANNOTSENDTOCHAN(nick, channel) (std::string(":") + SERVER + " 404 " + std::string(nick) + " " + std::string(channel) + " " + ":Cannot send to channel\r\n")
+
+#define JOIN(nick, username, ip, channel) (std::string(":") + std::string(nick) + "!" + std::string(username) + "@" + std::string(ip) + " JOIN :" + std::string(channel) + "\r\n")
+#define TOPIC(nick, username, channel, ip, topic) (std::string(":") + std::string(nick) + "!" + std::string(username) + "@" + std::string(ip) + " TOPIC " + std::string(channel) + " :" + std::string(topic) + "\r\n")
 #define MODE(nick, username, ip, channel, modes, params) (std::string(":") + std::string(nick) + "!" + std::string(username) + "@" + std::string(ip) + " MODE " + std::string(channel) + " " + std::string(modes) + " " + std::string(params) + "\r\n")
 
 #endif

@@ -84,13 +84,13 @@ void	Server::mode(const std::string& message, Client *client)
 		return client->reply(ERR_NOSUCHCHANNEL(client->getNickname(), channel));
 	Channel*	channelCopy = findChannel(channel);
 
-	if (!channelCopy->getChannelClient(client->getNickname()))
+	if (!channelCopy->findClientInChannel(client->getNickname()))
 		return client->reply(ERR_NOTONCHANNEL(client->getNickname(), channel));
 	//ici return modes actuels du channel
 	//si pas operateur retourne tout sans les params, sinon retourne tout
 	if (parsedMessage.size() == 2)
 	{
-		if (!channelCopy->getChannelOperator(client->getNickname()))
+		if (!channelCopy->findOperatorInChannel(client->getNickname()))
 			return client->reply(RPL_CHANNELMODEIS1(client->getNickname(), channel, channelCopy->getActiveModes()));
 		else
 		{
@@ -105,7 +105,7 @@ void	Server::mode(const std::string& message, Client *client)
 		}
 
 	}
-	if (!channelCopy->getChannelOperator(client->getNickname()))
+	if (!channelCopy->findOperatorInChannel(client->getNickname()))
 		return client->reply(ERR_CHANOPRIVSNEEDED(client->getNickname(), channel));
 	parsedModes = parseModes(parsedMessage[2], client);
 	if (parsedModes.empty())
@@ -147,17 +147,17 @@ void	Server::setNewModes(std::map<std::string, std::string> modesAndParams, Chan
 					params.push_back(it->second);
 				}
 			}
-			else if (it->first[1] == 'o' && !channel->getChannelOperator(it->second))
+			else if (it->first[1] == 'o' && !channel->findOperatorInChannel(it->second))
 			{
 				if (it->second.empty())
 					client->reply(ERR_INVALIDMODEPARAM(client->getNickname(), channel->getName(), "+o", ""));
 				else if (!findNickName(it->second))
 					client->reply(ERR_NOSUCHNICK(client->getNickname(), it->second));
-				else if (!channel->getChannelClient(it->second))
+				else if (!channel->findClientInChannel(it->second))
 					client->reply(ERR_USERNOTINCHANNEL(client->getNickname(), it->second, channel->getName()));
 				else
 				{
-					channel->addChannelOperator(channel->getChannelClient(it->second));
+					channel->addChannelOperator(channel->findClientInChannel(it->second));
 					modes += "+o";
 					params.push_back(it->second);
 				}
@@ -198,9 +198,9 @@ void	Server::setNewModes(std::map<std::string, std::string> modesAndParams, Chan
 				channel->setKey("");
 				modes += "-k";
 			}
-			else if (it->first[1] == 'o' && channel->getChannelOperator(it->second))
+			else if (it->first[1] == 'o' && channel->findOperatorInChannel(it->second))
 			{
-				channel->deleteChannelOperator(channel->getChannelClient(it->second));
+				channel->deleteChannelOperator(channel->findClientInChannel(it->second));
 				modes += "-o";
 				params.push_back(it->second);
 			}
