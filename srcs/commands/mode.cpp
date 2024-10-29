@@ -5,53 +5,47 @@
 #include "numerics.hpp"
 #include "utils.hpp"
 
-std::vector<std::string>	Server::parseModes(const std::string& src)
+std::vector<std::string>	Server::parseModes(const std::string& src, Client *client)
 {
 	std::vector<std::string>	parsedModes, error;
 	std::string	result;
 	char	sign = 0;
+	int		i = 0;
 
-	if (src[0] != '-' && src[0] != '+')
-		return error;
-	sign = src[0];
-	for (size_t i = 1; i < src.size(); ++i)
+	while (src[i])
 	{
-		if ((src[i] == '+' || src[i] == '-') && (src[i - 1] == '+' || src[i - 1] == '-'))
+		if (i == 10)
 			return error;
-		if (src[i] == '+')
+		if (src[i] == '-' || src[i] == '+')
+			break ;
+		client->reply(ERR_UNKNOWNMODE(client->getNickname(), convertInString(src[i])));
+		i++;
+	}
+	for (size_t j = i; j < src.size(); ++j)
+	{
+		if (j != 0 && (src[j] == '+' || src[j] == '-') && ((src[j - 1] == '+' || src[j - 1] == '-') || (j + 1 == src.size())))
+			client->reply(ERR_UNKNOWNMODE(client->getNickname(), convertInString(src[j])));
+		if (src[j] == '+')
 			sign = '+';
-		else if (src[i] == '-')
+		else if (src[j] == '-')
 			sign = '-';
 		else
 		{
-			if (src[i] != 'k' && src[i] != 'o' && src[i] != 'l' && src[i] != 'l' && src[i] != 'i' && src[i] != 't')
-				return error;
-			result += sign;
-			result += src[i];
-			parsedModes.push_back(result);
-			result.clear();
+			if (src[j] != 'k' && src[j] != 'o' && src[j] != 'l' && src[j] != 'l' && src[j] != 'i' && src[j] != 't')
+				client->reply(ERR_UNKNOWNMODE(client->getNickname(), convertInString(src[j])));
+			else
+			{
+				result += sign;
+				result += src[j];
+				parsedModes.push_back(result);
+				result.clear();
+			}
 		}
 	}
 	return parsedModes;
 }
 
-bool	Server::checkModeParams(const std::vector<std::string>& modes, const std::vector<std::string>& params)
-{
-	size_t	paramCounter = 0;
-
-	for (size_t i = 0; i < modes.size(); ++i)
-	{
-		if (((modes[i][1] == 'k' || modes[i][1] == 'l') && modes[i][0] == '+') || modes[i][1] == 'o')
-		{
-			if (paramCounter >= params.size())
-				return false;
-			paramCounter++;
-		}
-	}
-	return paramCounter == params.size();
-}
-
-std::map<std::string, std::string>	Server::joinModesAndParams(const std::vector<std::string>& modes, const std::vector<std::string>& params)
+std::map<std::string, std::string>	Server::joinModesAndParams(const std::vector<std::string>& modes, const std::vector<std::string>& params, Client *client)
 {
 	std::map<std::string, std::string>	modesAndParams;
 	size_t	paramCounter = 0;
@@ -60,8 +54,15 @@ std::map<std::string, std::string>	Server::joinModesAndParams(const std::vector<
 	{
 		if (modes[i][1] == 'k' || modes[i][1] == 'o' || modes[i][1] == 'l')
 		{
-			modesAndParams[modes[i]] = params[paramCounter];
-			paramCounter++;
+			if (!params.size())
+				client->reply(ERR_NEEDMOREPARAMS(client->getNickname(), "MODE"));
+			else if (paramCounter > params.size() - 1)
+				client->reply(ERR_NEEDMOREPARAMS(client->getNickname(), "MODE"));
+			else
+			{
+				modesAndParams[modes[i]] = params[paramCounter];
+				paramCounter++;
+			}
 		}
 		else
 			modesAndParams[modes[i]] = "";
@@ -106,16 +107,11 @@ void	Server::mode(const std::string& message, Client *client)
 	}
 	if (!channelCopy->getChannelOperator(client->getNickname()))
 		return client->reply(ERR_CHANOPRIVSNEEDED(client->getNickname(), channel));
-	parsedModes = parseModes(parsedMessage[2]);
+	parsedModes = parseModes(parsedMessage[2], client);
 	if (parsedModes.empty())
 		return client->reply(ERR_NEEDMOREPARAMS(client->getNickname(), "MODE"));
-	if (parsedMessage.size() >= 4)
-	{
-		parsedMessage.erase(parsedMessage.begin(), parsedMessage.begin()+3);
-		if (!checkModeParams(parsedModes, parsedMessage))
-			return client->reply(ERR_NEEDMOREPARAMS(client->getNickname(), "MODE"));
-	}
-	modesAndParams = joinModesAndParams(parsedModes, parsedMessage);
+	parsedMessage.erase(parsedMessage.begin(), parsedMessage.begin()+3);
+	modesAndParams = joinModesAndParams(parsedModes, parsedMessage, client);
 	for (std::map<std::string, std::string>::iterator it = modesAndParams.begin(); it != modesAndParams.end(); ++it)
 		std::cout << it->first << ", " << it->second << std::endl;
 	setNewModes(modesAndParams, channelCopy, client);
@@ -142,27 +138,46 @@ void	Server::setNewModes(std::map<std::string, std::string> modesAndParams, Chan
 			}
 			else if (it->first[1] == 'k')
 			{
-				channel->setKey(it->second);
-				modes += "+k";
-				params.push_back(it->second);
+				if (it->second.empty())
+					client->reply(ERR_INVALIDMODEPARAM(client->getNickname(), channel->getName(), "+k", ""));
+				else
+				{
+					channel->setKey(it->second);
+					modes += "+k";
+					params.push_back(it->second);
+				}
 			}
-			else if (it->first[1] == 'o' && !channel->getChannelOperator(it->second) && channel->getChannelClient(it->second))
+			else if (it->first[1] == 'o' && !channel->getChannelOperator(it->second))
 			{
-				channel->addChannelOperator(channel->getChannelClient(it->second));
-				modes += "+o";
-				params.push_back(it->second);
+				if (it->second.empty())
+					client->reply(ERR_INVALIDMODEPARAM(client->getNickname(), channel->getName(), "+o", ""));
+				else if (!findNickName(it->second))
+					client->reply(ERR_NOSUCHNICK(client->getNickname(), it->second));
+				else if (!channel->getChannelClient(it->second))
+					client->reply(ERR_USERNOTINCHANNEL(client->getNickname(), it->second, channel->getName()));
+				else
+				{
+					channel->addChannelOperator(channel->getChannelClient(it->second));
+					modes += "+o";
+					params.push_back(it->second);
+				}
 			}
 			else if (it->first[1] == 'l')
 			{
-				char *end;
-				long int	res = strtol(it->second.c_str(), &end, 10);
-				if (!res || res > 2000)
-					client->reply(ERR_INVALIDMODEPARAM(client->getNickname(), channel->getName(), "+l", it->second));
+				if (it->second.empty())
+					client->reply(ERR_INVALIDMODEPARAM(client->getNickname(), channel->getName(), "+l", ""));
 				else
 				{
-					channel->setUserLimit((int)res);
-					modes += "+l";
-					params.push_back(it->second);
+					char *end;
+					long int	res = strtol(it->second.c_str(), &end, 10);
+					if (!res || res > 2000)
+						client->reply(ERR_INVALIDMODEPARAM(client->getNickname(), channel->getName(), "+l", it->second));
+					else
+					{
+						channel->setUserLimit((int)res);
+						modes += "+l";
+						params.push_back(it->second);
+					}
 				}
 			}
 		}
