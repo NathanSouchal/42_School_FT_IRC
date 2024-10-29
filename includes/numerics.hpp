@@ -46,6 +46,8 @@
 #define ERR_NOSUCHCHANNEL(nick, channel) (std::string(":") + SERVER + " 403 " + std::string(nick) + " " + std::string(channel) + " :No such channel\r\n")
 #define ERR_USERNOTINCHANNEL(nick, str, channel) (std::string(":") + SERVER + " 441 " + std::string(nick) + " " + std::string(str) + " " + std::string(channel) + " :They aren't on that channel\r\n")
 #define ERR_CHANOPRIVSNEEDED(nick, channel) (std::string(":") + SERVER + " 482 " + std::string(nick) + " " + std::string(channel) + " :You're not channel operator\r\n")
+#define ERR_USERONCHANNEL(nick, user, channel) (std::string(":") + SERVER + " 443 " + std::string(nick) + " " + std::string(user) + " " + std::string(channel) + " :is already on channel\r\n")
+#define RPL_INVITING(nick, user, channel) (std::string(":") + SERVER + " 341 " + std::string(nick) + " " + std::string(user) + " " + std::string(channel) + "\r\n")
 
 #define ERR_NORECIPIENT(nick, command) (std::string(":") + SERVER + " 411 " + std::string(nick) + " :No recipient given " + std::string(command) + "\r\n")
 #define ERR_NOTEXTTOSEND(nick) (std::string(":") + SERVER + " 412 " + std::string(nick) + " :No text to send\r\n")

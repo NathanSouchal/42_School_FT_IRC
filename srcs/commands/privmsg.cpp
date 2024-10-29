@@ -61,7 +61,8 @@ void	Server::messageToChannel(const std::string& msgToSend, Client *client, std:
 	channelClients = channel->getClientList();
 	for (size_t i = 0; i < channelClients.size(); ++i)
 	{
-		channelClients[i]->reply(commandToSend);
+		if (client != channelClients[i])
+			channelClients[i]->reply(commandToSend);
 	}
 }
 
