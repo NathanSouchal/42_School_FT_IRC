@@ -90,6 +90,16 @@ void	Channel::deleteChannelOperator(Client *client)
 	}
 }
 
+void	Channel::deleteChannelClient(Client *client)
+{
+	std::vector<Client*>::iterator it = std::find(channelClients.begin(), channelClients.end(), client);
+	if (it != channelClients.end())
+	{
+		channelClients.erase(it);
+		std::cout << "Deleted channel Client " << client->getNickname() << std::endl;
+	}
+}
+
 Client*		Channel::findOperatorInChannel(const std::string& nickname)
 {
 	for (std::vector<Client*>::iterator it = channelOperators.begin(); it != channelOperators.end(); ++it)
@@ -185,6 +195,8 @@ void		Channel::sendMessageToAllClients(const std::string& src, const std::string
 			(*it)->reply(TOPIC((*it)->getNickname(), (*it)->getUsername(), this->getName(), (*it)->getIPaddress(), this->getChannelTopic()));
 		else if (src == "MODE")
 			(*it)->reply(MODE((*it)->getNickname(), (*it)->getUsername(), (*it)->getIPaddress(), this->getName(), param1, param2));
+		else if (src == "KICK")
+			(*it)->reply(KICK((*it)->getNickname(), (*it)->getUsername(), (*it)->getIPaddress(), this->getName(), param1, param2));
 	}
 }
 

@@ -55,5 +55,6 @@
 #define JOIN(nick, username, ip, channel) (std::string(":") + std::string(nick) + "!" + std::string(username) + "@" + std::string(ip) + " JOIN :" + std::string(channel) + "\r\n")
 #define TOPIC(nick, username, channel, ip, topic) (std::string(":") + std::string(nick) + "!" + std::string(username) + "@" + std::string(ip) + " TOPIC " + std::string(channel) + " :" + std::string(topic) + "\r\n")
 #define MODE(nick, username, ip, channel, modes, params) (std::string(":") + std::string(nick) + "!" + std::string(username) + "@" + std::string(ip) + " MODE " + std::string(channel) + " " + std::string(modes) + " " + std::string(params) + "\r\n")
+#define KICK(nick, username, ip, channel, target, reason) (std::string(":") + std::string(nick) + "!" + std::string(username) + "@" + std::string(ip) + " MODE " + std::string(channel) + " " + std::string(target) + " " + std::string(reason) + "\r\n")
 
 #endif

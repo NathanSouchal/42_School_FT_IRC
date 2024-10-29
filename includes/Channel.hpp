@@ -26,6 +26,7 @@ class Channel
 		Channel(const std::string &name);
 		void					addChannelClient(Client *client);
 		void					addChannelOperator(Client *client);
+		void					deleteChannelClient(Client *client);
 		void					deleteChannelOperator(Client *client);
 		std::string				generateUserList();
 		void					replySuccessfullJoin(Client *client);
