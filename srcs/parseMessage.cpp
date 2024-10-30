@@ -28,9 +28,14 @@ void	Server::parseMessage(const std::string& message, int fd)
 			if (command != "PASS" && command != "CAP")
 			{
 				if (current_client->getPassword().empty())
-					current_client->reply(ERR_NEEDMOREPARAMS(current_client->getNickname(), command));
+				current_client->reply(ERR_NEEDMOREPARAMS(current_client->getNickname(), command));
+			else
+			{
+				if (!current_client->getRegistration() && command != "NICK" && command != "USER")
+					current_client->reply(ERR_NOTREGISTERED(current_client->getNickname(), command));
 				else
 					checkCommand(line, current_client);
+			}
 			}
 			else if (command == "PASS")
 				password(line, current_client);
@@ -63,6 +68,6 @@ void	Server::checkCommand(const std::string& message, Client *current_client)
 		}
 	}
 	if (!found)
-		std::cerr << "Command " << message << " does not exist, sorry" << std::endl;
+		current_client->reply(ERR_UNKNOWNCOMMAND(current_client->getNickname(), command));
 	return ;
 }

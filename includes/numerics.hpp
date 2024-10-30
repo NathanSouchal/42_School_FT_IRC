@@ -43,6 +43,7 @@
 #define ERR_CHANNELISFULL(nick, channel) (std::string(":") + SERVER + " 471 " + std::string(nick) + " " + std::string(channel) + " :Cannot join channel (+l)\r\n")
 #define ERR_INVITEONLYCHAN(nick, channel) (std::string(":") + SERVER + " 473 " + std::string(nick) + " " + std::string(channel) + " :Cannot join channel (+i)\r\n")
 #define ERR_NICKNAMEINUSE(nick) (std::string(":") + SERVER + " 433 " + std::string(nick) + " " + std::string(nick) + " :Nickname is already in use\r\n")
+#define ERR_ERRONEUSNICKNAME(nick) (std::string(":") + SERVER + " 432 " + std::string(nick) + " " + std::string(nick) + " :Erroneous nickname\r\n")
 #define ERR_NOTONCHANNEL(nick, channel) (std::string(":") + SERVER + " 442 " + std::string(nick) + " " + std::string(channel) + " :You're not on that channel\r\n")
 #define ERR_NOSUCHCHANNEL(nick, channel) (std::string(":") + SERVER + " 403 " + std::string(nick) + " " + std::string(channel) + " :No such channel\r\n")
 #define ERR_USERNOTINCHANNEL(nick, str, channel) (std::string(":") + SERVER + " 441 " + std::string(nick) + " " + std::string(str) + " " + std::string(channel) + " :They aren't on that channel\r\n")
@@ -54,6 +55,7 @@
 #define ERR_NOTEXTTOSEND(nick) (std::string(":") + SERVER + " 412 " + std::string(nick) + " :No text to send\r\n")
 #define ERR_NOSUCHNICK(nick, nickDestination) (std::string(":") + SERVER + " 401 " + std::string(nick) + " " + std::string(nickDestination) + " " + ":No such nick/channel\r\n")
 #define ERR_CANNOTSENDTOCHAN(nick, channel) (std::string(":") + SERVER + " 404 " + std::string(nick) + " " + std::string(channel) + " " + ":Cannot send to channel\r\n")
+#define ERR_UNKNOWNCOMMAND(nick, command) (std::string(":") + SERVER + " 421 " + std::string(nick) + " " + std::string(command) + " :Unknown command\r\n")
 
 #define JOIN(nick, username, ip, channel) (std::string(":") + std::string(nick) + "!" + std::string(username) + "@" + std::string(ip) + " JOIN :" + std::string(channel) + "\r\n")
 #define TOPIC(nick, username, channel, ip, topic) (std::string(":") + std::string(nick) + "!" + std::string(username) + "@" + std::string(ip) + " TOPIC " + std::string(channel) + " :" + std::string(topic) + "\r\n")
