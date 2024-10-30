@@ -102,8 +102,8 @@ void	Client::setTrueRegistration()
 	reply(RPL_WELCOME(_nickname, _username, _IPaddress));
 	reply(RPL_YOURHOST(_nickname));
 	reply(RPL_CREATED(_nickname, _serverRef.getCreationTime()));
-	reply(RPL_MYINFO(_nickname, "o", "t"));
-	reply(RPL_ISUPPORT(_nickname, "PREFIX=(ov)@+ CHANTYPES=#& CHANMODES=b,k,l,imnt"));
+	reply(RPL_MYINFO(_nickname, "o", "klito kl"));
+	reply(RPL_ISUPPORT(_nickname, "PREFIX=(o)@ CHANTYPES=#& CHANMODES=,k,l,it"));
 }
 
 bool	Client::checkRegistration()
