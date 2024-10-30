@@ -26,6 +26,7 @@ class Channel
 		Channel(const std::string &name);
 		void					addChannelClient(Client *client);
 		void					addChannelOperator(Client *client);
+		void					deleteChannelClient(Client *client);
 		void					deleteChannelOperator(Client *client);
 		void					removeClientFromChannel(Client *client);
 		std::string				generateUserList();
@@ -50,7 +51,7 @@ class Channel
 		void					setTopicCreator(const std::string& creator);
 		void					setTopicCreationTime(const std::string& creationTime);
 		void					setModeT();
-		void					sendMessageToAllClients(const std::string& src, const std::string& param1, const std::string& param2);
+		void					sendMessageToAllClients(Client *client, const std::string& src, const std::string& param1, const std::string& param2);
 		void					informUsersOnJoin(Client *client);
 		void					setUserLimit(int limit);
 };

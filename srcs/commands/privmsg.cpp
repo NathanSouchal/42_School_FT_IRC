@@ -31,11 +31,11 @@ void	Server::privmsg(const std::string& message, Client *client)
 	}
 	for (size_t i = 0; i < targets.size(); ++i)
 	{
-		if (targets[i][0] == '&' || targets[i][0] == '#') 
+		if (targets[i][0] == '&' || targets[i][0] == '#')
 			messageToChannel(msgToSend, client, targets[i]);
 		else
 			messageToUser(msgToSend, client, targets[i]);
-			
+
 	}
 }
 
@@ -69,7 +69,7 @@ void	Server::messageToChannel(const std::string& msgToSend, Client *client, std:
 void	Server::messageToUser(const std::string& msgToSend, Client *client, std::string targetUserName)
 {
 	std::string	commandToSend;
-	Client		*targetUser;			
+	Client		*targetUser;
 
 	targetUser = findClientByNickname(targetUserName);
 	if (!targetUser)

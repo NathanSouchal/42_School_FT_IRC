@@ -77,8 +77,6 @@ void	Server::mode(const std::string& message, Client *client)
 	std::map<std::string, std::string>	modesAndParams;
 	std::string	channel;
 
-	if (parsedMessage.size() == 1)
-		return client->reply(ERR_NEEDMOREPARAMS(client->getNickname(), "MODE"));
 	channel = parsedMessage[1];
 	if (!findChannel(channel))
 		return client->reply(ERR_NOSUCHCHANNEL(client->getNickname(), channel));
@@ -222,7 +220,7 @@ void	Server::setNewModes(std::map<std::string, std::string> modesAndParams, Chan
 			paramsStr += params[i];
 		}
 	}
-	channel->sendMessageToAllClients("MODE", modes, paramsStr);
+	channel->sendMessageToAllClients(client, "MODE", modes, paramsStr);
 }
 
 
