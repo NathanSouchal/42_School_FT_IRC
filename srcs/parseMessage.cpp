@@ -61,6 +61,6 @@ void	Server::checkCommand(const std::string& message, Client *current_client)
 		}
 	}
 	if (!found)
-		std::cerr << "Command " << message << " does not exist, sorry" << std::endl;
+		current_client->reply(ERR_UNKNOWNCOMMAND(current_client->getNickname(), command));
 	return ;
 }
