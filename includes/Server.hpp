@@ -59,6 +59,7 @@ class	Server
 		void	nickname(const std::string& message, Client *client);
 		void	user(const std::string& message, Client *client);
 		void	motd(const std::string& message, Client *client);
+		void	part(const std::string& message, Client *client);
 
 		void	join(const std::string& message, Client *client);
 		bool	checkAddClientToChannel(const std::string &name, const std::string &key, Client *client);
