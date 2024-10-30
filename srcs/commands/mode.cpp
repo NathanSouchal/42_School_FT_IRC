@@ -220,7 +220,7 @@ void	Server::setNewModes(std::map<std::string, std::string> modesAndParams, Chan
 			paramsStr += params[i];
 		}
 	}
-	channel->sendMessageToAllClients("MODE", modes, paramsStr);
+	channel->sendMessageToAllClients(client, "MODE", modes, paramsStr);
 }
 
 

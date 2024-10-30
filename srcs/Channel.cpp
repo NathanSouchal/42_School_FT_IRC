@@ -187,16 +187,16 @@ void		Channel::setUserLimit(int limit)
 	this->_userLimit = limit;
 }
 
-void		Channel::sendMessageToAllClients(const std::string& src, const std::string& param1, const std::string& param2)
+void		Channel::sendMessageToAllClients(Client *client, const std::string& src, const std::string& param1, const std::string& param2)
 {
 	for (std::vector<Client*>::iterator it = channelClients.begin(); it != channelClients.end(); ++it)
 	{
 		if (src == "TOPIC")
-			(*it)->reply(TOPIC((*it)->getNickname(), (*it)->getUsername(), this->getName(), (*it)->getIPaddress(), this->getChannelTopic()));
+			(*it)->reply(TOPIC(client->getNickname(), (*it)->getUsername(), this->getName(), (*it)->getIPaddress(), this->getChannelTopic()));
 		else if (src == "MODE")
-			(*it)->reply(MODE((*it)->getNickname(), (*it)->getUsername(), (*it)->getIPaddress(), this->getName(), param1, param2));
+			(*it)->reply(MODE(client->getNickname(), (*it)->getUsername(), (*it)->getIPaddress(), this->getName(), param1, param2));
 		else if (src == "KICK")
-			(*it)->reply(KICK((*it)->getNickname(), (*it)->getUsername(), (*it)->getIPaddress(), this->getName(), param1, param2));
+			(*it)->reply(KICK(client->getNickname(), (*it)->getUsername(), (*it)->getIPaddress(), this->getName(), param1, param2));
 	}
 }
 
