@@ -27,7 +27,7 @@ void	Server::user(const std::string& message, Client *client)
 			{
 				realname_sent = message.substr(pos + 1);
 				client->setRealname(realname_sent);
-				if (!(client->getNickname().empty()))
+				if (client->getNickname() != "*")
 					client->setTrueRegistration();
 			}
 		}

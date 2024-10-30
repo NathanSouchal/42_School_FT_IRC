@@ -25,7 +25,12 @@ void	Server::parseMessage(const std::string& message, int fd)
 			if (current_client->getPassword().empty())
 				current_client->reply(ERR_NEEDMOREPARAMS(current_client->getNickname(), command));
 			else
-				checkCommand(line, current_client);
+			{
+				if (!current_client->getRegistration() && command != "NICK" && command != "USER")
+					current_client->reply(ERR_NOTREGISTERED(current_client->getNickname(), command));
+				else
+					checkCommand(line, current_client);
+			}
 		}
 		else if (command == "PASS")
 			password(line, current_client);

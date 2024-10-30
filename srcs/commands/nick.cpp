@@ -12,11 +12,10 @@ void	Server::nickname(const std::string& message, Client *client)
 	else
 	{
 		nickname_sent = message.substr(pos + 1);
+		if (nickname_sent.size() > 9 || nickname_sent.find(",") != std::string::npos)
+			return client->reply(ERR_ERRONEUSNICKNAME(nickname_sent));
 		if (findNickName(nickname_sent))
-		{
-			client->reply(ERR_NICKNAMEINUSE(nickname_sent));
-			return ;
-		}
+			return client->reply(ERR_NICKNAMEINUSE(nickname_sent));
 		client->setNick(nickname_sent);
 		if (!(client->getRealname().empty()) && !(client->getUsername().empty()))
 			client->setTrueRegistration();

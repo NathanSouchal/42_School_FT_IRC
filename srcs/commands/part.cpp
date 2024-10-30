@@ -29,7 +29,7 @@ void	Server::part(const std::string& message, Client *client)
 		    client->reply(ERR_NOTONCHANNEL(client->getNickname(), channels[i]));
         else
         {
-            findChannel(channels[i])->removeClientFromChannel(client);
+            findChannel(channels[i])->deleteChannelClient(client);
             client->reply(":" + client->getNickname() + "!" + client->getUsername() + "@" + client->getIPaddress() \
 	        + " PART " + channels[i] + " :" + partMessage + "\r\n");
         }
