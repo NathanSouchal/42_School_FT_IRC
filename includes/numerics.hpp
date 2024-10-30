@@ -43,6 +43,7 @@
 #define ERR_CHANNELISFULL(nick, channel) (std::string(":") + SERVER + " 471 " + std::string(nick) + " " + std::string(channel) + " :Cannot join channel (+l)\r\n")
 #define ERR_INVITEONLYCHAN(nick, channel) (std::string(":") + SERVER + " 473 " + std::string(nick) + " " + std::string(channel) + " :Cannot join channel (+i)\r\n")
 #define ERR_NICKNAMEINUSE(nick) (std::string(":") + SERVER + " 433 " + std::string(nick) + " " + std::string(nick) + " :Nickname is already in use\r\n")
+#define ERR_ERRONEUSNICKNAME(nick) (std::string(":") + SERVER + " 432 " + std::string(nick) + " " + std::string(nick) + " :Erroneous nickname\r\n")
 #define ERR_NOTONCHANNEL(nick, channel) (std::string(":") + SERVER + " 442 " + std::string(nick) + " " + std::string(channel) + " :You're not on that channel\r\n")
 #define ERR_NOSUCHCHANNEL(nick, channel) (std::string(":") + SERVER + " 403 " + std::string(nick) + " " + std::string(channel) + " :No such channel\r\n")
 #define ERR_USERNOTINCHANNEL(nick, str, channel) (std::string(":") + SERVER + " 441 " + std::string(nick) + " " + std::string(str) + " " + std::string(channel) + " :They aren't on that channel\r\n")
