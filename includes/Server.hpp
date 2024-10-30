@@ -69,7 +69,6 @@ class	Server
 		void	messageToChannel(const std::string& msgToSend, Client *client, std::string channelName);
 		void	messageToUser(const std::string& msgToSend, Client *client, std::string targetUserName);
 
-		void	kick(const std::string& message, Client *client);
 		void	invite(const std::string& message, Client *client);
 		void	topic(const std::string& message, Client *client);
 		void	lusers(const std::string& message, Client *client);
@@ -86,6 +85,10 @@ class	Server
 		std::vector<std::string>	parseModes(const std::string& src, Client *client);
 		std::map<std::string, std::string>	joinModesAndParams(const std::vector<std::string>& modes, const std::vector<std::string>& params, Client *client);
 		void	setNewModes(std::map<std::string, std::string> modesAndParams, Channel* channel, Client* client);
+
+		//KICK
+		void	kick(const std::string& message, Client *client);
+		std::vector<std::string>	parseUsers(const std::string& src);
 };
 
 #endif
