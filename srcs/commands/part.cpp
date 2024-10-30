@@ -14,7 +14,7 @@ void	Server::part(const std::string& message, Client *client)
 
     if (parameters.size() == 2)
     {
-        partMessage = parameters[1];
+        partMessage = parameters[1].substr(1);
     }
 	while (std::getline(ss2, temp, ','))
 	{
