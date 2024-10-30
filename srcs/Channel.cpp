@@ -90,6 +90,14 @@ void	Channel::deleteChannelOperator(Client *client)
 	}
 }
 
+void	Channel::removeClientFromChannel(Client *client)
+{
+	std::vector<Client*>::iterator it = std::find(channelClients.begin(), channelClients.end(), client);
+	if (it != channelClients.end())
+		channelClients.erase(it);
+}
+
+
 Client*		Channel::findOperatorInChannel(const std::string& nickname)
 {
 	for (std::vector<Client*>::iterator it = channelOperators.begin(); it != channelOperators.end(); ++it)
