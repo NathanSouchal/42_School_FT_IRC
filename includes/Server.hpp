@@ -72,6 +72,7 @@ class	Server
 
 		void	invite(const std::string& message, Client *client);
 		void	topic(const std::string& message, Client *client);
+		void	sendTopic(Channel *channel, Client *client);
 		void	lusers(const std::string& message, Client *client);
 
 		Client	*findClient(int fd);
