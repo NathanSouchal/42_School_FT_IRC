@@ -47,15 +47,9 @@ void	Server::messageToChannel(const std::string& msgToSend, Client *client, std:
 
 	channel = findChannel(channelName);
 	if (!channel)
-	{
-		client->reply(ERR_NOSUCHCHANNEL(client->getNickname(), channelName));
-		return ;
-	}
+		return client->reply(ERR_NOSUCHCHANNEL(client->getNickname(), channelName));
 	if (!channel->findClientInChannel(client->getNickname()))
-	{
-		client->reply(ERR_NOTONCHANNEL(client->getNickname(), channelName));
-		return ;
-	}
+		return client->reply(ERR_NOTONCHANNEL(client->getNickname(), channelName));
 	commandToSend = ":" + client->getNickname() + "!" + client->getUsername() + "@" + client->getIPaddress() \
 	+ " PRIVMSG " + channelName + " :" + msgToSend + "\r\n";
 	channelClients = channel->getClientList();
@@ -73,10 +67,7 @@ void	Server::messageToUser(const std::string& msgToSend, Client *client, std::st
 
 	targetUser = findClientByNickname(targetUserName);
 	if (!targetUser)
-	{
-		client->reply(ERR_NOSUCHNICK(client->getNickname(), targetUserName));
-		return ;
-	}
+		return client->reply(ERR_NOSUCHNICK(client->getNickname(), targetUserName));
 	commandToSend = ":" + client->getNickname() + "!" + client->getUsername() + "@" + client->getIPaddress() \
 	+ " PRIVMSG " + targetUser->getNickname() + " :" + msgToSend + "\r\n";
 	targetUser->reply(commandToSend);

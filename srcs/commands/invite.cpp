@@ -11,39 +11,20 @@ void	Server::invite(const std::string& message, Client *client)
 	std::string					channelName;
 
 	if (parameters.size() != 2)
-	{
-		client->reply(ERR_NEEDMOREPARAMS(client->getNickname(), "INVITE"));
-		return ;
-	}
+		return client->reply(ERR_NEEDMOREPARAMS(client->getNickname(), "INVITE"));
 	userInvited = parameters[0];
 	channelName = parameters[1];
 	if (!findClientByNickname(userInvited))
-	{
-		client->reply(ERR_NOSUCHNICK(client->getNickname(), userInvited));
-		return;
-	}
+		return client->reply(ERR_NOSUCHNICK(client->getNickname(), userInvited));
 	if (!findChannel(channelName))
-	{
-		client->reply(ERR_NOSUCHCHANNEL(client->getNickname(), channelName));
-		return;
-	}
+		return client->reply(ERR_NOSUCHCHANNEL(client->getNickname(), channelName));
 	if (!(findChannel(channelName)->findClientInChannel(client->getNickname())))
-	{
-		client->reply(ERR_NOTONCHANNEL(client->getNickname(), channelName));
-		return;
-	}
+		return client->reply(ERR_NOTONCHANNEL(client->getNickname(), channelName));
 	if (findChannel(channelName)->findClientInChannel(userInvited))
-	{
-		client->reply(ERR_USERONCHANNEL(client->getNickname(), userInvited, channelName));
-		return;
-	}
+		return client->reply(ERR_USERONCHANNEL(client->getNickname(), userInvited, channelName));;
 	if (!(findChannel(channelName)->checkIfUserOperator(client->getNickname())) &&  \
 	findChannel(channelName)->getInviteOnly())
-	{
-		client->reply(ERR_CHANOPRIVSNEEDED(client->getNickname(), channelName));
-		return;
-	}
-
+		return client->reply(ERR_CHANOPRIVSNEEDED(client->getNickname(), channelName));
 	findClientByNickname(userInvited)->reply(":" + client->getNickname() + "!" + client->getUsername() + "@" + client->getIPaddress() \
 	+ " INVITE " + userInvited + " :" + channelName + "\r\n");
 	client->reply(RPL_INVITING(client->getNickname(), userInvited, channelName));

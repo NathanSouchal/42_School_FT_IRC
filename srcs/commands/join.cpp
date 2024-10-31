@@ -13,10 +13,7 @@ void	Server::join(const std::string& message, Client *client)
 
 	std::vector<std::string>	parameters = parseParams(message.substr(message.find(" ") + 1));
 	if (parameters.size() > 2)
-	{
-		client->reply(ERR_NEEDMOREPARAMS(client->getNickname(), "JOIN"));
-		return ;
-	}
+		return client->reply(ERR_NEEDMOREPARAMS(client->getNickname(), "JOIN"));
 	std::string					channelNames = parameters[0];
 	if (parameters.size() == 2)
 	{
