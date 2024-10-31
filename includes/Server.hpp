@@ -16,6 +16,8 @@
 #include <csignal>
 #include <vector>
 #include <map>
+#include <cstring>
+#include <cerrno>
 
 class	Client;
 
@@ -32,7 +34,6 @@ class	Server
 		int	_nbUsers;
 		std::vector<Client *>	clients;
 		std::vector<pollfd>	fds;
-		static bool	_signal;
 		std::string	_creationTime;
 		std::vector<Channel *>	serverChannels;
 		std::string				_partialCommand;
@@ -48,10 +49,9 @@ class	Server
 		void	AcceptNewClient();
 		void	clearClient(int fd);
 		void	clearAllClients();
-		void	ServerProgram();
+		void	ServerProgram(bool _signal);
 		void	CloseFds();
 		void	ReceiveData(int fd);
-		static void	SignalHandler(int signal);
 		void	SendPing(int fd);
 		void	parseMessage(const std::string& message, int fd);
 		void	checkCommand(const std::string& message, Client *current_client);

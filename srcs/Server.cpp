@@ -4,35 +4,30 @@
 #include "Channel.hpp"
 #include "utils.hpp"
 
-bool	Server::_signal = false;
-
 Server::Server(int port, std::string password) : _port(port), _password(password), serverSocketFd(0), _nbMaxClients(0), _nbUsers(0)
 {
 	_creationTime = getTimestampDate();
 	std::cout << "Password : " << _password << "\nPort : " << _port << std::endl;
 	ServerSocket();
-	ServerProgram();
 }
 
-void	Server::ServerProgram()
+void	Server::ServerProgram(bool _signal)
 {
-	while (!_signal)
+	if (_signal)
+		return;
+	//Attend qu'il se produise un evenement sur un des fds
+	if((poll(&fds[0],fds.size(), -1) == -1) && !_signal)
+		return ;
+	for (size_t i = 0; i < fds.size(); i++)
 	{
-		//Attend qu'il se produise un evenement sur un des fds
-		if((poll(&fds[0],fds.size(), -1) == -1) && !_signal)
-			throw(std::runtime_error("poll() failed"));
-		for (size_t i = 0; i < fds.size(); i++)
+		if (fds[i].revents & POLLIN)
 		{
-			if (fds[i].revents & POLLIN)
-			{
-				if (fds[i].fd == serverSocketFd)
-					AcceptNewClient();
-				else
-					ReceiveData(fds[i].fd);
-			}
+			if (fds[i].fd == serverSocketFd)
+				AcceptNewClient();
+			else
+				ReceiveData(fds[i].fd);
 		}
 	}
-	CloseFds();
 }
 
 Server::~Server()
@@ -64,12 +59,6 @@ const int	&Server::getNbUsers()
 std::string	Server::getCreationTime()
 {
 	return _creationTime;
-}
-
-void	Server::SignalHandler(int signal)
-{
-	(void)signal;
-	_signal = true;
 }
 
 void	Server::CloseFds()
