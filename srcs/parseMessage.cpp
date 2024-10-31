@@ -50,7 +50,7 @@ void	Server::checkCommand(const std::string& message, Client *current_client)
 	std::string	command;
 
 	if (pos == std::string::npos)
-		command = message;
+		current_client->reply(ERR_NEEDMOREPARAMS(current_client->getNickname(), command));
 	else
 		command = message.substr(0, pos);
 	void(Server::*function_ptr[])(const std::string&, Client *) = {&Server::nickname, &Server::user, &Server::motd,\
