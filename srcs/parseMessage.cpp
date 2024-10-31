@@ -12,17 +12,22 @@ void	Server::parseMessage(const std::string& message, int fd)
 	std::string 		line, value;
 	Client				*current_client = findClient(fd);
 
-	while (std::getline(reader, line))
+	if (message[message.size() - 1] != '\n')
+		_partialCommand = _partialCommand + message;
+	else
 	{
-		// std::cout << "line " << line << std::endl;
-		if (!line.empty() && line[line.size() - 1] == '\r')
-			line.erase(line.size() - 1);
-		std::cout << "line " << line << std::endl;
-		command = line.substr(0, line.find(32));
-		std::cout << "commande " << command << "|"<< std::endl;
-		if (command != "PASS" && command != "CAP")
+		while (std::getline(reader, line))
 		{
-			if (current_client->getPassword().empty())
+			if (!line.empty() && line[line.size() - 1] == '\r')
+				line.erase(line.size() - 1);
+			line = _partialCommand + line;
+			_partialCommand.clear();
+			std::cout << "line " << line << std::endl;
+			command = line.substr(0, line.find(32));
+			std::cout << "commande " << command << "|"<< std::endl;
+			if (command != "PASS" && command != "CAP")
+			{
+				if (current_client->getPassword().empty())
 				current_client->reply(ERR_NEEDMOREPARAMS(current_client->getNickname(), command));
 			else
 			{
@@ -31,11 +36,13 @@ void	Server::parseMessage(const std::string& message, int fd)
 				else
 					checkCommand(line, current_client);
 			}
+			}
+			else if (command == "PASS")
+				password(line, current_client);
 		}
-		else if (command == "PASS")
-			password(line, current_client);
 	}
 }
+
 
 void	Server::checkCommand(const std::string& message, Client *current_client)
 {

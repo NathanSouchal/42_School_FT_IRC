@@ -34,14 +34,15 @@ class	Server
 		std::vector<pollfd>	fds;
 		static bool	_signal;
 		std::string	_creationTime;
-		std::vector<Channel *> serverChannels;
+		std::vector<Channel *>	serverChannels;
+		std::string				_partialCommand;
 	public:
 		Server(int port, std::string password);
 		~Server();
-		void		setNbMaxClients(int newNb);
-		const int	&getNbMaxClients();
-		void		modifyNbUsers(int valueToAdd);
-		const int	&getNbUsers();
+		void				setNbMaxClients(int newNb);
+		const int			&getNbMaxClients();
+		void				modifyNbUsers(int valueToAdd);
+		const int			&getNbUsers();
 		std::string	getCreationTime();
 		void	ServerSocket();
 		void	AcceptNewClient();
