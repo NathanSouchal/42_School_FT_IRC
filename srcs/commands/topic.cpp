@@ -4,66 +4,48 @@
 #include "utils.hpp"
 #include "numerics.hpp"
 
-void	Server::topic(const std::string& message, Client *client)
+void	Server::sendTopic(Channel *channel, Client *client)
 {
-	std::cout << "message : " << message << std::endl;
-	size_t		pos = message.find(":");
-	if (pos == std::string::npos)
-	{
-		client->reply(ERR_NEEDMOREPARAMS(client->getNickname(), "TOPIC"));
-		return ;
-	}
-	std::string	param = message.substr(pos + 1);
-	std::string	channel, topic;
-	std::vector<std::string>	parsedParams = parseParams(param);
-	channel = parsedParams[0];
-	if (parsedParams.size() == 2)
-		topic = parsedParams[1];
-	if (parsedParams.size() > 2)
-	{
-		client->reply(ERR_NEEDMOREPARAMS(client->getNickname(), "TOPIC"));
-		return ;
-	}
-	if (!findChannel(channel))
-		client->reply(ERR_NOSUCHCHANNEL(client->getNickname(), channel));
+	if (!channel->findClientInChannel(client->getNickname()))
+		return client->reply(ERR_NOTONCHANNEL(client->getNickname(), channel->getName()));
+	if (channel->getChannelTopic().empty())
+		return client->reply(RPL_NOTOPIC(client->getNickname(), channel->getName()));
 	else
 	{
-		Channel*	channelCopy = findChannel(channel);
-
-		if (!channelCopy->findClientInChannel(client->getNickname()))
-			client->reply(ERR_NOTONCHANNEL(client->getNickname(), channel));
-		if (topic.empty())
-		{
-			// Demande le topic actuel du canal
-			if (channelCopy->getChannelTopic().empty())
-				client->reply(RPL_NOTOPIC(client->getNickname(), channel));
-			else
-			{
-				client->reply(RPL_TOPIC(client->getNickname(), channel, channelCopy->getChannelTopic()));
-				client->reply(RPL_TOPICWHOTIME(client->getNickname(), channel, channelCopy->getTopicCreator(), channelCopy->getTopicCreationTime()));
-			}
-		}
-		else
-		{
-			if (!channelCopy->checkIfUserOperator(client->getNickname()))
-				client->reply(ERR_CHANOPRIVSNEEDED(client->getNickname(), channel));
-			//si -t non-active les non-operateurs peuvent pas mofifier le topic
-			else
-			{
-				if (topic == ":")
-					channelCopy->setChannelTopic("");
-				else
-				{
-					if (topic[0] == ':')
-						topic = topic.substr(1);
-					channelCopy->setChannelTopic(topic);
-				}
-				channelCopy->setTopicCreator(client->getNickname());
-				channelCopy->setTopicCreationTime(convertInString(getTimestamp()));
-				//ici envoyer le nouveau topic a tous les membres du channel
-				channelCopy->sendMessageToAllClients(client, "TOPIC", "", "");
-			}
-		}
+		client->reply(RPL_TOPIC(client->getNickname(), channel->getName(), channel->getChannelTopic()));
+		return client->reply(RPL_TOPICWHOTIME(client->getNickname(), channel->getName(), channel->getTopicCreator(), channel->getTopicCreationTime()));
 	}
-	std::cout << "channel : " << channel << "|" << std::endl;
+}
+
+void	Server::topic(const std::string& message, Client *client)
+{
+	std::string	channel, topic;
+	std::vector<std::string>	parsedParams = parseParams(message);
+	if (parsedParams.size() == 1)
+		return client->reply(ERR_NEEDMOREPARAMS(client->getNickname(), "TOPIC"));
+	channel = parsedParams[1];
+	Channel*	channelCopy = findChannel(channel);
+	if (!channelCopy)
+		return client->reply(ERR_NOSUCHCHANNEL(client->getNickname(), channel));
+	if (parsedParams.size() == 2)
+		return sendTopic(channelCopy, client);
+	if (parsedParams.size() == 3)
+		topic = parsedParams[2];
+	if (parsedParams.size() > 3)
+		return client->reply(ERR_NEEDMOREPARAMS(client->getNickname(), "TOPIC"));
+	if (!channelCopy->findClientInChannel(client->getNickname()))
+		return client->reply(ERR_NOTONCHANNEL(client->getNickname(), channel));
+	if (!channelCopy->checkIfUserOperator(client->getNickname()))
+		return client->reply(ERR_CHANOPRIVSNEEDED(client->getNickname(), channel));
+	if (topic == ":" || topic == "::")
+		channelCopy->setChannelTopic("");
+	else
+	{
+		if (topic[0] == ':')
+			topic = topic.substr(1);
+		channelCopy->setChannelTopic(topic);
+	}
+	channelCopy->setTopicCreator(client->getNickname());
+	channelCopy->setTopicCreationTime(convertInString(getTimestamp()));
+	channelCopy->sendMessageToAllClients(client, "TOPIC", "", "");
 }
