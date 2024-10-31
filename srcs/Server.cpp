@@ -118,7 +118,7 @@ bool	Server::findNickName(const std::string& nick)
 {
 	for (size_t i = 0; i < clients.size(); ++i)
 	{
-		if (clients[i]->getNickname() == nick)
+		if (clients[i]->checkRegistration() && clients[i]->getNickname() == nick)
 			return true;
 	}
 	return false;

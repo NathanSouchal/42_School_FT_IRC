@@ -2,10 +2,7 @@
 #include "Server.hpp"
 #include "numerics.hpp"
 
-Client::Client(Server& server) : _serverRef(server)
-{
-	_nickname = "*";
-}
+Client::Client(Server& server) : _serverRef(server) {}
 
 const int		&Client::getFd()
 {
@@ -17,9 +14,18 @@ const std::string	&Client::getIPaddress()
 	return _IPaddress;
 }
 
-const std::string	&Client::getNickname()
+const std::string	Client::getNickname()
 {
+	if (_nickname.empty())
+		return "*";
 	return _nickname;
+}
+
+bool	Client::checkEmptyNickname()
+{
+	if (_nickname.empty())
+		return true;
+	return false;
 }
 
 const std::string	&Client::getUsername()

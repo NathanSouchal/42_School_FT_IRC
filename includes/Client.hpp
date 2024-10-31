@@ -26,7 +26,7 @@ class	Client
 		Client(Server& server);
 		const int			&getFd();
 		const std::string	&getIPaddress();
-		const std::string	&getNickname();
+		const std::string	getNickname();
 		const std::string	&getUsername();
 		const std::string	&getRealname();
 		const std::string	&getPassword();
@@ -42,6 +42,7 @@ class	Client
 		void				setPong(time_t timePong);
 		void				setIPaddress(const std::string& new_ip);
 		bool				checkRegistration();
+		bool				checkEmptyNickname();
 		void				reply(std::string message);
 };
 

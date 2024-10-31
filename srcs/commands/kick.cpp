@@ -45,7 +45,7 @@ void	Server::kick(const std::string& message, Client *client)
 	if (!channelCopy->findClientInChannel(client->getNickname()))
 		return client->reply(ERR_NOTONCHANNEL(client->getNickname(), channel));
 	//check if user is operator
-	if (!channelCopy->findOperatorInChannel(client->getNickname()))
+	if (!channelCopy->checkIfUserOperator(client->getNickname()))
 		return client->reply(ERR_CHANOPRIVSNEEDED(client->getNickname(), channel));
 	//not enough params
 	if (parsedMessage.size() < 2)

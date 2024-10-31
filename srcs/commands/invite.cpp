@@ -37,7 +37,7 @@ void	Server::invite(const std::string& message, Client *client)
 		client->reply(ERR_USERONCHANNEL(client->getNickname(), userInvited, channelName));
 		return;
 	}
-	if (!(findChannel(channelName)->findOperatorInChannel(client->getNickname())) &&  \
+	if (!(findChannel(channelName)->checkIfUserOperator(client->getNickname())) &&  \
 	findChannel(channelName)->getInviteOnly())
 	{
 		client->reply(ERR_CHANOPRIVSNEEDED(client->getNickname(), channelName));
