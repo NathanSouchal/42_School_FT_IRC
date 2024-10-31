@@ -1,5 +1,6 @@
 #include "Server.hpp"
 #include "Client.hpp"
+#include "Channel.hpp"
 #include "numerics.hpp"
 
 void	Server::ServerSocket()
@@ -56,14 +57,12 @@ void	Server::clearClient(int fd)
 	}
 }
 
-void	Server::clearAllClients()
+void	Server::deleteAll()
 {
-	for (size_t i = 0; i < fds.size(); ++i)
-		fds.erase(fds.begin() + i);
-	fds.clear();
 	for (size_t i = 0; i < clients.size(); ++i)
-		clients.erase(clients.begin() + i);
-	clients.clear();
+		delete clients[i];
+	for (size_t i = 0; i < serverChannels.size(); ++i)
+		delete serverChannels[i];
 }
 
 void	Server::AcceptNewClient()
@@ -93,7 +92,6 @@ void	Server::AcceptNewClient()
 	if (fds.size() > static_cast<size_t>(_nbMaxClients))
 		setNbMaxClients(clients.size());
 	std::cout << "Client " << fd << " connected !" << std::endl;
-	//sendPing(fd);
 }
 
 void	Server::ReceiveData(int fd)

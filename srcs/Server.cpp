@@ -32,8 +32,8 @@ void	Server::ServerProgram(bool _signal)
 
 Server::~Server()
 {
-	for (size_t i = 0; i < clients.size(); ++i)
-		delete clients[i];
+	CloseFds();
+	deleteAll();
 }
 
 void		Server::setNbMaxClients(int newNb)
@@ -69,18 +69,6 @@ void	Server::CloseFds()
 		close(clients[i]->getFd());
 	}
 	close(serverSocketFd);
-}
-
-void	Server::SendPing(int fd)
-{
-	std::string ping = "PING :serverping\r\n";
-	send(fd, ping.c_str(), ping.length(), 0);
-	time_t timePing = time(NULL);
-	for (size_t i = 0; i < clients.size(); ++i)
-	{
-		if (clients[i]->getFd() == fd)
-			clients[i]->setPing(timePing);
-	}
 }
 
 Client	*Server::findClient(int fd)

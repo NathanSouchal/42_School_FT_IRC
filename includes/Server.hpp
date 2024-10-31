@@ -48,11 +48,10 @@ class	Server
 		void	ServerSocket();
 		void	AcceptNewClient();
 		void	clearClient(int fd);
-		void	clearAllClients();
+		void	deleteAll();
 		void	ServerProgram(bool _signal);
 		void	CloseFds();
 		void	ReceiveData(int fd);
-		void	SendPing(int fd);
 		void	parseMessage(const std::string& message, int fd);
 		void	checkCommand(const std::string& message, Client *current_client);
 

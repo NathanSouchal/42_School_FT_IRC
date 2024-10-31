@@ -40,9 +40,6 @@ int	main(int ac, char **av)
 			server.ServerProgram(_signal);
 			sleep(1);
 		}
-		server.CloseFds();
-		server.clearAllClients();
-		std::cout << "coucou\n";
 	}
 	catch(const std::exception& e)
 	{

@@ -59,15 +59,6 @@ void	Client::setFd(const int& new_fd)
 	_fd = new_fd;
 }
 
-void	Client::setPing(time_t timePing)
-{
-	_timePing = timePing;
-}
-
-void	Client::setPong(time_t timePong)
-{
-	_timePong = timePong;
-}
 
 void	Client::setIPaddress(const std::string& new_ip)
 {

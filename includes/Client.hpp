@@ -14,8 +14,6 @@ class	Client
 	private:
 		int			_fd;
 		std::string	_IPaddress;
-		time_t		_timePing;
-		time_t		_timePong;
 		std::string	_nickname;
 		std::string	_username;
 		std::string	_realname;
@@ -38,8 +36,6 @@ class	Client
 		void				setRealname(const std::string &realname);
 		void				setPassword(const std::string &password);
 		void				setTrueRegistration();
-		void				setPing(time_t timePing);
-		void				setPong(time_t timePong);
 		void				setIPaddress(const std::string& new_ip);
 		bool				checkRegistration();
 		bool				checkEmptyNickname();
