@@ -67,10 +67,7 @@ void	Channel::addChannelClient(Client *client)
 	std::vector<Client*>::iterator it;
 
 	if (channelClients.size() >= static_cast<size_t>(_userLimit))
-	{
-		client->reply(ERR_CHANNELISFULL(client->getNickname(), _name));
-		return ;
-	}
+		return client->reply(ERR_CHANNELISFULL(client->getNickname(), _name));
 	it = std::find(channelClients.begin(), channelClients.end(), client);
 	if (it != channelClients.end() || !client)
 		return ;
