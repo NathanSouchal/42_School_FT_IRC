@@ -45,7 +45,7 @@ void	Server::topic(const std::string& message, Client *client)
 		}
 		else
 		{
-			if (!channelCopy->getModeT() && !channelCopy->findOperatorInChannel(client->getNickname()))
+			if (!channelCopy->checkIfUserOperator(client->getNickname()))
 				client->reply(ERR_CHANOPRIVSNEEDED(client->getNickname(), channel));
 			//si -t non-active les non-operateurs peuvent pas mofifier le topic
 			else

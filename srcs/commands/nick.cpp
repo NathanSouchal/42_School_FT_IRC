@@ -12,7 +12,7 @@ void	Server::nickname(const std::string& message, Client *client)
 		return client->reply(ERR_ERRONEUSNICKNAME(nickname_sent));
 	if (findNickName(nickname_sent))
 		return client->reply(ERR_NICKNAMEINUSE(nickname_sent));
-	if (!(client->getRealname().empty()) && !(client->getUsername().empty()) && client->getNickname() == "*")
+	if (!(client->getRealname().empty()) && !(client->getUsername().empty()) && client->checkEmptyNickname())
 		client->setTrueRegistration();
 	client->setNick(nickname_sent);
 }

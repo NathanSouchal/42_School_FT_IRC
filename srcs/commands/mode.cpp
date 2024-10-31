@@ -88,7 +88,7 @@ void	Server::mode(const std::string& message, Client *client)
 	//si pas operateur retourne tout sans les params, sinon retourne tout
 	if (parsedMessage.size() == 2)
 	{
-		if (!channelCopy->findOperatorInChannel(client->getNickname()))
+		if (!channelCopy->checkIfUserOperator(client->getNickname()))
 			return client->reply(RPL_CHANNELMODEIS1(client->getNickname(), channel, channelCopy->getActiveModes()));
 		else
 		{
@@ -103,7 +103,7 @@ void	Server::mode(const std::string& message, Client *client)
 		}
 
 	}
-	if (!channelCopy->findOperatorInChannel(client->getNickname()))
+	if (!channelCopy->checkIfUserOperator(client->getNickname()))
 		return client->reply(ERR_CHANOPRIVSNEEDED(client->getNickname(), channel));
 	parsedModes = parseModes(parsedMessage[2], client);
 	if (parsedModes.empty())

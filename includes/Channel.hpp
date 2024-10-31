@@ -53,6 +53,7 @@ class Channel
 		void					sendMessageToAllClients(Client *client, const std::string& src, const std::string& param1, const std::string& param2);
 		void					informUsersOnJoin(Client *client);
 		void					setUserLimit(int limit);
+		bool					checkIfUserOperator(std::string nickname);
 };
 
 #endif
