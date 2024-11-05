@@ -56,6 +56,7 @@
 #define ERR_NOSUCHNICK(nick, nickDestination) (std::string(":") + SERVER + " 401 " + std::string(nick) + " " + std::string(nickDestination) + " " + ":No such nick/channel\r\n")
 #define ERR_CANNOTSENDTOCHAN(nick, channel) (std::string(":") + SERVER + " 404 " + std::string(nick) + " " + std::string(channel) + " " + ":Cannot send to channel\r\n")
 #define ERR_UNKNOWNCOMMAND(nick, command) (std::string(":") + SERVER + " 421 " + std::string(nick) + " " + std::string(command) + " :Unknown command\r\n")
+#define ERR_NOMOTD(nick) (std::string(":") + SERVER + " 422 " + std::string(nick) + " :MOTD File is missing\r\n")
 
 #define JOIN(nick, username, ip, channel) (std::string(":") + std::string(nick) + "!" + std::string(username) + "@" + std::string(ip) + " JOIN :" + std::string(channel) + "\r\n")
 #define TOPIC(nick, username, channel, ip, topic) (std::string(":") + std::string(nick) + "!" + std::string(username) + "@" + std::string(ip) + " TOPIC " + std::string(channel) + " :" + std::string(topic) + "\r\n")

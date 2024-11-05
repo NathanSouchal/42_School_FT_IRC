@@ -6,13 +6,13 @@
 #    By: nsouchal <nsouchal@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/18 15:55:18 by tnicolau          #+#    #+#              #
-#    Updated: 2024/10/29 15:58:36 by nsouchal         ###   ########.fr        #
+#    Updated: 2024/11/05 12:59:57 by nsouchal         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = ircserv
 CC = c++
-FLAGS = -Wall -Wextra -Werror -std=c++98
+FLAGS = -Wall -Wextra -Werror -std=c++98 -g3
 
 DIR_SRCS 		= 	srcs/
 DIR_CMD 		= 	srcs/commands/
@@ -36,7 +36,6 @@ SRC =	$(DIR_SRCS)main.cpp \
 		$(DIR_CMD)kick.cpp \
 		$(DIR_CMD)lusers.cpp \
 		$(DIR_CMD)mode.cpp \
-		$(DIR_CMD)motd.cpp \
 		$(DIR_CMD)nick.cpp \
 		$(DIR_CMD)privmsg.cpp \
 		$(DIR_CMD)topic.cpp \

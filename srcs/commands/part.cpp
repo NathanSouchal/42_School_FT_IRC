@@ -31,10 +31,11 @@ void	Server::part(const std::string& message, Client *client)
 		    client->reply(ERR_NOTONCHANNEL(client->getNickname(), channels[i]));
         else
         {
+            channel->sendMessageToAllClients(client, "PART", partMessage, "");
             channel->deleteChannelClient(client);
             if (channel->findOperatorInChannel(client->getNickname()))
 				channel->deleteChannelOperator(client);
-			channel->sendMessageToAllClients(client, "PART", partMessage, "");
+            client->getServerRef().deleteChannel(channel);
         }
     }
 }

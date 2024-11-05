@@ -7,7 +7,6 @@
 Server::Server(int port, std::string password) : _port(port), _password(password), serverSocketFd(0), _nbMaxClients(0), _nbUsers(0)
 {
 	_creationTime = getTimestampDate();
-	std::cout << "Password : " << _password << "\nPort : " << _port << std::endl;
 	ServerSocket();
 }
 
@@ -118,20 +117,17 @@ Channel	*Server::findChannel(const std::string& channel)
 
 void	Server::deleteChannel(Channel *channel)
 {
-	std::cout << "channel " << channel->getName() << " deleted 1" << std::endl;
 	if (!(channel->getClientList().size()) && !(channel->getOperatorList().size()))
 	{
-		std::cout << "channel " << channel->getName() << " deleted 2" << std::endl;
 		if (findChannel(channel->getName()))
 		{
-			std::cout << "channel " << channel->getName() << " deleted 3" << std::endl;
 			for (std::vector<Channel *>::iterator it = serverChannels.begin(); it != serverChannels.end(); ++it)
 			{
 				if (*it == channel)
 				{
-					std::cout << "channel " << channel->getName() << " deleted 4" << std::endl;
 					serverChannels.erase(it);
 					delete channel;
+					break ;
 				}
 			}
 		}
