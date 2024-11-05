@@ -203,6 +203,8 @@ void		Channel::sendMessageToAllClients(Client *client, const std::string& src, c
 			(*it)->reply(MODE(client->getNickname(), (*it)->getUsername(), (*it)->getIPaddress(), this->getName(), param1, param2));
 		else if (src == "KICK")
 			(*it)->reply(KICK(client->getNickname(), (*it)->getUsername(), (*it)->getIPaddress(), this->getName(), param1, param2));
+		else if (src == "PART")
+			(*it)->reply(PART(client->getNickname(), (*it)->getUsername(), (*it)->getIPaddress(), this->getName(), param1));
 	}
 }
 
