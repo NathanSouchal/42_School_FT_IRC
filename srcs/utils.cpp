@@ -1,18 +1,13 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   utils.cpp                                          :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: tnicolau <tnicolau@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/22 09:23:55 by tnicolau          #+#    #+#             */
-/*   Updated: 2024/10/22 09:28:12 by tnicolau         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+#include "utils.hpp"
 
-#include "Server.hpp"
+time_t	getTimestamp()
+{
+	time_t	timestamp;
+	time(&timestamp);
+	return timestamp;
+}
 
-std::string	getTimestamp()
+std::string	getTimestampDate()
 {
 	time_t	timestamp;
 	time(&timestamp);
@@ -20,3 +15,21 @@ std::string	getTimestamp()
 	return timeString;
 }
 
+std::vector<std::string>	parseParams(const std::string& src)
+{
+	std::vector<std::string>	result;
+
+	std::string					buffer;
+	std::string					str = src;
+	size_t 						pos = src.find(":");
+	if (pos != std::string::npos)
+		str = str.substr(0, pos);
+	std::stringstream			ss(str);
+	while (ss >> buffer)
+	{
+		result.push_back(buffer);
+	}
+	if (pos != std::string::npos)
+		result.push_back(src.substr(pos));
+	return result;
+}

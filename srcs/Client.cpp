@@ -1,21 +1,11 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   Client.cpp                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: nsouchal <nsouchal@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/11 13:23:42 by tnicolau          #+#    #+#             */
-/*   Updated: 2024/10/21 12:57:47 by nsouchal         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "Client.hpp"
 #include "Server.hpp"
+#include "numerics.hpp"
 
-Client::Client(Server& server) : _serverRef(server)
+Client::Client(Server& server) : _serverRef(server) 
 {
-	_nickname = "*";
+	_registrationChecked = false;
+	_fd = -1;
 }
 
 const int		&Client::getFd()
@@ -28,9 +18,18 @@ const std::string	&Client::getIPaddress()
 	return _IPaddress;
 }
 
-const std::string	&Client::getNickname()
+const std::string	Client::getNickname()
 {
+	if (_nickname.empty())
+		return "*";
 	return _nickname;
+}
+
+bool	Client::checkEmptyNickname()
+{
+	if (_nickname.empty())
+		return true;
+	return false;
 }
 
 const std::string	&Client::getUsername()
@@ -64,15 +63,6 @@ void	Client::setFd(const int& new_fd)
 	_fd = new_fd;
 }
 
-void	Client::setPing(time_t timePing)
-{
-	_timePing = timePing;
-}
-
-void	Client::setPong(time_t timePong)
-{
-	_timePong = timePong;
-}
 
 void	Client::setIPaddress(const std::string& new_ip)
 {
@@ -107,12 +97,13 @@ void	Client::reply(std::string message)
 void	Client::setTrueRegistration()
 {
 	_registrationChecked = true;
-	std::cout << "Registered!!" << std::endl;
+	std::cout << _nickname <<  " Registered!!" << std::endl;
+	_serverRef.modifyNbUsers(1);
 	reply(RPL_WELCOME(_nickname, _username, _IPaddress));
 	reply(RPL_YOURHOST(_nickname));
 	reply(RPL_CREATED(_nickname, _serverRef.getCreationTime()));
-	reply(RPL_MYINFO(_nickname, "o", "t"));
-	reply(RPL_ISUPPORT(_nickname, "PREFIX=(ov)@+ CHANTYPES=#& CHANMODES=b,k,l,imnt"));
+	reply(RPL_MYINFO(_nickname, "o", "klito kl"));
+	reply(RPL_ISUPPORT(_nickname, "PREFIX=(o)@ CHANTYPES=#& CHANMODES=,k,l,it"));
 }
 
 bool	Client::checkRegistration()

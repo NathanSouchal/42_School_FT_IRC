@@ -1,18 +1,9 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   Channel.hpp                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: tnicolau <tnicolau@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/21 12:34:13 by nsouchal          #+#    #+#             */
-/*   Updated: 2024/10/22 09:30:11 by tnicolau         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #ifndef CHANNEL_HPP
 #define CHANNEL_HPP
 
+#include <iostream>
+#include <string>
+#include <algorithm>
 #include <vector>
 #include <string>
 
@@ -25,17 +16,45 @@ class Channel
 		std::string				_key;
 		std::vector<Client *>	channelClients;
 		std::vector<Client *>	channelOperators;
-		std::vector<std::string>	channelTopic;
+		std::string				_channelTopic;
+		std::string				_topicCreator;
+		std::string				_topicCreationTime;
 		bool					_inviteOnly;
+		bool					_modeT;
+		int						_userLimit;
 	public:
 		Channel(const std::string &name);
-		void				addChannelClient(Client *client, const std::string& name);
-		void				addChannelOperator(Client *client);
-		const std::string	&getName();
-		const std::string	&getKey();
-		bool				getInviteOnly();
-		void				setKey(const std::string &key);
-		void				setInviteOnly();
+		void					addChannelClient(Client *client);
+		void					addChannelOperator(Client *client);
+		void					deleteChannelClient(Client *client);
+		void					deleteChannelOperator(Client *client);
+		std::string				generateUserList();
+		void					replySuccessfullJoin(Client *client);
+
+		Client*					findOperatorInChannel(const std::string& nickname);
+		Client*					findClientInChannel(const std::string& nickname);
+		const std::string		&getName();
+		const std::string		&getKey();
+		bool					getInviteOnly();
+		std::string				getChannelTopic();
+		std::string				getTopicCreator();
+		std::string				getTopicCreationTime();
+		bool					getModeT();
+		int						getUserLimit();
+		std::string				getActiveModes();
+		std::vector<Client *>	getClientList();
+		std::vector<Client *>	getOperatorList();
+
+		void					setKey(const std::string &key);
+		void					setInviteOnly();
+		void					setChannelTopic(const std::string& topic);
+		void					setTopicCreator(const std::string& creator);
+		void					setTopicCreationTime(const std::string& creationTime);
+		void					setModeT();
+		void					sendMessageToAllClients(Client *client, const std::string& src, const std::string& param1, const std::string& param2);
+		void					informUsersOnJoin(Client *client);
+		void					setUserLimit(int limit);
+		bool					checkIfUserOperator(std::string nickname);
 };
 
 #endif

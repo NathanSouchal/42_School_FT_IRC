@@ -1,15 +1,3 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   Client.hpp                                         :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: nsouchal <nsouchal@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/11 13:23:09 by tnicolau          #+#    #+#             */
-/*   Updated: 2024/10/21 12:57:12 by nsouchal         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #ifndef CLIENT_HPP
 #define CLIENT_HPP
 
@@ -18,7 +6,6 @@
 #include <ctime>
 #include <sys/socket.h>
 #include <sys/types.h>
-#include "numerics.hpp"
 
 class	Server;
 
@@ -27,8 +14,6 @@ class	Client
 	private:
 		int			_fd;
 		std::string	_IPaddress;
-		time_t		_timePing;
-		time_t		_timePong;
 		std::string	_nickname;
 		std::string	_username;
 		std::string	_realname;
@@ -39,7 +24,7 @@ class	Client
 		Client(Server& server);
 		const int			&getFd();
 		const std::string	&getIPaddress();
-		const std::string	&getNickname();
+		const std::string	getNickname();
 		const std::string	&getUsername();
 		const std::string	&getRealname();
 		const std::string	&getPassword();
@@ -51,10 +36,9 @@ class	Client
 		void				setRealname(const std::string &realname);
 		void				setPassword(const std::string &password);
 		void				setTrueRegistration();
-		void				setPing(time_t timePing);
-		void				setPong(time_t timePong);
 		void				setIPaddress(const std::string& new_ip);
 		bool				checkRegistration();
+		bool				checkEmptyNickname();
 		void				reply(std::string message);
 };
 

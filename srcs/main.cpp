@@ -1,16 +1,6 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   main.cpp                                           :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: tnicolau <tnicolau@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/10 10:10:09 by tnicolau          #+#    #+#             */
-/*   Updated: 2024/10/22 08:48:12 by tnicolau         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "Server.hpp"
+
+bool	_signal = false;
 
 int	checkInput(char* port)
 {
@@ -22,6 +12,12 @@ int	checkInput(char* port)
 	return res;
 }
 
+void	SignalHandler(int signal)
+{
+	(void)signal;
+	_signal = true;
+}
+
 int	main(int ac, char **av)
 {
 	if (ac != 3)
@@ -31,13 +27,19 @@ int	main(int ac, char **av)
 	}
 	try
 	{
+		struct sigaction	sa;
+		std::memset(&sa, 0, sizeof(sa));
+		sa.sa_flags = SA_SIGINFO;
+		sa.sa_handler = SignalHandler;
+		sigaction(SIGINT, &sa, NULL);
+
 		int port = checkInput(av[1]);
 		Server	server(port, av[2]);
-
-		struct sigaction	sa;
-		sa.sa_flags = SA_SIGINFO;
-		sa.sa_handler = Server::SignalHandler;
-		sigaction(SIGINT, &sa, NULL);
+		while (!_signal)
+		{
+			server.ServerProgram(_signal);
+			sleep(1);
+		}
 	}
 	catch(const std::exception& e)
 	{
