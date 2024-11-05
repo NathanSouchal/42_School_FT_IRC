@@ -49,9 +49,9 @@ void	Server::checkCommand(const std::string& message, Client *current_client)
 	size_t 		pos = message.find(" ");
 	std::string	command;
 
-	if (pos == std::string::npos)
+	if (pos == std::string::npos && message != "MOTD")
 		current_client->reply(ERR_NEEDMOREPARAMS(current_client->getNickname(), command));
-	else
+	else if (command != "MOTD")
 		command = message.substr(0, pos);
 	void(Server::*function_ptr[])(const std::string&, Client *) = {&Server::nickname, &Server::user, &Server::motd,\
 	&Server::lusers, &Server::join, &Server::privmsg, &Server::kick, &Server::invite, &Server::topic, &Server::mode, &Server::part};
