@@ -92,6 +92,7 @@ void	Channel::deleteChannelOperator(Client *client)
 		channelOperators.erase(it);
 		std::cout << "Deleted channel Operator " << client->getNickname() << std::endl;
 	}
+	client->getServerRef().deleteChannel(this);
 }
 
 void	Channel::deleteChannelClient(Client *client)
@@ -102,6 +103,7 @@ void	Channel::deleteChannelClient(Client *client)
 		channelClients.erase(it);
 		std::cout << "Deleted channel Client " << client->getNickname() << std::endl;
 	}
+	client->getServerRef().deleteChannel(this);
 }
 
 Client*		Channel::findOperatorInChannel(const std::string& nickname)
@@ -207,6 +209,11 @@ void		Channel::sendMessageToAllClients(Client *client, const std::string& src, c
 std::vector<Client *>	Channel::getClientList()
 {
 	return channelClients;
+}
+
+std::vector<Client *>	Channel::getOperatorList()
+{
+	return channelOperators;
 }
 
 void	Channel::informUsersOnJoin(Client *client)

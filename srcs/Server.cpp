@@ -115,3 +115,25 @@ Channel	*Server::findChannel(const std::string& channel)
 	}
 	return NULL;
 }
+
+void	Server::deleteChannel(Channel *channel)
+{
+	std::cout << "channel " << channel->getName() << " deleted 1" << std::endl;
+	if (!(channel->getClientList().size()) && !(channel->getOperatorList().size()))
+	{
+		std::cout << "channel " << channel->getName() << " deleted 2" << std::endl;
+		if (findChannel(channel->getName()))
+		{
+			std::cout << "channel " << channel->getName() << " deleted 3" << std::endl;
+			for (std::vector<Channel *>::iterator it = serverChannels.begin(); it != serverChannels.end(); ++it)
+			{
+				if (*it == channel)
+				{
+					std::cout << "channel " << channel->getName() << " deleted 4" << std::endl;
+					serverChannels.erase(it);
+					delete channel;
+				}
+			}
+		}
+	}
+}
