@@ -98,13 +98,13 @@ void	Server::ReceiveData(int fd)
 {
 	char	buffer[1024];
 
-	ssize_t bytes = recv(fd, buffer, sizeof(buffer) - 1 , 0); //-> receive the data
+	ssize_t bytes = recv(fd, buffer, sizeof(buffer) - 1 , 0);
 
 	if (bytes == 0)
 	{
 		std::cerr << "Client " << fd << " disconnected" << std::endl;
-		clearClient(fd); //-> clear the client
-		close(fd); //-> close the client socket
+		clearClient(fd);
+		close(fd);
 	}
 	else if (bytes < 0)
 	{

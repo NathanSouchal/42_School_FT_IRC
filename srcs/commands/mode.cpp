@@ -220,25 +220,3 @@ void	Server::setNewModes(std::map<std::string, std::string> modesAndParams, Chan
 	}
 	channel->sendMessageToAllClients(client, "MODE", modes, paramsStr);
 }
-
-
-//MODE
-//->liste des modes i t k o l
-
-//k -> password
-//o -> nickname
-//l -> number
-
-//MODE #channel ou MODE nickname
-//->modes actuels du channel ou user
-
-//MODE <cible> +mode
-//->active le mode (si il n,a pas besoin de parametre)
-
-//MODE <cible> +mode+mode-mode parametre
-//MODE #channel +mode-mode user1 user2
-
-//Si mode deja actif ou inactif, on ignore
-
-//Normalement si mauvaise combinaison mode+param on rep ERR_INVALIDMODEPARAM au client, mais comment savoir quel mode associe a quel param est invalide ?
-//pour l'instant erreur generique ERR_NEEDMOREPARAMS
