@@ -259,8 +259,6 @@ void	Channel::informUsersOnJoin(Client *client)
 
 bool	Channel::checkIfUserOperator(std::string nickname)
 {
-	if (_modeT)
-		return true;
 	for (std::vector<Client*>::iterator it = channelOperators.begin(); it != channelOperators.end(); ++it)
 	{
 		if ((*it)->getNickname() == nickname)

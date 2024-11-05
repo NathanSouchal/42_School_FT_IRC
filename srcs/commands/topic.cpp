@@ -35,7 +35,7 @@ void	Server::topic(const std::string& message, Client *client)
 		return client->reply(ERR_NEEDMOREPARAMS(client->getNickname(), "TOPIC"));
 	if (!channelCopy->findClientInChannel(client->getNickname()))
 		return client->reply(ERR_NOTONCHANNEL(client->getNickname(), channel));
-	if (!channelCopy->checkIfUserOperator(client->getNickname()))
+	if (!channelCopy->checkIfUserOperator(client->getNickname()) && !channelCopy->getModeT())
 		return client->reply(ERR_CHANOPRIVSNEEDED(client->getNickname(), channel));
 	if (topic == ":" || topic == "::")
 		channelCopy->setChannelTopic("");
