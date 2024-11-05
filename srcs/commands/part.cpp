@@ -23,15 +23,18 @@ void	Server::part(const std::string& message, Client *client)
 	}
     for (size_t i = 0; i < channels.size(); ++i)
     {
-        if (!findChannel(channels[i]))
+		Channel	*channel = findChannel(channels[i]);
+
+        if (!channel)
 		    client->reply(ERR_NOSUCHCHANNEL(client->getNickname(), channels[i]));
-        else if (!(findChannel(channels[i])->findClientInChannel(client->getNickname())))
+        else if (!channel->findClientInChannel(client->getNickname()))
 		    client->reply(ERR_NOTONCHANNEL(client->getNickname(), channels[i]));
         else
         {
-            findChannel(channels[i])->deleteChannelClient(client);
-            client->reply(":" + client->getNickname() + "!" + client->getUsername() + "@" + client->getIPaddress() \
-	        + " PART " + channels[i] + " :" + partMessage + "\r\n");
+            channel->deleteChannelClient(client);
+            if (channel->findOperatorInChannel(client->getNickname()))
+				channel->deleteChannelOperator(client);
+			channel->sendMessageToAllClients(client, "PART", partMessage, "");
         }
     }
 }
