@@ -54,6 +54,7 @@ class	Server
 		void	ReceiveData(int fd);
 		void	parseMessage(const std::string& message, int fd);
 		void	checkCommand(const std::string& message, Client *current_client);
+		void	deleteChannel(Channel *channel);
 
 		void	password(const std::string& message, Client *client);
 		void	nickname(const std::string& message, Client *client);

@@ -21,11 +21,6 @@ std::vector<std::string>	Server::parseUsers(const std::string& src)
 			if (!buffer.empty())
 				result.push_back(buffer);
 		}
-		//print result
-		for (std::vector<std::string>::iterator it = result.begin(); it != result.end(); ++it)
-		{
-			std::cout << "User : " << *it << std::endl;
-		}
 	}
 	return result;
 }
@@ -67,6 +62,7 @@ void	Server::kick(const std::string& message, Client *client)
 			if (channelCopy->findOperatorInChannel(parsedUsers[i]))
 				channelCopy->deleteChannelOperator(channelCopy->findOperatorInChannel(parsedUsers[i]));
 			channelCopy->deleteChannelClient(channelCopy->findClientInChannel(parsedUsers[i]));
+			client->getServerRef().deleteChannel(channelCopy);
 		}
 	}
 }

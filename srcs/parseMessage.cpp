@@ -6,7 +6,6 @@
 
 void	Server::parseMessage(const std::string& message, int fd)
 {
-	std::cout << "Client " << fd << ", data: " << message << std::endl;
 	std::string			command;
 	std::istringstream	reader(message);
 	std::string 		line, value;
@@ -22,9 +21,7 @@ void	Server::parseMessage(const std::string& message, int fd)
 				line.erase(line.size() - 1);
 			line = _partialCommand + line;
 			_partialCommand.clear();
-			std::cout << "line " << line << std::endl;
 			command = line.substr(0, line.find(32));
-			std::cout << "commande " << command << "|"<< std::endl;
 			if (command != "PASS" && command != "CAP")
 			{
 				if (current_client->getPassword().empty())
@@ -53,9 +50,9 @@ void	Server::checkCommand(const std::string& message, Client *current_client)
 		current_client->reply(ERR_NEEDMOREPARAMS(current_client->getNickname(), command));
 	else if (command != "MOTD")
 		command = message.substr(0, pos);
-	void(Server::*function_ptr[])(const std::string&, Client *) = {&Server::nickname, &Server::user, &Server::motd,\
+	void(Server::*function_ptr[])(const std::string&, Client *) = {&Server::nickname, &Server::user,\
 	&Server::lusers, &Server::join, &Server::privmsg, &Server::kick, &Server::invite, &Server::topic, &Server::mode, &Server::part};
-	std::string commands[] = {"NICK", "USER", "MOTD", "LUSERS", "JOIN", "PRIVMSG", "KICK", "INVITE", "TOPIC", "MODE", "PART"};
+	std::string commands[] = {"NICK", "USER", "LUSERS", "JOIN", "PRIVMSG", "KICK", "INVITE", "TOPIC", "MODE", "PART"};
 	bool	found = false;
 
 	for (size_t i = 0; i < sizeof(commands) / sizeof(commands[0]); i++)

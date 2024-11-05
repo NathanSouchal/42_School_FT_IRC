@@ -31,10 +31,5 @@ std::vector<std::string>	parseParams(const std::string& src)
 	}
 	if (pos != std::string::npos)
 		result.push_back(src.substr(pos));
-	//print result
-	for (std::vector<std::string>::iterator it = result.begin(); it != result.end(); ++it)
-	{
-		std::cout << *it << std::endl;
-	}
 	return result;
 }

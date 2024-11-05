@@ -43,6 +43,7 @@ class Channel
 		int						getUserLimit();
 		std::string				getActiveModes();
 		std::vector<Client *>	getClientList();
+		std::vector<Client *>	getOperatorList();
 
 		void					setKey(const std::string &key);
 		void					setInviteOnly();

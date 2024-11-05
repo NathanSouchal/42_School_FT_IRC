@@ -5,6 +5,8 @@
 Channel::Channel(const std::string &name): _name(name)
 {
 	_userLimit = 10;
+	_inviteOnly = false;
+	_modeT = false;
 }
 
 const std::string	&Channel::getName()
@@ -72,6 +74,7 @@ void	Channel::addChannelClient(Client *client)
 	if (it != channelClients.end() || !client)
 		return ;
 	channelClients.push_back(client);
+	std::cout << client->getNickname() << " added to channel " << _name << " !" << std::endl;
 	replySuccessfullJoin(client);
 }
 
@@ -90,7 +93,7 @@ void	Channel::deleteChannelOperator(Client *client)
 	if (it != channelOperators.end())
 	{
 		channelOperators.erase(it);
-		std::cout << "Deleted channel Operator " << client->getNickname() << std::endl;
+		std::cout << client->getNickname() << " isn't operator anymore of " << _name << std::endl;
 	}
 }
 
@@ -100,7 +103,7 @@ void	Channel::deleteChannelClient(Client *client)
 	if (it != channelClients.end())
 	{
 		channelClients.erase(it);
-		std::cout << "Deleted channel Client " << client->getNickname() << std::endl;
+		std::cout << "User " << client->getNickname() << " has left " << _name << std::endl;
 	}
 }
 
@@ -182,7 +185,6 @@ void		Channel::setTopicCreator(const std::string& creator)
 
 void		Channel::setTopicCreationTime(const std::string& creationTime)
 {
-	std::cout << "creationTime :" << creationTime << std::endl;
 	this->_topicCreationTime = creationTime;
 }
 
@@ -193,22 +195,30 @@ void		Channel::setUserLimit(int limit)
 
 void		Channel::sendMessageToAllClients(Client *client, const std::string& src, const std::string& param1, const std::string& param2)
 {
-	for (std::vector<Client*>::iterator it = channelClients.begin(); it != channelClients.end(); ++it)
+	if (!channelClients.empty())
 	{
-		if (src == "TOPIC")
-			(*it)->reply(TOPIC(client->getNickname(), (*it)->getUsername(), this->getName(), (*it)->getIPaddress(), this->getChannelTopic()));
-		else if (src == "MODE")
-			(*it)->reply(MODE(client->getNickname(), (*it)->getUsername(), (*it)->getIPaddress(), this->getName(), param1, param2));
-		else if (src == "KICK")
-			(*it)->reply(KICK(client->getNickname(), (*it)->getUsername(), (*it)->getIPaddress(), this->getName(), param1, param2));
-		else if (src == "PART")
-			(*it)->reply(PART(client->getNickname(), (*it)->getUsername(), (*it)->getIPaddress(), this->getName(), param1));
+		for (std::vector<Client*>::iterator it = channelClients.begin(); it != channelClients.end(); ++it)
+		{
+			if (src == "TOPIC")
+				(*it)->reply(TOPIC(client->getNickname(), (*it)->getUsername(), this->getName(), (*it)->getIPaddress(), this->getChannelTopic()));
+			else if (src == "MODE")
+				(*it)->reply(MODE(client->getNickname(), (*it)->getUsername(), (*it)->getIPaddress(), this->getName(), param1, param2));
+			else if (src == "KICK")
+				(*it)->reply(KICK(client->getNickname(), (*it)->getUsername(), (*it)->getIPaddress(), this->getName(), param1, param2));
+			else if (src == "PART")
+				(*it)->reply(PART(client->getNickname(), (*it)->getUsername(), (*it)->getIPaddress(), this->getName(), param1));
+		}
 	}
 }
 
 std::vector<Client *>	Channel::getClientList()
 {
 	return channelClients;
+}
+
+std::vector<Client *>	Channel::getOperatorList()
+{
+	return channelOperators;
 }
 
 void	Channel::informUsersOnJoin(Client *client)
@@ -228,7 +238,7 @@ bool	Channel::checkIfUserOperator(std::string nickname)
 {
 	if (_modeT)
 		return true;
-	for (std::vector<Client*>::iterator it = channelClients.begin(); it != channelClients.end(); ++it)
+	for (std::vector<Client*>::iterator it = channelOperators.begin(); it != channelOperators.end(); ++it)
 	{
 		if ((*it)->getNickname() == nickname)
 			return true;

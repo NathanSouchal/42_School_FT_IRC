@@ -110,8 +110,6 @@ void	Server::mode(const std::string& message, Client *client)
 		return client->reply(ERR_NEEDMOREPARAMS(client->getNickname(), "MODE"));
 	parsedMessage.erase(parsedMessage.begin(), parsedMessage.begin()+3);
 	modesAndParams = joinModesAndParams(parsedModes, parsedMessage, client);
-	for (std::map<std::string, std::string>::iterator it = modesAndParams.begin(); it != modesAndParams.end(); ++it)
-		std::cout << it->first << ", " << it->second << std::endl;
 	setNewModes(modesAndParams, channelCopy, client);
 }
 

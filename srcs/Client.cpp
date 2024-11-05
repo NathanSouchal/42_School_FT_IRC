@@ -2,7 +2,11 @@
 #include "Server.hpp"
 #include "numerics.hpp"
 
-Client::Client(Server& server) : _serverRef(server) {}
+Client::Client(Server& server) : _serverRef(server) 
+{
+	_registrationChecked = false;
+	_fd = -1;
+}
 
 const int		&Client::getFd()
 {
@@ -88,13 +92,12 @@ void	Client::setRealname(const std::string &realname)
 void	Client::reply(std::string message)
 {
 	send(_fd, message.c_str(), message.size(), 0);
-	std::cout << "fd: " << _fd << ", message: " << message << std::endl;
 }
 
 void	Client::setTrueRegistration()
 {
 	_registrationChecked = true;
-	std::cout << "Registered!!" << std::endl;
+	std::cout << _nickname <<  " Registered!!" << std::endl;
 	_serverRef.modifyNbUsers(1);
 	reply(RPL_WELCOME(_nickname, _username, _IPaddress));
 	reply(RPL_YOURHOST(_nickname));
