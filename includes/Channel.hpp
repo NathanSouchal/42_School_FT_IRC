@@ -16,6 +16,7 @@ class Channel
 		std::string				_key;
 		std::vector<Client *>	channelClients;
 		std::vector<Client *>	channelOperators;
+		std::vector<Client *>	invitedClients;
 		std::string				_channelTopic;
 		std::string				_topicCreator;
 		std::string				_topicCreationTime;
@@ -26,6 +27,7 @@ class Channel
 		Channel(const std::string &name);
 		void					addChannelClient(Client *client);
 		void					addChannelOperator(Client *client);
+		void					addInvitedClient(Client *client);
 		void					deleteChannelClient(Client *client);
 		void					deleteChannelOperator(Client *client);
 		std::string				generateUserList();
@@ -33,6 +35,7 @@ class Channel
 
 		Client*					findOperatorInChannel(const std::string& nickname);
 		Client*					findClientInChannel(const std::string& nickname);
+		Client*					findInvitedClientInChannel(const std::string& nickname);
 		const std::string		&getName();
 		const std::string		&getKey();
 		bool					getInviteOnly();
@@ -44,6 +47,7 @@ class Channel
 		std::string				getActiveModes();
 		std::vector<Client *>	getClientList();
 		std::vector<Client *>	getOperatorList();
+		std::vector<Client *>	getInvitedClients();
 
 		void					setKey(const std::string &key);
 		void					setInviteOnly();

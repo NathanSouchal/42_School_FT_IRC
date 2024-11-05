@@ -55,7 +55,7 @@ bool	Server::checkAddClientToChannel(const std::string &name, const std::string 
 				client->reply(ERR_USERONCHANNEL(client->getNickname(), client->getNickname(), name));
 				return true;
 			}
-			if (serverChannels[i]->getInviteOnly())
+			if (serverChannels[i]->getInviteOnly() && !serverChannels[i]->findInvitedClientInChannel(client->getNickname()))
 			{
 				client->reply(ERR_INVITEONLYCHAN(client->getNickname(), name));
 				return true;

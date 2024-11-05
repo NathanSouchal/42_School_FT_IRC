@@ -183,6 +183,7 @@ void	Server::setNewModes(std::map<std::string, std::string> modesAndParams, Chan
 			{
 				channel->setInviteOnly();
 				modes += "-i";
+				channel->getInvitedClients().clear();
 			}
 			else if (it->first[1] == 't' && channel->getModeT())
 			{

@@ -87,6 +87,14 @@ void	Channel::addChannelOperator(Client *client)
 	std::cout << "Added channel Operator " << client->getNickname() << std::endl;
 }
 
+void	Channel::addInvitedClient(Client *client)
+{
+	std::vector<Client*>::iterator it = std::find(invitedClients.begin(), invitedClients.end(), client);
+	if (it != invitedClients.end() || !client)
+		return ;
+	invitedClients.push_back(client);
+}
+
 void	Channel::deleteChannelOperator(Client *client)
 {
 	std::vector<Client*>::iterator it = std::find(channelOperators.begin(), channelOperators.end(), client);
@@ -120,6 +128,16 @@ Client*		Channel::findOperatorInChannel(const std::string& nickname)
 Client*		Channel::findClientInChannel(const std::string& nickname)
 {
 	for (std::vector<Client*>::iterator it = channelClients.begin(); it != channelClients.end(); ++it)
+	{
+		if ((*it)->getNickname() == nickname)
+			return *it;
+	}
+	return NULL;
+}
+
+Client*		Channel::findInvitedClientInChannel(const std::string& nickname)
+{
+	for (std::vector<Client*>::iterator it = invitedClients.begin(); it != invitedClients.end(); ++it)
 	{
 		if ((*it)->getNickname() == nickname)
 			return *it;
@@ -219,6 +237,11 @@ std::vector<Client *>	Channel::getClientList()
 std::vector<Client *>	Channel::getOperatorList()
 {
 	return channelOperators;
+}
+
+std::vector<Client *>	Channel::getInvitedClients()
+{
+	return invitedClients;
 }
 
 void	Channel::informUsersOnJoin(Client *client)
