@@ -14,8 +14,8 @@ int	checkInput(char* port)
 
 void	SignalHandler(int signal)
 {
-	(void)signal;
-	_signal = true;
+	if (signal == SIGINT)
+		_signal = true;
 }
 
 int	main(int ac, char **av)
@@ -32,6 +32,7 @@ int	main(int ac, char **av)
 		sa.sa_flags = SA_SIGINFO;
 		sa.sa_handler = SignalHandler;
 		sigaction(SIGINT, &sa, NULL);
+		sigaction(SIGTSTP, &sa, NULL);
 
 		int port = checkInput(av[1]);
 		Server	server(port, av[2]);

@@ -6,13 +6,13 @@
 #    By: nsouchal <nsouchal@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/18 15:55:18 by tnicolau          #+#    #+#              #
-#    Updated: 2024/11/05 12:59:57 by nsouchal         ###   ########.fr        #
+#    Updated: 2024/11/06 11:40:09 by nsouchal         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = ircserv
 CC = c++
-FLAGS = -Wall -Wextra -Werror -std=c++98 -g3
+FLAGS = -Wall -Wextra -Werror -std=c++98
 
 DIR_SRCS 		= 	srcs/
 DIR_CMD 		= 	srcs/commands/

@@ -100,15 +100,9 @@ void	Server::ReceiveData(int fd)
 
 	ssize_t bytes = recv(fd, buffer, sizeof(buffer) - 1 , 0);
 
-	if (bytes == 0)
+	if (bytes <= 0)
 	{
 		std::cerr << "Client " << fd << " disconnected" << std::endl;
-		clearClient(fd);
-		close(fd);
-	}
-	else if (bytes < 0)
-	{
-		std::cerr << "Client " << fd << " error made him disconnect" << std::endl;
 		clearClient(fd);
 		close(fd);
 	}
