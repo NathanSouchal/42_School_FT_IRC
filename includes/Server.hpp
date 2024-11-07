@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include <algorithm>
 #include <sstream>
+#include <fstream>
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <netinet/in.h>
@@ -96,6 +97,7 @@ class	Server
 		std::vector<std::string>	parseUsers(const std::string& src);
 
 		void	connectBot();
+		std::vector<std::vector<std::string> >	parseQuizDatabase(const std::string& database);
 };
 
 #endif
