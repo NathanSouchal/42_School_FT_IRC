@@ -51,8 +51,8 @@ void	Server::checkCommand(const std::string& message, Client *current_client)
 	else
 		command = message.substr(0, pos);
 	void(Server::*function_ptr[])(const std::string&, Client *) = {&Server::nickname, &Server::user,\
-	&Server::lusers, &Server::join, &Server::privmsg, &Server::kick, &Server::invite, &Server::topic, &Server::mode, &Server::part};
-	std::string commands[] = {"NICK", "USER", "LUSERS", "JOIN", "PRIVMSG", "KICK", "INVITE", "TOPIC", "MODE", "PART"};
+	&Server::lusers, &Server::join, &Server::privmsg, &Server::kick, &Server::invite, &Server::topic, &Server::mode, &Server::part, &Server::quizz};
+	std::string commands[] = {"NICK", "USER", "LUSERS", "JOIN", "PRIVMSG", "KICK", "INVITE", "TOPIC", "MODE", "PART", "QUIZZ"};
 	bool	found = false;
 
 	for (size_t i = 0; i < sizeof(commands) / sizeof(commands[0]); i++)

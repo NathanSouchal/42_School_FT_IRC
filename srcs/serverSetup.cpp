@@ -5,7 +5,6 @@
 
 void	Server::ServerSocket()
 {
-	sockaddr_in serverAddress;
 	pollfd	newPoll;
 	serverAddress.sin_family = AF_INET;
 	serverAddress.sin_port = htons(_port);
@@ -87,6 +86,40 @@ void	Server::AcceptNewClient()
 
 	client->setFd(fd);
 	client->setIPaddress(inet_ntoa((clientAddress.sin_addr)));
+	clients.push_back(client);
+	fds.push_back(newPoll);
+	if (fds.size() > static_cast<size_t>(_nbMaxClients))
+		setNbMaxClients(clients.size());
+	std::cout << "Client " << fd << " connected !" << std::endl;
+}
+
+void	Server::configBot()
+{
+	Client	*client = new Client(*this);
+	sockaddr_in	clientAddress;
+	pollfd	newPoll;
+	socklen_t	len = sizeof(clientAddress);
+
+	int	fd = accept(serverSocketFd, (sockaddr *)&clientAddress, &len);
+	if (fd == -1)
+		std::cerr << "Accept() failed" << std::endl;
+	if (fcntl(fd, F_SETFL, O_NONBLOCK) == -1)
+	{
+		std::cerr << "fcntl() failed" << std::endl;
+		return ;
+	}
+
+	newPoll.fd = fd;
+	newPoll.events = POLLIN;
+	newPoll.revents = 0;
+
+	client->setFd(fd);
+	client->setIPaddress(inet_ntoa((clientAddress.sin_addr)));
+	client->setNick("JulienLepers");
+	client->setUsername("Jul");
+	client->setRealname("Micheal Keaton");
+	client->setTrueRegistration();
+	client->setPassword("password");
 	clients.push_back(client);
 	fds.push_back(newPoll);
 	if (fds.size() > static_cast<size_t>(_nbMaxClients))

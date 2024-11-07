@@ -133,3 +133,20 @@ void	Server::deleteChannel(Channel *channel)
 		}
 	}
 }
+
+void	Server::connectBot()
+{
+	int botSocket = socket(AF_INET, SOCK_STREAM, 0);
+    if (botSocket == -1)
+    {
+        std::cerr << "socket() failed for bot" << std::endl;
+        return;
+    }
+	if (connect(botSocket, (sockaddr *)&serverAddress, sizeof(serverAddress)) == -1)
+    {
+        std::cerr << "connect() failed for bot" << std::endl;
+        close(botSocket);
+        return;
+    }
+    std::cout << "Bot connected to the server successfully!" << std::endl;
+}

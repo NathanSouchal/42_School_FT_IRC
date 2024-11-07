@@ -36,6 +36,8 @@ int	main(int ac, char **av)
 
 		int port = checkInput(av[1]);
 		Server	server(port, av[2]);
+		server.connectBot();
+		server.configBot();
 		while (!_signal)
 		{
 			server.ServerProgram(_signal);

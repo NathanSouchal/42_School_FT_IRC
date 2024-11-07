@@ -10,8 +10,11 @@ void	Server::privmsg(const std::string& message, Client *client)
 	std::vector<std::string>	targets;
 	std::string					msgToSend, temp;
 
+	std::cout << "coucou" << std::endl;
+	std::cout << client << std::endl;
 	if (parameters.size() != 2)
 	{
+		std::cout << "coucou1" << std::endl;
 		if (parameters.size() > 2)
 			client->reply(ERR_NEEDMOREPARAMS(client->getNickname(), "JOIN"));
 		else if ((parameters.size() == 1 && parameters[0][0] == ':') || parameters.size() == 0)
@@ -20,7 +23,9 @@ void	Server::privmsg(const std::string& message, Client *client)
 			client->reply(ERR_NOTEXTTOSEND(client->getNickname()));
 		return ;
 	}
+	std::cout << "coucou2" << std::endl;
 	msgToSend = parameters[1];
+	std::cout << "coucou3" << std::endl;
 	if (msgToSend[0] == ':')
 		msgToSend = msgToSend.substr(msgToSend.find(':') + 1);
 	std::stringstream			ss(parameters[0]);

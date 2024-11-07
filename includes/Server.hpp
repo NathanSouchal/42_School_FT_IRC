@@ -29,6 +29,7 @@ class	Server
 		Server();
 		int	_port;
 		std::string	_password;
+		sockaddr_in serverAddress;
 		int	serverSocketFd;
 		int	_nbMaxClients;
 		int	_nbUsers;
@@ -47,6 +48,7 @@ class	Server
 		std::string	getCreationTime();
 		void	ServerSocket();
 		void	AcceptNewClient();
+		void	configBot();
 		void	clearClient(int fd);
 		void	deleteAll();
 		void	ServerProgram(bool _signal);
@@ -74,6 +76,7 @@ class	Server
 		void	topic(const std::string& message, Client *client);
 		void	sendTopic(Channel *channel, Client *client);
 		void	lusers(const std::string& message, Client *client);
+		void	quizz(const std::string& message, Client *client);
 
 		Client	*findClient(int fd);
 		Client	*findClientByNickname(std::string nickname);
@@ -91,6 +94,8 @@ class	Server
 		//KICK
 		void	kick(const std::string& message, Client *client);
 		std::vector<std::string>	parseUsers(const std::string& src);
+
+		void	connectBot();
 };
 
 #endif
