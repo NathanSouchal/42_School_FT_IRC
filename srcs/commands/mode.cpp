@@ -31,7 +31,7 @@ std::vector<std::string>	Server::parseModes(const std::string& src, Client *clie
 			sign = '-';
 		else
 		{
-			if (src[j] != 'k' && src[j] != 'o' && src[j] != 'l' && src[j] != 'l' && src[j] != 'i' && src[j] != 't')
+			if (src[j] != 'k' && src[j] != 'o' && src[j] != 'l' && src[j] != 'i' && src[j] != 't')
 				client->reply(ERR_UNKNOWNMODE(client->getNickname(), convertInString(src[j])));
 			else
 			{
@@ -52,7 +52,7 @@ std::map<std::string, std::string>	Server::joinModesAndParams(const std::vector<
 
 	for (size_t i = 0; i < modes.size(); ++i)
 	{
-		if (modes[i][1] == 'k' || modes[i][1] == 'o' || modes[i][1] == 'l')
+		if (modes[i][1] == 'k' || modes[i][1] == 'o' || (modes[i][0] == '+' && modes[i][1] == 'l'))
 		{
 			if (!params.size())
 				client->reply(ERR_NEEDMOREPARAMS(client->getNickname(), "MODE"));
@@ -67,6 +67,8 @@ std::map<std::string, std::string>	Server::joinModesAndParams(const std::vector<
 		else
 			modesAndParams[modes[i]] = "";
 	}
+	if (params.size() && (params.size() > modes.size() || paramCounter < params.size()))
+		client->reply(ERR_TOOMANYPARAMS(client->getNickname(), "MODE"));
 	return modesAndParams;
 }
 
@@ -98,7 +100,8 @@ void	Server::mode(const std::string& message, Client *client)
 				activeParams += channelCopy->getKey();
 				activeParams += " ";
 			}
-			activeParams += convertInString(channelCopy->getUserLimit());
+			if (channelCopy->getUserLimitSet())
+				activeParams += convertInString(channelCopy->getUserLimit());
 			return client->reply(RPL_CHANNELMODEIS2(client->getNickname(), channel, channelCopy->getActiveModes(), activeParams));
 		}
 
@@ -166,10 +169,13 @@ void	Server::setNewModes(std::map<std::string, std::string> modesAndParams, Chan
 				{
 					char *end;
 					long int	res = strtol(it->second.c_str(), &end, 10);
-					if (!res || res > 2000)
+					size_t	channelSize = channel->getClientList().size();
+					if (channelSize > (size_t)res || (res <= 0 || res > 2000))
 						client->reply(ERR_INVALIDMODEPARAM(client->getNickname(), channel->getName(), "+l", it->second));
 					else
 					{
+						if (!channel->getUserLimitSet())
+							channel->setUserLimitSet();
 						channel->setUserLimit((int)res);
 						modes += "+l";
 						params.push_back(it->second);
@@ -203,7 +209,8 @@ void	Server::setNewModes(std::map<std::string, std::string> modesAndParams, Chan
 			}
 			else if (it->first[1] == 'l')
 			{
-				channel->setUserLimit(10);
+				channel->setUserLimitSet();
+				channel->setUserLimit(-1);
 				modes += "-l";
 			}
 		}

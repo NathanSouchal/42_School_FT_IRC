@@ -68,8 +68,6 @@ void	Channel::addChannelClient(Client *client)
 {
 	std::vector<Client*>::iterator it;
 
-	if (channelClients.size() >= static_cast<size_t>(_userLimit))
-		return client->reply(ERR_CHANNELISFULL(client->getNickname(), _name));
 	it = std::find(channelClients.begin(), channelClients.end(), client);
 	if (it != channelClients.end() || !client)
 		return ;
@@ -170,6 +168,11 @@ int			Channel::getUserLimit()
 	return this->_userLimit;
 }
 
+bool		Channel::getUserLimitSet()
+{
+	return this->_userLimitSet;
+}
+
 std::string	Channel::getActiveModes()
 {
 	std::string	result = "+";
@@ -182,7 +185,8 @@ std::string	Channel::getActiveModes()
 		result += "k";
 	if (channelOperators.size())
 		result += "o";
-	result += "l";
+	if (getUserLimitSet())
+		result += "l";
 	return result;
 }
 
@@ -209,6 +213,11 @@ void		Channel::setTopicCreationTime(const std::string& creationTime)
 void		Channel::setUserLimit(int limit)
 {
 	this->_userLimit = limit;
+}
+
+void		Channel::setUserLimitSet()
+{
+	this->_userLimitSet = !_userLimitSet;
 }
 
 void		Channel::sendMessageToAllClients(Client *client, const std::string& src, const std::string& param1, const std::string& param2)

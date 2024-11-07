@@ -22,6 +22,7 @@ class Channel
 		std::string				_topicCreationTime;
 		bool					_inviteOnly;
 		bool					_modeT;
+		bool					_userLimitSet;
 		int						_userLimit;
 	public:
 		Channel(const std::string &name);
@@ -43,6 +44,7 @@ class Channel
 		std::string				getTopicCreator();
 		std::string				getTopicCreationTime();
 		bool					getModeT();
+		bool					getUserLimitSet();
 		int						getUserLimit();
 		std::string				getActiveModes();
 		std::vector<Client *>	getClientList();
@@ -55,6 +57,7 @@ class Channel
 		void					setTopicCreator(const std::string& creator);
 		void					setTopicCreationTime(const std::string& creationTime);
 		void					setModeT();
+		void					setUserLimitSet();
 		void					sendMessageToAllClients(Client *client, const std::string& src, const std::string& param1, const std::string& param2);
 		void					informUsersOnJoin(Client *client);
 		void					setUserLimit(int limit);
