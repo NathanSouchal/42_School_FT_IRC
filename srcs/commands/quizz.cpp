@@ -21,17 +21,18 @@ void    Server::quizz(const std::string& message, Client *client)
     int     questionIndex;
     char    *end;
 
-    if (parameters.size() > 1 || parameters[0] > "10" || parameters[0] < "1")
-        return client->reply("ERROR: please enter just a number between 1 and 10");
     nbQuestions = strtol(parameters[0].c_str(), &end, 10);
+    if (parameters.size() > 1 || nbQuestions > 10 || nbQuestions < 1)
+        return client->reply("ERROR: please enter just a number between 1 and 10");
     questionIndex = randomDigitGenerator(client->getUsedIndex());
     client->getUsedIndex().push_back(questionIndex);
     client->setNbQuestions(nbQuestions - 1);
-    client->setLastQuestion(quizDataBase[questionIndex]);
-    privmsg(" " + client->getNickname() + " :" + quizDataBase[questionIndex][0], bot);
+    client->setLastQuestion(_quizDataBase[questionIndex]);
+    privmsg(" " + client->getNickname() + " :\n" + _quizDataBase[questionIndex][0] + "\n" + \
+    _quizDataBase[questionIndex][1] + "\n" + _quizDataBase[questionIndex][2] + "\n" + _quizDataBase[questionIndex][3], bot);
 }
 
-std::vector<std::vector<std::string> >	Server::parseQuizDatabase(const std::string& src)
+void	Server::parseQuizDatabase(const std::string& src)
 {
 	std::vector<std::vector<std::string> >	quizDatabase;
 	std::vector<std::string>				question;
@@ -67,7 +68,7 @@ std::vector<std::vector<std::string> >	Server::parseQuizDatabase(const std::stri
 		for (size_t j = 0; j < quizDatabase[i].size(); ++j)
 			std::cout << quizDatabase[i][j] << std::endl;
 	}
-	return quizDatabase;
+    _quizDataBase = quizDatabase;
 }
 
 // {
