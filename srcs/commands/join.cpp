@@ -60,6 +60,11 @@ bool	Server::checkAddClientToChannel(const std::string &name, const std::string 
 				client->reply(ERR_INVITEONLYCHAN(client->getNickname(), name));
 				return true;
 			}
+			if (serverChannels[i]->getClientList().size() >= static_cast<size_t>(serverChannels[i]->getUserLimit()))
+			{
+				client->reply(ERR_CHANNELISFULL(client->getNickname(), serverChannels[i]->getName()));
+				return true;
+			}
 			if (!serverChannels[i]->getKey().empty())
 			{
 				if (serverChannels[i]->getKey() == key)

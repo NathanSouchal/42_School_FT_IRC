@@ -6,6 +6,7 @@
 #define SERVER "FT_IRC"
 #define NETWORKNAME "hier c, aujourd'hui c++"
 #define ERR_NEEDMOREPARAMS(source, command) (std::string(":") + SERVER + " 461 " + std::string(source) + " " + std::string(command) + " :Not enough parameters\r\n")
+#define ERR_TOOMANYPARAMS(source, command) (std::string(":") + SERVER + " 461 " + std::string(source) + " " + std::string(command) + " :Too many parameters\r\n")
 #define ERR_NOTREGISTERED(source, command) (std::string(":") + SERVER + " 451 " + std::string(source) + " " + std::string(command) + " :You have not registered\r\n")
 #define ERR_ALREADYREGISTERED(source, command) (std::string(":") + SERVER + " 462 " + std::string(source) + " " + std::string(command) + " :You may not reregister\r\n")
 #define ERR_PASSWDMISMATCH(source, command) (std::string(":") + SERVER + " 464 " + std::string(source) + " " + std::string(command) + " :Password incorrect\r\n")
