@@ -20,7 +20,7 @@ void	SignalHandler(int signal)
 
 int	main(int ac, char **av)
 {
-	if (ac != 3)
+	if (ac != 4)
 	{
 		std::cerr << "Wrong number of arguments" << std::endl;
 		return -1;
@@ -38,6 +38,7 @@ int	main(int ac, char **av)
 		Server	server(port, av[2]);
 		server.connectBot();
 		server.configBot();
+		server.parseQuizDatabase(av[3]);
 		while (!_signal)
 		{
 			server.ServerProgram(_signal);
