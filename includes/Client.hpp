@@ -6,6 +6,7 @@
 #include <ctime>
 #include <sys/socket.h>
 #include <sys/types.h>
+#include <vector>
 
 class	Server;
 
@@ -20,9 +21,13 @@ class	Client
 		std::string	_password;
 		bool		_registrationChecked;
 		Server&		_serverRef;
+		std::vector<std::string>	_lastQuestion;
+		int							_nbQuestions;
+		std::vector<int>			_usedIndex;						
 	public:
 		Client(Server& server);
 		const int			&getFd();
+		const int			&getNbQuestions();
 		const std::string	&getIPaddress();
 		const std::string	getNickname();
 		const std::string	&getUsername();
@@ -30,12 +35,16 @@ class	Client
 		const std::string	&getPassword();
 		Server&				getServerRef();
 		const bool			&getRegistration();
+		const std::vector<std::string>	&getLastQuestion();
+		std::vector<int>	&getUsedIndex();
 		void				setFd(const int& new_fd);
 		void				setNick(const std::string &nickname);
 		void				setUsername(const std::string &username);
 		void				setRealname(const std::string &realname);
 		void				setPassword(const std::string &password);
 		void				setTrueRegistration();
+		void				setLastQuestion(const std::vector<std::string>	&lastQuestion);
+		void				setNbQuestions(const int &nbQuestions);
 		void				setIPaddress(const std::string& new_ip);
 		bool				checkRegistration();
 		bool				checkEmptyNickname();

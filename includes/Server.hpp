@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <cstdlib>
+#include <ctime>
 #include <algorithm>
 #include <sstream>
 #include <sys/socket.h>
@@ -38,6 +39,7 @@ class	Server
 		std::string	_creationTime;
 		std::vector<Channel *>	serverChannels;
 		std::string				_partialCommand;
+		std::vector<std::vector<std::string> > quizDataBase;
 	public:
 		Server(int port, std::string password);
 		~Server();

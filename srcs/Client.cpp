@@ -6,11 +6,17 @@ Client::Client(Server& server) : _serverRef(server)
 {
 	_registrationChecked = false;
 	_fd = -1;
+	_nbQuestions = 0;
 }
 
 const int		&Client::getFd()
 {
 	return _fd;
+}
+
+const int		&Client::getNbQuestions()
+{
+	return _nbQuestions;
 }
 
 const std::string	&Client::getIPaddress()
@@ -58,6 +64,16 @@ Server		&Client::getServerRef()
 	return _serverRef;
 }
 
+const std::vector<std::string>		&Client::getLastQuestion()
+{
+	return _lastQuestion;
+}
+
+std::vector<int>		&Client::getUsedIndex()
+{
+	return _usedIndex;
+}
+
 void	Client::setFd(const int& new_fd)
 {
 	_fd = new_fd;
@@ -82,6 +98,16 @@ void	Client::setPassword(const std::string &password)
 void	Client::setUsername(const std::string &username)
 {
 	_username = username;
+}
+
+void	Client::setLastQuestion(const std::vector<std::string>	&lastQuestion)
+{
+	_lastQuestion = lastQuestion;
+}
+
+void	Client::setNbQuestions(const int &nbQuestions)
+{
+	_nbQuestions = nbQuestions;
 }
 
 void	Client::setRealname(const std::string &realname)
