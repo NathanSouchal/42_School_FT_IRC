@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <cstdlib>
+#include <ctime>
 #include <algorithm>
 #include <sstream>
 #include <fstream>
@@ -39,6 +40,7 @@ class	Server
 		std::string	_creationTime;
 		std::vector<Channel *>	serverChannels;
 		std::string				_partialCommand;
+		std::vector<std::vector<std::string> > _quizDataBase;
 	public:
 		Server(int port, std::string password);
 		~Server();
@@ -97,7 +99,7 @@ class	Server
 		std::vector<std::string>	parseUsers(const std::string& src);
 
 		void	connectBot();
-		std::vector<std::vector<std::string> >	parseQuizDatabase(const std::string& database);
+		void	parseQuizDatabase(const std::string& database);
 };
 
 #endif

@@ -1,14 +1,38 @@
 #include "Server.hpp"
 #include "Client.hpp"
+#include "utils.hpp"
+
+int randomDigitGenerator(std::vector<int> usedIndex)
+{
+    int randomNb;
+
+    std::srand(std::time(0));
+    randomNb = std::rand() % 10;
+    while (std::find(usedIndex.begin(), usedIndex.end(), randomNb) != usedIndex.end())
+        randomNb = std::rand() % 10;
+    return randomNb;
+}
 
 void    Server::quizz(const std::string& message, Client *client)
 {
-    (void)message;
-    std::cout << client->getNickname() << std::endl;
-    privmsg(" " + client->getNickname() + " :coucou c'est juju", findClientByNickname("JulienLepers"));
+    std::vector<std::string> parameters = parseParams(message.substr(message.find(" ")));
+    Client  *bot = findClientByNickname("JulienLepers");
+    long    nbQuestions;
+    int     questionIndex;
+    char    *end;
+
+    nbQuestions = strtol(parameters[0].c_str(), &end, 10);
+    if (parameters.size() > 1 || nbQuestions > 10 || nbQuestions < 1)
+        return client->reply("ERROR: please enter just a number between 1 and 10");
+    questionIndex = randomDigitGenerator(client->getUsedIndex());
+    client->getUsedIndex().push_back(questionIndex);
+    client->setNbQuestions(nbQuestions - 1);
+    client->setLastQuestion(_quizDataBase[questionIndex]);
+    privmsg(" " + client->getNickname() + " :\n" + _quizDataBase[questionIndex][0] + "\n" + \
+    _quizDataBase[questionIndex][1] + "\n" + _quizDataBase[questionIndex][2] + "\n" + _quizDataBase[questionIndex][3], bot);
 }
 
-std::vector<std::vector<std::string> >	Server::parseQuizDatabase(const std::string& src)
+void	Server::parseQuizDatabase(const std::string& src)
 {
 	std::vector<std::vector<std::string> >	quizDatabase;
 	std::vector<std::string>				question;
@@ -44,7 +68,7 @@ std::vector<std::vector<std::string> >	Server::parseQuizDatabase(const std::stri
 		for (size_t j = 0; j < quizDatabase[i].size(); ++j)
 			std::cout << quizDatabase[i][j] << std::endl;
 	}
-	return quizDatabase;
+    _quizDataBase = quizDatabase;
 }
 
 // {
