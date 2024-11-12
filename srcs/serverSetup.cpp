@@ -51,6 +51,7 @@ void	Server::clearClient(int fd)
 		{
 			if (clients[i]->getRegistration())
 				modifyNbUsers(-1);
+			delete clients[i];
 			clients.erase(clients.begin() + i);
 			break ;
 		}
@@ -61,8 +62,10 @@ void	Server::deleteAll()
 {
 	for (size_t i = 0; i < clients.size(); ++i)
 		delete clients[i];
+	clients.clear();
 	for (size_t i = 0; i < serverChannels.size(); ++i)
 		delete serverChannels[i];
+	serverChannels.clear();
 }
 
 void	Server::AcceptNewClient()
@@ -74,24 +77,36 @@ void	Server::AcceptNewClient()
 
 	int	fd = accept(serverSocketFd, (sockaddr *)&clientAddress, &len);
 	if (fd == -1)
+	{
+		delete client;
 		std::cerr << "Accept() failed" << std::endl;
+		return ;
+	}
 	if (fcntl(fd, F_SETFL, O_NONBLOCK) == -1)
 	{
+		delete client;
 		std::cerr << "fcntl() failed" << std::endl;
 		return ;
 	}
+	try
+	{
+		newPoll.fd = fd;
+		newPoll.events = POLLIN;
+		newPoll.revents = 0;
 
-	newPoll.fd = fd;
-	newPoll.events = POLLIN;
-	newPoll.revents = 0;
-
-	client->setFd(fd);
-	client->setIPaddress(inet_ntoa((clientAddress.sin_addr)));
-	clients.push_back(client);
-	fds.push_back(newPoll);
-	if (fds.size() > static_cast<size_t>(_nbMaxClients))
-		setNbMaxClients(clients.size());
-	std::cout << "Client " << fd << " connected !" << std::endl;
+		client->setFd(fd);
+		client->setIPaddress(inet_ntoa((clientAddress.sin_addr)));
+		clients.push_back(client);
+		fds.push_back(newPoll);
+		if (fds.size() > static_cast<size_t>(_nbMaxClients))
+			setNbMaxClients(clients.size());
+		std::cout << "Client " << fd << " connected !" << std::endl;
+	}
+	catch(...)
+	{
+		delete client;
+		std::cerr << "Couldn't accept new client" << std::endl;
+	}
 }
 
 void	Server::ReceiveData(int fd)

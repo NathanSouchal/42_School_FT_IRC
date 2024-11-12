@@ -27,14 +27,14 @@ class	Server
 {
 	private:
 		Server();
-		int	_port;
-		std::string	_password;
-		int	serverSocketFd;
-		int	_nbMaxClients;
-		int	_nbUsers;
+		int						_port;
+		std::string				_password;
+		int						serverSocketFd;
+		int						_nbMaxClients;
+		int						_nbUsers;
 		std::vector<Client *>	clients;
-		std::vector<pollfd>	fds;
-		std::string	_creationTime;
+		std::vector<pollfd>		fds;
+		std::string				_creationTime;
 		std::vector<Channel *>	serverChannels;
 		std::string				_partialCommand;
 	public:
