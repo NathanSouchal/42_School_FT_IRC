@@ -102,12 +102,9 @@ void	Server::configBot()
 
 	int	fd = accept(serverSocketFd, (sockaddr *)&clientAddress, &len);
 	if (fd == -1)
-		std::cerr << "Accept() failed" << std::endl;
+		throw std::runtime_error("Accept() failed");
 	if (fcntl(fd, F_SETFL, O_NONBLOCK) == -1)
-	{
-		std::cerr << "fcntl() failed" << std::endl;
-		return ;
-	}
+		throw std::runtime_error("fcntl() failed");
 
 	newPoll.fd = fd;
 	newPoll.events = POLLIN;

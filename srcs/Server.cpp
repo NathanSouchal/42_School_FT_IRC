@@ -138,15 +138,13 @@ void	Server::connectBot()
 {
 	int botSocket = socket(AF_INET, SOCK_STREAM, 0);
     if (botSocket == -1)
-    {
-        std::cerr << "socket() failed for bot" << std::endl;
-        return;
-    }
+	{
+        throw std::runtime_error("socket() failed for bot");
+	}
 	if (connect(botSocket, (sockaddr *)&serverAddress, sizeof(serverAddress)) == -1)
     {
-        std::cerr << "connect() failed for bot" << std::endl;
-        close(botSocket);
-        return;
+		close(botSocket);
+        throw std::runtime_error("connect() failed for bot");
     }
     std::cout << "Bot connected to the server successfully!" << std::endl;
 }

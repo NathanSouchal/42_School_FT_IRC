@@ -64,7 +64,6 @@ class	Server
 		void	password(const std::string& message, Client *client);
 		void	nickname(const std::string& message, Client *client);
 		void	user(const std::string& message, Client *client);
-		void	motd(const std::string& message, Client *client);
 		void	part(const std::string& message, Client *client);
 
 		void	join(const std::string& message, Client *client);
@@ -79,7 +78,6 @@ class	Server
 		void	topic(const std::string& message, Client *client);
 		void	sendTopic(Channel *channel, Client *client);
 		void	lusers(const std::string& message, Client *client);
-		void	quizz(const std::string& message, Client *client);
 
 		Client	*findClient(int fd);
 		Client	*findClientByNickname(std::string nickname);
@@ -98,8 +96,12 @@ class	Server
 		void	kick(const std::string& message, Client *client);
 		std::vector<std::string>	parseUsers(const std::string& src);
 
+		//QUIZ
 		void	connectBot();
 		void	parseQuizDatabase(const std::string& database);
+		void	quiz(const std::string& message, Client *client);
+		void	answerQuiz(const std::string& msgToSend, Client *client, Client *bot);
+		void	sendQuestion(Client *client, Client *bot);
 };
 
 #endif

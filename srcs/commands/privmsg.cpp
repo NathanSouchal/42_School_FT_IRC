@@ -60,6 +60,26 @@ void	Server::messageToChannel(const std::string& msgToSend, Client *client, std:
 	}
 }
 
+void	Server::answerQuiz(const std::string& msgToSend, Client *client, Client *bot)
+{
+	std::string	commandToSend;
+
+	if (!client->getLastQuestion().empty())
+	{
+		if (client->getLastQuestion()[4] == msgToSend)
+			privmsg(" " + client->getNickname() + " :Well done !", bot);
+		else
+			privmsg(" " + client->getNickname() + " :Bad answer, the right answer was : " + client->getLastQuestion()[4], bot);
+	}
+	if (!client->getNbQuestions())
+	{
+		if (!client->getLastQuestion().empty())
+			client->setLastQuestion(std::vector<std::string>());
+		return privmsg(" " + client->getNickname() + " :Game is over. To start a new game, send a new QUIZ command", bot);
+	}
+	sendQuestion(client, bot);
+}
+
 void	Server::messageToUser(const std::string& msgToSend, Client *client, std::string targetUserName)
 {
 	std::string	commandToSend;
@@ -68,6 +88,8 @@ void	Server::messageToUser(const std::string& msgToSend, Client *client, std::st
 	targetUser = findClientByNickname(targetUserName);
 	if (!targetUser)
 		return client->reply(ERR_NOSUCHNICK(client->getNickname(), targetUserName));
+	if (targetUserName == "JulienLepers")
+		answerQuiz(msgToSend, client, targetUser);
 	commandToSend = ":" + client->getNickname() + "!" + client->getUsername() + "@" + client->getIPaddress() \
 	+ " PRIVMSG " + targetUser->getNickname() + " :" + msgToSend + "\r\n";
 	targetUser->reply(commandToSend);

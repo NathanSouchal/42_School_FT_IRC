@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: nsouchal <nsouchal@student.42.fr>          +#+  +:+       +#+         #
+#    By: tnicolau <tnicolau@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/10/18 15:55:18 by tnicolau          #+#    #+#              #
-#    Updated: 2024/11/07 10:07:09 by nsouchal         ###   ########.fr        #
+#    Updated: 2024/11/12 11:14:02 by tnicolau         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,7 +41,7 @@ SRC =	$(DIR_SRCS)main.cpp \
 		$(DIR_CMD)topic.cpp \
 		$(DIR_CMD)user.cpp \
 		$(DIR_CMD)part.cpp \
-		$(DIR_CMD)quizz.cpp
+		$(DIR_CMD)quiz.cpp
 
 OBJS_DIR = .objs/
 OBJS = $(patsubst %.cpp, $(OBJS_DIR)%.o, $(SRC))
