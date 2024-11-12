@@ -15,8 +15,6 @@ int randomDigitGenerator(std::vector<int> usedIndex)
 
 void	Server::sendQuestion(Client *client, Client *bot)
 {
-	if (client->getNbQuestions() == -1)
-		return ;
 	int questionIndex = randomDigitGenerator(client->getUsedIndex());
 	client->getUsedIndex().push_back(questionIndex);
 	client->setNbQuestions(client->getNbQuestions() - 1);

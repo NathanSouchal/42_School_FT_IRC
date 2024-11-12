@@ -2,11 +2,12 @@
 #include "Server.hpp"
 #include "numerics.hpp"
 
-Client::Client(Server& server) : _serverRef(server) 
+Client::Client(Server& server) : _serverRef(server)
 {
 	_registrationChecked = false;
 	_fd = -1;
 	_nbQuestions = 0;
+	_quizPoints = 0;
 }
 
 const int		&Client::getFd()
@@ -137,4 +138,14 @@ bool	Client::checkRegistration()
 	if (_username.empty() || _nickname.empty() || _password.empty() || _realname.empty())
 		return false;
 	return true;
+}
+
+void	Client::setQuizPoints(int points)
+{
+	_quizPoints = points;
+}
+
+int		Client::getQuizPoints()
+{
+	return _quizPoints;
 }

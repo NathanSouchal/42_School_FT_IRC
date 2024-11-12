@@ -67,14 +67,26 @@ void	Server::answerQuiz(const std::string& msgToSend, Client *client, Client *bo
 	if (!client->getLastQuestion().empty())
 	{
 		if (client->getLastQuestion()[4] == msgToSend)
+		{
 			privmsg(" " + client->getNickname() + " :Well done !", bot);
+			client->setQuizPoints(client->getQuizPoints() + 1);
+			privmsg(" " + client->getNickname() + " :+ 1 points (total " + convertInString(client->getQuizPoints()) + " points)", bot);
+		}
 		else
+		{
 			privmsg(" " + client->getNickname() + " :Bad answer, the right answer was : " + client->getLastQuestion()[4], bot);
+			privmsg(" " + client->getNickname() + " :+ 0 points (total " + convertInString(client->getQuizPoints()) + " points)", bot);
+		}
 	}
 	if (!client->getNbQuestions())
 	{
 		if (!client->getLastQuestion().empty())
+		{
 			client->setLastQuestion(std::vector<std::string>());
+			privmsg(" " + client->getNickname() + " :Total points for this game : " + convertInString(client->getQuizPoints()) + " points", bot);
+			client->setQuizPoints(0);
+			client->getUsedIndex().clear();
+		}
 		return privmsg(" " + client->getNickname() + " :Game is over. To start a new game, send a new QUIZ command", bot);
 	}
 	sendQuestion(client, bot);

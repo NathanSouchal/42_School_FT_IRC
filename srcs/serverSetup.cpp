@@ -73,9 +73,14 @@ void	Server::AcceptNewClient()
 
 	int	fd = accept(serverSocketFd, (sockaddr *)&clientAddress, &len);
 	if (fd == -1)
+	{
+		delete client;
 		std::cerr << "Accept() failed" << std::endl;
+		return ;
+	}
 	if (fcntl(fd, F_SETFL, O_NONBLOCK) == -1)
 	{
+		delete client;
 		std::cerr << "fcntl() failed" << std::endl;
 		return ;
 	}
@@ -102,9 +107,15 @@ void	Server::configBot()
 
 	int	fd = accept(serverSocketFd, (sockaddr *)&clientAddress, &len);
 	if (fd == -1)
+	{
+		delete client;
 		throw std::runtime_error("Accept() failed");
+	}
 	if (fcntl(fd, F_SETFL, O_NONBLOCK) == -1)
+	{
+		delete client;
 		throw std::runtime_error("fcntl() failed");
+	}
 
 	newPoll.fd = fd;
 	newPoll.events = POLLIN;

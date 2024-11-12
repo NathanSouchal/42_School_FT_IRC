@@ -29,18 +29,18 @@ class	Server
 {
 	private:
 		Server();
-		int	_port;
-		std::string	_password;
-		sockaddr_in serverAddress;
-		int	serverSocketFd;
-		int	_nbMaxClients;
-		int	_nbUsers;
-		std::vector<Client *>	clients;
-		std::vector<pollfd>	fds;
-		std::string	_creationTime;
-		std::vector<Channel *>	serverChannels;
-		std::string				_partialCommand;
-		std::vector<std::vector<std::string> > _quizDataBase;
+		int										_port;
+		std::string								_password;
+		sockaddr_in								serverAddress;
+		int										serverSocketFd;
+		int										_nbMaxClients;
+		int										_nbUsers;
+		std::vector<Client *>					clients;
+		std::vector<pollfd>						fds;
+		std::string								_creationTime;
+		std::vector<Channel *>					serverChannels;
+		std::string								_partialCommand;
+		std::vector<std::vector<std::string> >	_quizDataBase;
 	public:
 		Server(int port, std::string password);
 		~Server();

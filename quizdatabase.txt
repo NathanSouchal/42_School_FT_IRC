@@ -8,53 +8,113 @@ A: Blond
 B: Dark
 C: Nathan is bold
 B
-Question: Which of the following is a vegetable?
-A: Apple
-B: Carrot
-C: Banana
+Question: Which of the following is a planet in our solar system?
+A: Alpha Centauri
+B: Mars
+C: Orion
 B
-Question: Which color is the hair of Nathan?
-A: Blond
-B: Dark
-C: Nathan is bold
+Question: Which of the following is a famous painting by Leonardo da Vinci?
+A: The Starry Night
+B: The Mona Lisa
+C: The Scream
 B
-Question: Which of the following is a vegetable?
-A: Apple
-B: Carrot
-C: Banana
+Question: Which of the following is a programming language?
+A: HTML
+B: CSS
+C: Python
+C
+Question: Which of the following is a mammal?
+A: Shark
+B: Eagle
+C: Dolphin
+C
+Question: Which of the following is a historical figure known for his role in the American Civil Rights Movement?
+A: Albert Einstein
+B: Martin Luther King Jr.
+C: Winston Churchill
 B
-Question: Which color is the hair of Nathan?
-A: Blond
-B: Dark
-C: Nathan is bold
+Question: Which of the following is a classic novel written by George Orwell?
+A: Brave New World
+B: 1984
+C: To Kill a Mockingbird
 B
-Question: Which of the following is a vegetable?
-A: Apple
-B: Carrot
-C: Banana
+Question: Which of the following is a type of dance?
+A: Ballet
+B: Sculpture
+C: Painting
+A
+Question: Which of the following is a common form of renewable energy?
+A: Coal
+B: Solar power
+C: Natural gas
 B
-Question: Which color is the hair of Nathan?
-A: Blond
-B: Dark
-C: Nathan is bold
+Question: Which of the following is an Olympic sport?
+A: Chess
+B: Swimming
+C: Video gaming
 B
-Question: Which of the following is a vegetable?
-A: Apple
-B: Carrot
-C: Banana
+Question: Which of the following is a famous landmark in Paris?
+A: The Great Wall
+B: The Eiffel Tower
+C: The Colosseum
 B
-Question: Which color is the hair of Nathan?
-A: Blond
-B: Dark
-C: Nathan is bold
+Question: Which of the following is a monosaccharide?
+A: Sucrose
+B: Fructose
+C: Maltose
 B
-Question: Which of the following is a vegetable?
-A: Apple
-B: Carrot
-C: Banana
+Question: Which philosophical concept is associated with Jean-Paul Sartre?
+A: Utilitarianism
+B: Existentialism
+C: Empiricism
 B
-Question: Which color is the hair of Nathan?
-A: Blond
-B: Dark
-C: Nathan is bold
+Question: In quantum mechanics, which of the following is not a fundamental force?
+A: Strong nuclear force
+B: Weak nuclear force
+C: Centrifugal force
+C
+Question: Which of these is not a type of cognitive bias?
+A: Dunning-Kruger effect
+B: Confirmation bias
+C: Stockholm syndrome
+C
+Question: Which of the following is an example of a non-Euclidean geometry?
+A: Cartesian geometry
+B: Riemannian geometry
+C: Analytic geometry
 B
+Question: In linguistics, which of these is not a type of morpheme?
+A: Free morpheme
+B: Bound morpheme
+C: Phoneme morpheme
+C
+Question: Which of these algorithms is not typically used for sorting?
+A: Quicksort
+B: Dijkstra's algorithm
+C: Merge sort
+B
+Question: Which of the following is not a principle of art?
+A: Balance
+B: Rhythm
+C: Viscosity
+C
+Question: In economics, which of these is not a type of market structure?
+A: Oligopoly
+B: Perfect competition
+C: Bilateral monopoly
+C
+Question: Which of these is not a type of logical fallacy?
+A: Ad hominem
+B: Straw man
+C: Cognitive dissonance
+C
+Question: What did the zero say to the eight?
+A: "Nice belt!"
+B: "You look great!"
+C: "Why are you so round?"
+A
+Question: How does a penguin build its house?
+A: Igloos it together!
+B: With ice and snow!
+C: With a lot of help from friends!
+A

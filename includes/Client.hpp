@@ -13,17 +13,18 @@ class	Server;
 class	Client
 {
 	private:
-		int			_fd;
-		std::string	_IPaddress;
-		std::string	_nickname;
-		std::string	_username;
-		std::string	_realname;
-		std::string	_password;
-		bool		_registrationChecked;
-		Server&		_serverRef;
+		int							_fd;
+		std::string					_IPaddress;
+		std::string					_nickname;
+		std::string					_username;
+		std::string					_realname;
+		std::string					_password;
+		bool						_registrationChecked;
+		Server&						_serverRef;
 		std::vector<std::string>	_lastQuestion;
 		int							_nbQuestions;
-		std::vector<int>			_usedIndex;						
+		std::vector<int>			_usedIndex;
+		int							_quizPoints;
 	public:
 		Client(Server& server);
 		const int			&getFd();
@@ -37,6 +38,8 @@ class	Client
 		const bool			&getRegistration();
 		const std::vector<std::string>	&getLastQuestion();
 		std::vector<int>	&getUsedIndex();
+		void				setQuizPoints(int points);
+		int					getQuizPoints();
 		void				setFd(const int& new_fd);
 		void				setNick(const std::string &nickname);
 		void				setUsername(const std::string &username);
