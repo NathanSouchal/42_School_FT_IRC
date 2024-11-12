@@ -5,6 +5,7 @@
 Channel::Channel(const std::string &name): _name(name)
 {
 	_userLimit = 10;
+	_userLimitSet = false;
 	_inviteOnly = false;
 	_modeT = false;
 }

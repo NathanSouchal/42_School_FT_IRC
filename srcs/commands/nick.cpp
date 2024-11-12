@@ -14,6 +14,10 @@ void	Server::nickname(const std::string& message, Client *client)
 	if (findNickName(nickname_sent))
 		return client->reply(ERR_NICKNAMEINUSE(nickname_sent));
 	if (!(client->getRealname().empty()) && !(client->getUsername().empty()) && client->checkEmptyNickname())
+	{
+		client->setNick(nickname_sent);
 		client->setTrueRegistration();
-	client->setNick(nickname_sent);
+	}
+	else
+		client->setNick(nickname_sent);
 }
