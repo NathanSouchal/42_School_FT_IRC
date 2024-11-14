@@ -59,7 +59,6 @@ class	Server
 		void	password(const std::string& message, Client *client);
 		void	nickname(const std::string& message, Client *client);
 		void	user(const std::string& message, Client *client);
-		void	motd(const std::string& message, Client *client);
 		void	part(const std::string& message, Client *client);
 
 		void	join(const std::string& message, Client *client);
