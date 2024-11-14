@@ -13,7 +13,7 @@ void	Server::privmsg(const std::string& message, Client *client)
 	if (parameters.size() != 2)
 	{
 		if (parameters.size() > 2)
-			client->reply(ERR_NEEDMOREPARAMS(client->getNickname(), "JOIN"));
+			client->reply(ERR_NEEDMOREPARAMS(client->getNickname(), "PRIVMSG"));
 		else if ((parameters.size() == 1 && parameters[0][0] == ':') || parameters.size() == 0)
 			client->reply(ERR_NORECIPIENT(client->getNickname(), "PRIVMSG"));
 		else if (parameters.size() == 1)
